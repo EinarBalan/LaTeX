@@ -1,0 +1,943 @@
+\input{../preamble.tex}
+\newcommand \algorithm[3]{
+    \paragraph[]{Algorithm}
+    \begin{itemize}
+        #1
+    \end{itemize}
+
+    \paragraph[]{Proof}
+    \begin{itemize}
+        #2 
+    \end{itemize}
+    \qed
+
+    \paragraph[]{Complexity Analysis}
+    \begin{itemize}
+        #3 
+    \end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%
+%%  BEGIN DOCUMENT %%
+%%%%%%%%%%%%%%%%%%%%%
+
+\title{CS 180 Comprehensive Review: \\
+        Introduction to Algorithms and Complexity}
+\author{Einar Balan}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{Greedy Algorithms}
+
+\section{Famous Problem}
+We have a group of people and we want to determine which among them are famous. Considering person $A$, there are two criteria for being famous:
+\begin{enumerate}
+    \item Every person in the group knows $A$
+    \item $A$ doesn't know anyone in the group 
+\end{enumerate}
+We want an efficient algorithm to determine who in the group is famous.
+
+\algorithm
+{
+    \item Pick 2 arbitrary people, $A$ and $B$
+    \item Ask $A$ if they know $B$
+        \begin{itemize}
+            \item if yes, eliminate $A$ as a famous candidate
+            \item if no, eliminate $B$ as a famous candidate
+        \end{itemize}
+    \item Repeat until there is a single candidate remaining
+    \item Finally, ask this candidate if they know everyone and ask every other (eliminated) person if they know the candidate
+        \begin{itemize}
+            \item if the candidate doesn't know anyone and everyone knows the candidate, then the candidate is famous
+            \item otherwise, there is no famous person in the group
+        \end{itemize}
+}
+{
+    \item Assume towards a contradiction that the algorithm came to an incorrect conclusion
+    \item Two cases
+    \begin{enumerate}
+        \item Non famous candidate chosen
+            \begin{itemize}
+                \item For a candidate to be chosen they had to pass the final round of vetting
+                \item We know the candidate was chosen by the algorithm, so they must not know anyone and every other candidate knows them
+                \item Via problem definition, this candidate must be famous
+                \item Contradiction
+            \end{itemize}
+        \item No famous person declared when there is a famous person
+            \begin{itemize}
+                \item If there was no famous person found, this means that the final candidate did not pass the final round of vetting
+                \item By assumption, there must be another person $P$ that was eliminated in the first pass
+                \item For this person to have been eliminated while the final candidate was kept, either the final candidate doesn't know $P$ or $P$ knew the final candidate
+                \item In either case, $P$ cannot be famous, so we have reached a contradiction
+            \end{itemize}
+    \end{enumerate}
+    \item In both cases we have a contradiction        
+}
+{
+    \item We ask $n - 1$ questions for elimination round
+    \item We ask $2(n-1)$ questions for confirmation round
+    \item Therefore O(n)
+}
+
+
+\section{Stable Matching Problem}
+We have a set of $n$ men and $n$ women to be married, each of which has a preference list consisting of the other gender. We want a perfect stable matching (i.e. a matching in which every man is paired with exactly one woman and there is no pair that likes each other more than their current partners). The algorithm we will describe is called the Gale-Shapley algorithm.
+
+\algorithm
+{
+    \item Until there are no free men
+    \begin{itemize}
+        \item Pick an arbitrary man, $m$
+        \item Propose to the first unproposedto woman on his preference list (i.e. the first woman he has not yet proposed to)
+        \item If the woman is single, the manand woman become engaged
+        \item If the woman is engaged toanother man, $m'$
+        \begin {itemize}
+            \item If $m$ is higher onthepriority list than $m'$, $m$ and the woman become engaged and $m'$ is freed
+            \item Else no change
+        \end{itemize}
+    \end{itemize}
+}
+{
+    \item Assume towards a contradiction that the matching produced is not perfect
+    \begin{itemize}
+        \item This means that each man is not married to exactly one woman
+        \item There must be a point at which there is a free man but every woman has been proposed to (and is engaged)
+        \item This means that n men must be engaged (since n woman are engaged), but this is a contradiction because we just stated that we have a free man
+        \item So every man must be engaged to exactly 1 woman at the termination of the algorithm
+    \end{itemize}
+    \item Assume towards a contradiction that the matching produced is not stable
+    \begin{itemize}
+        \item This means that there must exist pairs $(m, w)$ and $(m', w')$ s.t. $m$ prefers $w'$ over $w$ and $w'$ prefers $m$ over $m'$
+        \item $m$'s last proposal must have have been to $w$, because they ended up together
+        \item If $m$ did not propose to $w'$ earlier $\rightarrow w > w'$, contradiction 
+        \item If $m$ did propose to $w'$ earlier
+        \begin{itemize}
+            \item There must be some man $m''$ which is ranked above $m$ on $w'$'s preference list
+            \item $m'' > m$
+            \item However, $m' > m''$ because $m'$ ends up with $w'$
+            \item By transitive property, $m' >m$, which is a contradiction
+        \end{itemize}
+    \end{itemize}
+}
+{
+    \item A man can propose to at worst n women in his priority list
+    \item There are n men
+    \item n * n
+    \item O(n$^{2}$)
+}
+
+\section{Interval Scheduling}
+We have a set of tasks, each of which have some duration (an interval of time). Only one task can be done at a time (that is, no two tasks can overlap). How can we schedule the maximum number of nonoverlapping tasks?
+
+\algorithm
+{
+    \item Sort set of tasks by earliest finish time
+    \item Iterate through sorted list and schedule earliest
+    \begin {itemize}
+        \item When a task is scheduled, remove all overlapping tasks
+    \end{itemize}
+    \item Continue until maximally scheduled
+}
+{
+    \item Assume there is an optimal solution that matches output in the first i intervals, but after this our algorithm "falls behind"
+    \item If the (i + 1)th interval in our algorithm is longer than the optimal, there is a contradiction because the optimal will end first (and our solution would have picked it). Therefore up to this interval, the optimal and the algorithm we choose have the same result
+    \item If our algorithm (i+1)th interval is shorter than the optimal, then replace the optimal solution with our interval. 
+    \begin{itemize}
+        \item The number of intervals doesn't change
+        \item Repeat this for the rest of the intervals
+        \item After the the optimal solution has been completely transformed into the solution generated by our greedy algorithm, the number of intervals stays the same, therefore our solution is at least as good as this hypothetical optimal
+
+    \end{itemize}
+}
+{
+    \item O(nlogn) to sort by finish time
+    \item O(n) to schedule 
+    
+}
+
+
+\section{Moore's Voting Algorithm}
+Given a set of m candidates and a set of n voters, determine which candidate will win an election. A candidate can win an election if they have > n/2 votes. We want an O(n) solution. 
+
+\algorithm
+{
+    \item iterate through array of votes
+    \begin{itemize}
+        \item set winner variable equal to first element in array and set count equal to 1
+        \item for each vote 
+        \begin{itemize}
+            \item if vote is for same as winner variable, increment count
+            \item if vote is not same, decrement count
+            \item if count reaches 0, set winner variable equal to candidate that caused decrement to 0 and increment count by 1
+        \end{itemize}
+    \end{itemize}
+    \item when we reach the end of the array, the final winner variable is set to a potential majority winner
+    \item do a second pass through the array to determine for sure that the potential winner truly does have a majority of votes
+}
+{
+    \item Assume towards a contradiction that the algorithm does not determine a winner correctly
+    \begin{enumerate}
+        \item Algorithm picks the wrong candidate as a winner (including the case where there is no majority)
+        \begin{itemize}
+            \item this means that the final candidate left in the winner variable does not hold a majority
+            \item after the second pass, this candidate would not be picked b/c it does not have n/2 votes (assumed this was the wrong candidate)
+            \item contradiction bc the wrong candidate could not be chosen after the second pass
+        \end{itemize}
+        \item Algorithm picks no winner (no majority) when there truly is a majority winner
+        \begin{itemize}
+            \item this means that the search for a majority candidate failed in the first pass (as the second pass correctly determined that the remaining candidate did not hold a majority, leading to no winner being picked)
+            \item at the end, we can be certain that if there is a majority element, then since it appears more than n/2 times, there are not enough elements to cross out all of its occurrences, and thus it must be the element stored at variable m.
+        \end{itemize}
+
+    \end{enumerate}
+
+}
+{
+    \item we look at each vote twice (first in the first pass, next in the second pass), non asymptotic term coefficient  is dropped 
+    \item O(n)
+}
+
+
+
+
+\chapter{Graphs}
+
+\begin{tabular}{lp{12cm}}
+    \toprule
+    Term & Definition \\
+    \midrule
+    vertex    & a node in the graph \\
+    \addlinespace
+    edge    & connects two nodes \\
+    \addlinespace
+    connected graph    & can reach any vertex in the graph starting at an arbitrary vertex \\
+    \addlinespace
+    directed graph    & can only travel in one direction across an edge; for instance for e(u,v) it is only possible to travel from u to v \\
+    \addlinespace
+    cycle & a series of edges in which you start and end at the same node \\
+    \addlinespace
+    tree & a connected graph with no cycles \\
+    \addlinespace
+    DAG & a directed acyclic graph; the directed analog of a tree*  \\
+    \addlinespace
+    \bottomrule
+  \end{tabular}
+
+  *Trees and DAG's differ in that in a DAG a node can have multiple parents and still not have a cycle (due to the directed edges) and in a tree a node can only have one parent (or it is guaranteed to have a cycle).
+
+\section{Data Structure Representations}
+\begin{figure}
+    \centering
+    \img{graph.png}
+    \caption{We will refer to this graph in the representations discussed.}
+\end{figure}
+
+\paragraph{Adjacency Matrix}
+\[
+\begin{bmatrix}
+     & a & b & c \\
+   a & 1 & 1 & 1 \\
+   b & 1 & 1 & 0 \\
+   c & 1 & 0 & 1 \\
+\end{bmatrix}
+\]
+
+If nodes i and j are connected, then M[i][j] = 1 otherwise it is 0.
+
+\begin{itemize}
+    \item O(1) to check if two vertices are neighbors.
+    \item O(n) to traverse all neighbors (to find al ledges adjacent to a given vertex).
+    \item Works better for dense graphs with many edges
+\end{itemize}
+
+
+\paragraph{Adjacency Lists}
+
+\[a \rightarrow b \rightarrow c\]
+\[b \rightarrow a \]
+\[c \rightarrow a\]
+
+The head of each linked list points to all its neighbors.
+
+\begin{itemize}
+    \item O(degree(n)) to check if a vertex is neighbors with n
+    \item O(degree(n)) to traverse all neighbors
+    \item Works better for sparse graphs
+\end{itemize}
+
+\section{Breadth First Search}
+Explores all neighbors of a node and puts them into a "layer" before moving onto the next layer (neighbors of neighbors). Like "flooding" the graph. The layer number of a node marks the distance from the starting node. If some node does not appear in any layers, the graph is not connected.
+
+BFS also generates a "BFS tree." That is, a representation of which edges were traveled along to discover all nodes. An edge is only added to the BFS tree if the node it connects has not been visited before. Non-tree edges all either connect nodes in the same layer or in adjacent layers.
+
+\algorithm
+{
+    \item start at a chosen node and mark it as visited
+    \item add each neighboring node to a queue 
+    \item until the queue is empty
+    \begin{itemize}
+        \item pick the first node in the queue
+        \item add its neighbors to the queue 
+        \item mark the node as visited
+        \item remove node from the queue
+    \end{itemize}
+}
+{
+    \item if distance is actually longer than what was found
+    \begin{itemize}
+        \item this means that a node at a higher level allowed the destination node to be visited for the first time
+        \item this is a contradiction because we found a lower layer that allows the node to be visited for the first time
+    \end{itemize}
+    \item if distance is actually shorter than what was found
+    \begin{itemize}
+        \item this means there is a path length j < i (the distance we found)
+        \item go to the first point where the paths branch away from each other
+        \begin{itemize}
+            \item for each path, going to a new layer in the BFS tree is distance 1
+            \item the path j will reach the destination in the same number of edges as path i
+            \item contradiction
+        \end{itemize}
+    \end{itemize}
+    \item more informally: BFS restricts the path traveled to be only along previously unvisited nodes. The shortest path between two nodes cannot revisit any so it is the shortest path. 
+}
+{
+    \item assume adjacency list representation 
+    \item outer loop runs v times, for each vertex in the graph
+    \begin{itemize}
+        \item there are n neighbors of each vertex, each of which is added to the queue
+        \item for each vertex, we mark the node as visited and remove it from the queue
+    \end{itemize}
+    \item v * (O(n) + O(1))
+    \item O(vn + v), but vn is just the number of edges in the graph
+    \item O(v + e)
+}
+
+
+\section{Depth First Search}
+Completely exhausts a path before moving on to new paths in the graph. Generates a DFS tree. Every edge not in the tree that is in the graph is an ancestor relationship (they are connected in the tree via a different path).
+
+
+\algorithm
+{
+    \item start at a chosen node and mark it as visited
+    \item add each neighboring node to a stack 
+    \item until the stack is empty
+    \begin{itemize}
+        \item pick the first node in the stack
+        \item add its neighbors to the stack 
+        \item mark the node as visited
+        \item pop node from the stack
+    \end{itemize}
+}
+{
+    \item exercise to the reader
+}
+{
+    \item see BFS
+}
+
+\section{Graph Coloring}
+A bipartite graph is a graph in which the nodes can be split up into two groups where every node has an edge between the two groups. We say a graph is bipartite if it is possible to color its node red and blue such that every edge is between only a red and blue node.
+ 
+We know if a graph contains an odd cycle, it is not bipartite.
+
+\algorithm
+{
+    \item run BFS
+    \item color even layers blue and odd layers red
+    \item if the BFS tree is not the same as graph (i.e. a cycle was present), the graph is not bipartite 
+    \item otherwise, since there are no edges between nodes of the same color, the graph is bipartite 
+    \item OR
+    \item scan adjacency lists to ensure no neighbors are of same color
+    
+}
+{
+    \item if there is no edge connecting nodes of the same layer
+    \begin{itemize}
+        \item there is no cycle and the BFS tree will be the same as the graph
+        \item then every edge will be between adjacent layers which are colored two different colors (representing the 2 different groups)
+        \item so for every node in a group there are edges only to the other group
+    \end{itemize}
+    \item if there is an edge connecting nodes of the same layer
+    \begin{itemize}
+        \item consider a node n that is an ancestor of both nodes connected in the same layer
+        \item these 3 nodes form an odd cycle
+        \item an odd cycle shows the graph is not bipartite because there will always be an edge between two nodes of the same color (pigeonhole principle)
+    \end{itemize}
+}
+{
+    \item BFS is O(v + e)
+    \item comparing the number of edges in the tree vs the graph is O(1)
+    
+}
+\section{Topological Sort}
+For a directed acyclic graph (DAG), we want to output a list such that the ordering in the list does not violate any precedence relationships established in the DAG. That is, if we have an edge from v to u, v comes before u in the topologically sorted list.
+ 
+We assume that we know the in degree and out degree of each node (specifically, our graph representation is two lists for each node: one with nodes to which the node has an edge and one with nodes from which the node has an edge; the sizes of these two lists are the out and in degree of the node).
+ 
+An important note is that there is no solution if our graph is not a DAG.
+
+\algorithm
+{
+    \item find all source vertices in the graph
+    \item pick an arbitrary source vertex
+    \begin{itemize}
+        \item add it to a list L and remove it from the graph
+        \item repeat until there are no more vertices in the graph
+    \end{itemize}
+    \item the list L is topologically sorted
+}
+{
+    \item assume G is a DAG
+    \item assume towards a contradiction that the list output by the graph violates a precedence relationship between two nodes u and v (v is directed towards u in the graph but comes after it in the list)
+    \begin{itemize}
+        \item this means that at some point u must have been a source node before v became a source node and was output into the list
+        \item this is a contradiction because there is no way for u to not have any nodes pointing towards it (i.e. source node) while v is still in the graph
+        \item because of the way the algorithm is structured v will always be output before u 
+    \end{itemize}
+    \item thus the algorithm produces a valid topological sort
+}
+{
+    \item to find our sources is O(v), where v is the number of nodes
+    \begin{itemize}
+        \item each vertex must be a source node that is output once throughout the algorithm
+    \end{itemize}
+    \item O(e) to create new source nodes
+    \begin{itemize}
+        \item we delete each edge when it becomes a source
+    \end{itemize}
+    \item O(v + e)
+}
+
+
+\section{Shortest Path Problem}
+Given a weighted graph, we want to find the shortest path between two vertices.
+ 
+A side effect of running the algorithm is that we will have the shortest path to every node from the starting node as well as the path to get there. We will discuss Dijkstra's Algorithm.
+
+\algorithm
+{
+    \item label distance from starting node to every other node in min heap
+    \begin{itemize}
+        \item self distance is 0
+        \item every other is $\infty$
+    \end{itemize}
+    \item consider each neighboring node of starting node that is unvisited
+    \begin{itemize}
+        \item if the weight + the distance leading to that node is < the current labeled distance then relabel the distance with this value
+        \item mark node as visited
+        \item travel to the next closest node from starting node and repeat analysis
+    \end{itemize}
+    \item finish when every node has been visited
+    \item return the distance between the two nodes
+}
+{
+    \item exercise to the reader
+}
+{
+    \item for each vertex, we examine all n connected edges 
+    \item  insertion from min heap (and deletion is) O(logv) 
+    \item so O(vnlogv) = O(elogv)
+
+}
+
+
+
+
+\chapter{Minimum Spanning Trees}
+
+\section{Prim's Algorithm}
+Given a weighted graph, we want to find a minimum spanning tree. That is, we want to find a subset of all the edges of the graph such that the graph is a tree (connected) and the sum of all the included edges is the minimum possible.
+ 
+Prim's algorithm is a vertex centric approach.
+ 
+\textbf{MST Theorem}: Given an arbitrary bipartition of a graph s.t. there is at least one node in each partition, the minimum cut edge between the partitions belongs in every MST.
+
+\algorithm
+{
+    \item select an arbitrary root node S
+    \item until there are no vertices left that have not been added
+    \begin{itemize}
+        \item consider all vertices connected to the tree that have not yet been added
+        \item add the vertex that is connected by the lowest weight edge
+    \end{itemize}
+    \item return the MST
+}
+{
+    \item by MST theorem, for each step of the algorithm we add an edge that is contained in the MST
+    \item the final result must be a spanning tree because it contains all vertices and no cycles (since the only edges added must be part of the MST, therefore no added edges can create a cycle)
+    
+}
+{
+    \item for each edge, insert/delete from min heap which takes logv time
+    \item O(elogv)
+}
+
+
+\section{Kruskall's Algorithm}
+An edge centric approach to finding the MST of a graph.
+
+\algorithm
+{
+    \item sort edges in non decreasing order
+    \item until all vertices are included
+    \begin{itemize}
+        \item consider e, the minimum edge that has not yet been added
+        \item if e will not create a cycle in the current tree, add e to the tree
+    \end{itemize}
+    \item return the MST
+}
+{
+    \item consider an edge e(v, w) about to be added by Kruskall's algorithm
+    \item let V be the set of all nodes and S be the set of all nodes to which a node v has a path to during algorithm execution before e is added
+    \item e is the cheapest edge between the partitions S and V - S, thus by MST theorem Kruskall's algorithm produces an MST
+    
+}
+{
+    \item O(elogv) from Union Find operations
+    \item O(eloge) for sorting
+    
+}
+
+
+\section{Union Find}
+A data structure that is used to implement Kruskall's algorithm efficiently (in particular the cycle checking).
+
+In general in Kruskall's Algorithm, if two nodes are already in the same connected component, then adding another edge between them will create a cycle. Union Find allows us to efficiently track these connected components and determine if two nodes are in the same one.
+
+\paragraph{Operations}
+\begin{itemize}
+    \item Find(u) - returns the set containing u in O(logn) time
+    \item Union(a, b) - merge sets a and b O(1)
+    \item MakeUnionFind(s) - creates a new Union Find using a set s in which all the items in s are disjoint in O(|s|) time
+\end{itemize}
+
+\paragraph{Description}
+\begin{itemize}
+    \item each node v is contained in a struct that contains a pointer to the set it belongs to
+    \item Union involves taking node for which a set was named and pointing it towards the name node for another set
+\end{itemize}
+
+\paragraph{Complexity Analysis}
+\begin{itemize}
+    \item for each edge, we execute 2 Find(u) to see if new edge will create a cycle (if it won't we won't execute a union operation)
+    \item therefore total O(elogv)
+\end{itemize}
+
+
+\section{Clustering}
+Given a set of points where distance between points represents similarity, generate k clusters of similar points. Essentially, we want to create k groups of the most similar points.
+
+\algorithm
+{
+    \item assume we have a graph G, where each point is represented by a node and nodes are connected by an edge of weight d$_{ij}$ 
+    \item use Kruskall's algorithm to construct a minimum spanning tree, but halt the algorithm when there are k connected components remaining
+    \item return the clusters 
+    
+}
+{
+    \item an optimal clustering maximizes min dij, or the distance between 2 clusters i and j
+    \item we have clusters c$_{1}$, c$_{2}$, ..., c$_{k}$ produced by Krukall's algorithm
+    \item by contradiction, assume we have another set of clusters c$_{1}'$, c$_{2}'$, ..., c$_{k}'$ produced by a better solution
+    \item there must be at least 1 cluster that is not a subset between of any 2 clusterings in c$'$ clustering
+    \item therefore, there must be 2 vertices in the same c$'$ cluster that are in different c clusters w/ distance dx
+    \item dx must be smaller than or equal to our min d$_{ij}$ (since kruskall added that edge before d$_{ij}$ edge) therefore we either have the same solution or the prime solution doesn't maximize d$_{ij}$
+    \item contradiction because our solution produces a larger min d$_{ij}$ 
+}
+{
+    \item assume graph given
+    we use Kruskall's algorithm and Union Find \item data structure so O(eloge)
+}
+
+
+
+
+\chapter{Divide and Conquer}
+Divide and conquer involves dividing the problem into subproblems and merging the solutions. Recurrence relations can be useful in order to determine the complexity of the algorithms.
+
+Some common recurrences
+\begin{itemize}
+    \item T(n) = qT(n/2) + cn
+    \begin{itemize}
+        \item for n > 2
+        each step of the recursion is split into q subproblems of size n/2
+        \item division and merging are both O(n)
+        \item q = 2 → O(nlogn)
+        \item q > 2 → O(n$^{\log{q}}$)
+        \item q = 1 → O(n)
+        
+    \end{itemize}
+    \item T(n) = 2T(n/2) + cn2
+    \begin{itemize}
+        \item for n > 2
+        each step of the recursion is split into 2 subproblems of size n/2
+        \item division and merging are both O(n$^{2}$) 
+        \item O(n$^{2}$)
+    \end{itemize}
+
+\end{itemize}
+
+\section{Mergesort}
+\algorithm
+{
+    \item split the list into two approximately equally sized lists
+    \item via recursion, sort these two lists (if the list size is two, simply compare the two elements and order appropriately)
+    \item merge the result into one large sorted list
+    \begin{itemize}
+        \item merge performed by maintaining two pointers starting at the first element in each list
+        \item we add the smaller of the two elements to the merged list and advance its pointer
+        \item continue until all elements have been added
+    \end{itemize}
+    \item return sorted list
+}
+{
+    \item by contradiction, assume mergesort does not produce a properly sorted list
+    \item this means that there is some a[i] > a[j] for i < j
+    \item consider the base case of a list of size 2
+    \item mergesort will never allow this list to not be properly sorted since it is based on a simple comparison (putting the larger element 2nd)
+    \item now consider we have 2 lists of size two (originally split from a larger list), each of which is sorted by mergesort
+    \item during the merge operation, we always add the smaller elements first (meaning the resulting merged list will have smaller elements before larger)
+    \item this base case can be extended to lists of arbitrary size
+    \item we have reached a contradiction since it is impossible for a[i] > a[j] for i < j based on these facts
+
+}
+{
+    \item T(n) = 2T(n/2) + cn
+    \item this resolves to O(nlogn)
+    
+}
+
+
+\section{Inverted Pairs Problem}
+Given a list of n integers, we want to find how many inversions are in the list. An inversion can be defined as the case where i < j and ai > aj. Essentially, it means that a larger number comes before a smaller number. We want to count these instances efficiently. 
+
+\algorithm
+{
+    \item divide the list into two lists, A and B
+    \item sort each list and count the inversions within them recursively
+    \item maintain a pointer to the beginning of each sorted list
+    \item until one of the lists is empty
+    \begin{itemize}
+        \item compare the elements referenced by the pointers
+        \item if B$_{j}$ < A$_{i}$
+        \begin{itemize}
+            \item add |A| - i to the number of inversions (number elements remaining after element i)
+            \item add B$_{j}$ to sorted list
+            \item advance j pointer
+        \end{itemize}
+    \item else
+    \begin{itemize}
+        \item add A$_{j}$ to the sorted list
+        \item advance i pointer
+    \end{itemize}
+    \end{itemize}
+    \item append the remaining  elements from the non empty list to the sorted list
+    \item return the number of inversions counted (in A and B and between A and B)
+}
+{
+    \item similar to mergesort argument
+}
+{
+    \item T(n) = 2T(n/2) + cn
+    \item we split the problem into two subproblems half the size of the original in O(n) time and then merge the results in O(n) time
+    \item this recursion resolves to O(nlogn)
+    
+}
+
+
+\section{Closest Points Problem}
+Given n points in a plane, we want to efficiently find the pair of points that is closest together.
+
+\algorithm
+{
+    \item sort points by non decreasing x and y coordinate 
+    \item via recursion, we know the closest points on left side of plane and right side of plane (call the min of these two d$_{R}$ and store this pair as the min distance pair)
+    \item let L be the line dividing the left and right sides of the plane
+    \item let S$_{y}$ be the set of all points within distance d$_{R}$ of L
+    \item for all points in S$_{y}$
+    \begin{itemize}
+        \item compute the distance between this point and the next 15 points in S$_{y}$
+        \item if this distance is < d$_{R}$ set this distance as the new d$_{R}$ and store points somewhere
+    \end{itemize}
+    \item return the min distance pair
+}
+{
+    \item exercise to the reader
+}
+{
+    \item T(n) = 2T(n/2) + cn 
+    \item splitting the problem into 2 half the size and then mergin in O(n) time (15 operations to merge)
+    \item O(nlogn)
+
+}
+
+
+\chapter{Dynamic Programming}
+
+\section{Weighted Interval Scheduling}
+We are given a set of n intervals, each with an associated starting time s(i), end time f(i), and weight w(i). We want to determine the maximum compatible set, that is the set of intervals that don't overlap and have the maximum possible weight.
+ 
+Define p(j) to be the last interval that does not overlap interval j (0 if there are none). Define OPT(j) to be the size of the optimal set of intervals up to interval j.
+
+\algorithm
+{
+    \item sort intervals by non decreasing f(i)
+    \item OPT(0) = 0 
+    \item for i to n
+    \begin{itemize}
+        \item OPT(i) = max(OPT(p(i)) + w(i), OPT(i  - 1))
+
+    \end{itemize}
+}
+{
+    \item by induction
+    \item we know base case OPT(0) = 0
+    \item assume that out algorithm is correct for all i < j
+    \item let our algorithm be ALG
+    \item we know that ALG(p(i)) = OPT(p(i)) and \item ALG(i - 1) = OPT(i - 1) via induction hypothesis
+    \item so OPT(i) = max(ALG(p(i)) + w(i), ALG(i - 1)) = ALG(i)
+    
+}
+{
+    \item O(nlogn) to sort
+    \item for each interval, we perform a constant time operation $\rightarrow$ O(n)
+}
+
+
+\section{Knapsack Problem}
+Given a knapsack of limited size S and n items each with value vi and size si, we ant to fit the maximum possible value within our knapsack.
+ 
+Define OPT(i, j) to be the optimal solution's value for items 1 - i and knapsack size j.
+
+\algorithm
+{
+    \item for i to n
+    \begin{itemize}
+        \item for j to S
+        \begin{itemize}
+            \item OPT(i, j) = max(OPT(i - 1, j - s$_{i}$) + v$_{i}$, OPT(i - 1, j))
+        \end{itemize}
+    \end{itemize}
+}
+{
+    \item exercise to the reader
+}
+{
+    \item we do a constant time operation n * S times
+    \item O(nS)
+}
+
+
+\section{Largest Common Subsequence}
+Given 2 sequences from an alphabet of size n and m, we want to determine the 
+largest common subsequence (with holes allowed).
+ 
+Define OPT(i, j) = i letters from first sequence and j letters from second.
+
+
+\algorithm
+{
+    \item OPT(0, j), OPT(i, 0) = 0
+    \item for i to n
+    \begin{itemize}
+        \item for j to m
+        \begin{itemize}
+            \item if L[i] == R[j]
+            \begin{itemize}
+                \item OPT(i, j) = OPT(i - 1, j - 1) + 1
+            \end{itemize}
+            \item else
+            \begin{itemize}
+                \item OPT(i, j) = max(OPT(i - 1, j), OPT(i, j - 1))
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+}
+{
+    \item exercise to the reader
+}
+{
+    \item O(nm)
+}
+
+\section{Shortest Path with Negative Weight}
+We want to find the shortest paths in a graph to all nodes from a starting node, given that some weights are negative. We describe the Bellman-Ford Algorithm.
+ 
+Define OPT(s, v) as the shortest distance starting from node s to node v. ci is the weight of an edge.
+
+\algorithm
+{
+    \item for i to n -1
+    \begin{itemize}
+        \item for v$_{i}$ in V
+        \begin{itemize}
+            \item OPT(s, v$_{i}$) = min(OPT(s, w$_{i}$) + c$_{i}$), for all neighbors w$_{i}$ of v$_{i}$
+        \end{itemize}
+    \end{itemize}
+}
+{
+    \item exercise to the reader
+}
+{
+    \item for up to v - 1 iterations, for v vertices,  for up to n neighbors of a vertex, we perform a constant time operation
+    \item O( (v - 1) * v * n) = O((v - 1) * e) = O(ve)
+    \item O(ve)
+}
+
+\section{Curve Fitting}
+Given an error function and a set of points, we want to determine an optimal set of lines that minimize the error function.
+ 
+Define OPT(i) to be the optimal set of lines up to point i and ee,j to be the min error of any line from point i to point j. n is the number of points. C is an arbitrary cost for adding a line.
+
+\algorithm
+{
+    \item assume we have the error for all (i, j) pairs
+    \item for j to n
+    \begin{itemize}
+        \item for all i <= j, OPT(j) = min(e$_{i,j}$ + C + OPT(i - 1))
+
+    \end{itemize}
+}
+{
+    \item exercise to the reader
+}
+{
+    \item n * worst case n
+    \item O(n$^2$)
+}
+
+
+
+
+\chapter{Networks}
+\begin{figure}[ht]
+    \centering
+    \img{network.png}
+    \caption{A network from source S to sink T that has an edge of capacity C$_i$}
+\end{figure}
+
+A \textbf{network} is a weighted directed graph with a source node and sink node. Each edge weight corresponds to a \textbf{capacity}, or a maximum allowable flow of "stuff" along that edge.
+ 
+All edges point away from the source and towards the sink.
+ 
+\textbf{Flow} refers to "stuff" being sent along the network. In order to send f$_i$ goods along an edge, f$_i$ $\leq$ c$_i$ for all i. Flow must also be conserved at all points along the network. That is, the sum of flow into a node is equal to the sum of flow out of a node (except S and T). The flow on an edge must be $\leq$ the capacity of the edge and non-negative.
+ 
+We are interested in the max flow, of which there may be multiple solutions.
+ 
+A \textbf{bottleneck} is an edge that limits the max flow of a network. This is also referred to as the min cut.
+ 
+A \textbf{residual graph} for a flow f$_i$ contains the same node set but modifies forward edges with capacity c$_i$ - f$_i$ and adds backwards edges with capacity f$_i$. An \textbf{augmenting path} is a path along forward or backwards edges that has leftover capacity (more flow can be added to it).
+
+\section{Max Flow Problem}
+Given a network, we want to find the max possible flow along that network. We describe the Ford-Fulkerson Algorithm.
+
+\algorithm
+{
+    \item initially the flow is 0 on all edges in G
+    \item f is the overall flow
+    \item while there is an s-t path, P, in the residual graph G$_f$
+    \begin{itemize}
+        \item set f to be the resulting flow value after augmenting P
+        \item augmenting is when we take every edge and P and add bottleneck flow to it if it is a forward path and subtract bottleneck flow if it is backwards
+        \item set G$_f$ to the resulting graph after augmentation
+    \end{itemize}
+    \item return f
+}
+{
+    \item WTS: if 1 then 2, if 2 then 2, if 3 then 1. If true, then our algorithm produces an optimal solution.
+    \begin{enumerate}
+        \item Flow f is a max flow
+        \item There is no augmenting path in the residual graph G$_f$
+        \item |f| = capacity of some (S, T) cut of network
+    \end{enumerate}
+    \item if 1 then 2:
+    \begin{itemize}
+        \item by contradiction, assume there is an augmenting path 
+        \item take the flow f along this path and add 1
+        \item we have reached a contradiction, because f is not a max flow as stated in 1
+    \end{itemize}
+    \item if 2 then 3:
+    \begin{itemize}
+        \item an edge is saturated if f$_i$ = c$_i$
+        \item remove saturated edges
+        \item by 2, we know that there is no augmenting path 
+        \item treat the 2 disconnected components as 2 partitions
+        \item any cut edge therefore must be saturated 
+        \item therefore |f| = capacity of (S, T) cut since f$_i$ = c$_i$ (definition of edge saturation)
+    \end{itemize}
+    \item if 3 then 4:
+    \begin{itemize}
+        \item given cut with capacity C(ST)
+        \item |f| <= C(ST) for all ST cuts
+        \item no flow can be greater than a cut capacity
+        \item therefore if |f| = C(ST) for any ST cut, we know it must be a max flow
+        
+    \end{itemize}
+}
+{
+    \item O((v + e) * |f|) 
+    \item O(v + e) operation (DFS to find s-t path in residual graph), f times
+    
+}
+
+
+\section{Applications}
+Ford-Fulkerson can be applied in a variety of situations. Typically if we want to match one group to another group without violating any capacity requirements, Ford-Fulkerson is a good choice.
+\paragraph{Finding min cut in a network}
+\begin{itemize}
+    \item run Ford-Fulkerson and return resulting residual graph
+    \item let A be the set of all nodes reachable from S and B be the remaining nodes
+    \item the cut (A, B) is the min cut
+    \item this can be determined in O(f *(v + e)) time
+\end{itemize}
+
+\paragraph{Bipartite Matching Problem}
+\begin{itemize}
+    \item generate a network based on problem statement (add source and sink)
+    \item run Ford-Fulkerson
+    \item every edge with 1 flow represents a match
+    \item source edge capacity represents how many matches for each object on the left
+    \item sink edge capacity represents how many matches for each object on the right
+    
+\end{itemize}
+
+
+
+\chapter{NP Completeness}
+We know of many computationally difficult problems. For example:
+\begin{enumerate}
+    \item Traveling Salesman - given a set of points, minimize the total distance traveled while traveled to all points
+    \item Satisfiability - given a product of sums, is there an assignment of variables to 0 and 1 s.t. in each clause at least 1 variable is 1 (resulting in an overall true evaluation)
+    \item Finding Hamiltonian Paths - given a directed graph, we find a path that starts from a source and passes through every vertex in the graph
+\end{enumerate}
+Many of these problems can be made far easier if certain restrictions are applied to them. For example, the finding Hamiltonian Paths in a DAG can be done in O(v + e) time through an application of topological sort.
+
+\section{Polynomial Time Reductions}
+We can use problem transformation to prove NP completeness of a problem, given another problem that we know is NP complete.
+ 
+We say that Y $\leq_p$ X if Y is polynomial time transformable to X, that is it takes polynomial time to transform the input of Y so that it is able to be fed into X and likewise for output. This can also be read as "X is at least as hard as Y."
+ 
+If Y cannot be solved in polynomial time (it is NP complete), then X must also be NP complete, since it is at least as hard as Y.
+
+\paragraph{Proving NP completeness}
+\begin{itemize}
+    \item we know Y is NP complete
+    we want to show X is NP complete
+    \item if Y $\leq_p$ X, then X must be NP complete
+    \item so if we can show that the problem Y can be transformed in polynomial time to become X, then X is NP complete
+    
+\end{itemize}
+
+
+\section{Lower Bound Arguments (Sorting)}
+
+Given n numbers, we will have n! leaves in our decision tree.
+ 
+The height of a tree is log(q) where q is the number of leaves.
+So we have log(n!) height. approximates to nlogn.
+
+\end{document}

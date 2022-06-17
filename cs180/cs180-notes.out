@@ -1,0 +1,33 @@
+\BOOKMARK [0][-]{chapter.1}{Greedy Algorithms}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Famous Problem}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Stable Matching Problem}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{Interval Scheduling}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.4}{Moore's Voting Algorithm}{chapter.1}% 5
+\BOOKMARK [0][-]{chapter.2}{Graphs}{}% 6
+\BOOKMARK [1][-]{section.2.1}{Data Structure Representations}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.2}{Breadth First Search}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.3}{Depth First Search}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.4}{Graph Coloring}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.5}{Topological Sort}{chapter.2}% 11
+\BOOKMARK [1][-]{section.2.6}{Shortest Path Problem}{chapter.2}% 12
+\BOOKMARK [0][-]{chapter.3}{Minimum Spanning Trees}{}% 13
+\BOOKMARK [1][-]{section.3.1}{Prim's Algorithm}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.2}{Kruskall's Algorithm}{chapter.3}% 15
+\BOOKMARK [1][-]{section.3.3}{Union Find}{chapter.3}% 16
+\BOOKMARK [1][-]{section.3.4}{Clustering}{chapter.3}% 17
+\BOOKMARK [0][-]{chapter.4}{Divide and Conquer}{}% 18
+\BOOKMARK [1][-]{section.4.1}{Mergesort}{chapter.4}% 19
+\BOOKMARK [1][-]{section.4.2}{Inverted Pairs Problem}{chapter.4}% 20
+\BOOKMARK [1][-]{section.4.3}{Closest Points Problem}{chapter.4}% 21
+\BOOKMARK [0][-]{chapter.5}{Dynamic Programming}{}% 22
+\BOOKMARK [1][-]{section.5.1}{Weighted Interval Scheduling}{chapter.5}% 23
+\BOOKMARK [1][-]{section.5.2}{Knapsack Problem}{chapter.5}% 24
+\BOOKMARK [1][-]{section.5.3}{Largest Common Subsequence}{chapter.5}% 25
+\BOOKMARK [1][-]{section.5.4}{Shortest Path with Negative Weight}{chapter.5}% 26
+\BOOKMARK [1][-]{section.5.5}{Curve Fitting}{chapter.5}% 27
+\BOOKMARK [0][-]{chapter.6}{Networks}{}% 28
+\BOOKMARK [1][-]{section.6.1}{Max Flow Problem}{chapter.6}% 29
+\BOOKMARK [1][-]{section.6.2}{Applications}{chapter.6}% 30
+\BOOKMARK [0][-]{chapter.7}{NP Completeness}{}% 31
+\BOOKMARK [1][-]{section.7.1}{Polynomial Time Reductions}{chapter.7}% 32
+\BOOKMARK [1][-]{section.7.2}{Lower Bound Arguments \(Sorting\)}{chapter.7}% 33

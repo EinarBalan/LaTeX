@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+        \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{element} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{a}\PYG{p}{):}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{element}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,124 @@
+\documentclass[]{report}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{xcolor}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage[parfill]{parskip}
+
+\usepackage{listings} % code highlighting
+\definecolor{commentcolor}{rgb}{0,0.6,0}
+\definecolor{numbercolor}{rgb}{0.5,0.5,0.5}
+\definecolor{strcolor}{rgb}{0.58,0,0.82}
+\definecolor{backcolor}{rgb}{0.97,0.97,0.97}
+\definecolor{keywordcolor}{HTML}{ff3856}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolor},   
+    commentstyle=\color{commentcolor},
+    keywordstyle=\color{keywordcolor},
+    numberstyle=\tiny\color{numbercolor},
+    stringstyle=\color{strcolor},
+    basicstyle=\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+\newcommand \kw[1]{{\textbf{#1}}}
+\newcommand \img[1]{\includegraphics[width=0.5\linewidth]{#1}}
+
+\begin{document}
+
+\chapter{Hello world.}
+
+You can convert this tex file to a pdf using \kw{pdflatex first.tex}.
+
+\section{Make changes}
+
+See changes on the fly. \emph{See changes on the fly.} See changes on the fly. See changes on the fly.\footnote[1]{This is a footnote}
+\textbf{See changes \textit{on} the fly.}
+
+\lipsum[1-5]
+
+\paragraph{Algorithm}
+\begin{enumerate}
+    \item ipsum
+    \item dolar
+    \item sit amet 
+\end{enumerate}
+
+\begin{figure}
+    \centering
+    \img{hankwhore.jpeg}
+    \caption[]{Hank does not appreciate infidelity.}
+\end{figure}
+
+\lipsum[6]
+
+\chapter{Lists}
+
+In \LaTeX, we can create both ordered and unorderded lists. You can also have nested lists!
+
+
+\paragraph{Ordered}
+\begin{enumerate}
+    \item first
+    \item second
+    \begin{enumerate}
+        \item nested
+    \end{enumerate}
+    \item third
+\end{enumerate}
+
+\paragraph{Unordered}
+\begin{itemize}
+    \item first
+    \item second
+    \begin{itemize}
+        \item nested
+    \end{itemize}
+    \item third
+\end{itemize}
+
+\chapter{Mathematics and Code}
+
+\section{Math}
+In \LaTeX, we can very easily add math and code blocks. Inline math can be inserted as follows (we can achieve it by wrapping it with \$): $a^{2} + b^{2} = c^{2}$. We can also have display math.
+\[
+    x = \frac{-b \pm \sqrt{b^{2} - 4ac}}{2a}
+\]
+The above is the quadratic formula. Do you remember the song?
+
+We can do cool stuff such as integrals too.
+\[
+  \int_{-\infty}^{+\infty} e^{x} \, dx
+\]
+How about summations?
+\[
+  \sum_{i=0}^{n} i \, = \frac{n(n-1)}{2}
+\]
+
+\section{Code}
+We can also have code blocks.
+
+\begin{lstlisting}[language=Python]
+for i, element in enumerate(a):
+    print(i, element)
+    count += 5
+\end{lstlisting}
+
+You can also import from a file!
+\lstinputlisting[language=Python]{../create-file.py}
+
+\end{document}
+
