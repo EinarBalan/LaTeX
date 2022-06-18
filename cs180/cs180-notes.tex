@@ -850,7 +850,7 @@ Given a network, we want to find the max possible flow along that network. We de
     \item return f
 }
 {
-    \item WTS: if 1 then 2, if 2 then 2, if 3 then 1. If true, then our algorithm produces an optimal solution.
+    \item WTS: if 1 then 2, if 2 then 3, if 3 then 1. If true, then our algorithm produces an optimal solution.
     \begin{enumerate}
         \item Flow f is a max flow
         \item There is no augmenting path in the residual graph G$_f$
@@ -871,7 +871,7 @@ Given a network, we want to find the max possible flow along that network. We de
         \item any cut edge therefore must be saturated 
         \item therefore |f| = capacity of (S, T) cut since f$_i$ = c$_i$ (definition of edge saturation)
     \end{itemize}
-    \item if 3 then 4:
+    \item if 3 then 1:
     \begin{itemize}
         \item given cut with capacity C(ST)
         \item |f| <= C(ST) for all ST cuts
@@ -916,7 +916,7 @@ We know of many computationally difficult problems. For example:
     \item Satisfiability - given a product of sums, is there an assignment of variables to 0 and 1 s.t. in each clause at least 1 variable is 1 (resulting in an overall true evaluation)
     \item Finding Hamiltonian Paths - given a directed graph, we find a path that starts from a source and passes through every vertex in the graph
 \end{enumerate}
-Many of these problems can be made far easier if certain restrictions are applied to them. For example, the finding Hamiltonian Paths in a DAG can be done in O(v + e) time through an application of topological sort.
+Many of these problems can be made far easier if certain restrictions are applied to them. For example, finding Hamiltonian Paths in a DAG can be done in O(v + e) time through an application of topological sort.
 
 \section{Polynomial Time Reductions}
 We can use problem transformation to prove NP completeness of a problem, given another problem that we know is NP complete.
