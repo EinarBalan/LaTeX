@@ -1,2 +1,156 @@
-\chapter{Introduction}
-Hello world. 
+\chapter{Set Theory and Random Variables}
+
+\section{Probabilistic Sets}
+A random event, E, has more than 1 possible outcome in the sample space S. S is the collection of all possible event outcomes. We know that E $\subset$ S.
+
+\begin{example}
+    Number in dice roll
+    \[S = \{1, 2, 3, 4, 5, 6\}\]
+    \[E_{odd} = \{1, 3, 5\}\]
+    \[E_{>3} = \{4, 5, 6\}\]
+\end{example}
+
+\subsection*{Operations}
+We can apply several operations to our sets.
+
+\begin{enumerate}
+    \item Union, denoted $E_1 \cup E_2$
+    \item Intersection, denoted $E_1 \cap E_2$ or $E_1E_2$
+\end{enumerate}
+
+\vspace{.5cm}
+
+Consider $E_{odd}$ and $E_{>3}$ above.
+
+\[E_{odd} \cup E_{>3} = \{1, 3, 4, 5, 6\}\]
+\[E_{odd} \cap E_{>3} = \{5\}\]
+
+These operations are commutative, associate, and distributive. Intersection has precedence over union. 
+
+\vspace{.5cm}
+
+\subsection*{Special Events}
+\begin{itemize}
+    \item S is the event the spans the entire sample space
+    \item $\varnothing$ is the null event, it has no outcomes
+    \item if $E_1$ and $E_2$ are mutually exclusive, $E_1E_2 = \varnothing$
+    \item if $E_1$ and $E_2$ are collectively exhaustive, $E_1 \cup E_2 = S$
+    \item  $\overline{E_1} = S - E_1$, the complement\footnote[1]{Demorgan's Laws hold} of $E_1$  
+\end{itemize}
+
+\vspace{2cm}
+
+\subsection*{Frequentist Probability (Natural Variation)}
+The probability of occurrence of E is the relative frequency of observations of E ina large number of repeated experiments. Put more formally below,
+\[
+    P(E) = \lim_{N\rightarrow\infty}\frac{n}{N} \text{, where n = occurences of E in N observations in S}
+\]
+
+
+\subsection*{Bayesian Probability (Incomplete Knowledge)}
+The probability of an event E represents analysts' degree of belief that E will occur.
+
+\vspace{.5cm}
+
+\begin{center}
+\begin{tabular}{p{5cm}|p{5cm}}
+    Frequentist Probability & Bayesian Probability \\
+    \hline
+    probability of expecting a ground shaking intensity of 1g in next 100 years & probability of finding water on new planet \\
+    \addlinespace
+    max wind speed in a year & probability that a buidling will collapse under ground shaking intensity of 1g \\
+    \addlinespace
+    live load on a building & election results \\
+    \addlinespace
+    *based on previous observations & *not based on previous observations \\
+    \addlinespace
+    *cannot be reduced through more measurement & *can be reduced if more observations/measurements applied
+\end{tabular}
+\end{center}
+
+\section{Axioms}
+\begin{enumerate}
+    \item $0 \le P(E) \le 1$
+    \item  $P(S) = 1$
+    \item $P(A \cup B) = P(A) + P(B)$, s.t. $AB = \varnothing$
+\end{enumerate}
+* these axioms are consistent with Frequentist probability
+
+We can derive several rules from these axioms.
+\begin{enumerate}
+    \item $P(\overline{E}) = 1 - P(E)$
+    \item $P(\varnothing) = 0$
+    \item $P(E_1 \cup E_2) = P(E_1) + P(E_2) - P(E_1E_2)$
+    \begin{itemize}
+        \item if $E_1$ and $E_2$ are mutually exclusive, then we double count their intersection when using the 3rd axiom; subtracting it leads to the correct value
+        \item what if we have > 2 events? Inclusion/Exclusion rule 
+        \item $P(E_1 \cup E_2 \cup ... \cup E_n) =$ \[
+             \sum_{i=1}^{n}P(E_i) - \sum_{i=1}^{n}\sum_{j=1}^{i-1}P(E_iE_j) + \sum_{i=1}^{n}\sum_{j=1}^{i-1}\sum_{k=1}^{j-1}P(E_iE_jE_k) + ... + (-1)^{n-1}P(E_1E_2...E_n)
+            \]
+    \end{itemize}
+\end{enumerate}
+
+\pagebreak
+
+\subsection*{Conditional Probability}
+We may want to determine the probability of an event given another event is guaranteed to occur. This is denoted $P(E_1 | E_2)$, which is read as $E_1$ given $E_2$. It essentially redefines the sample space to be $E_2$.
+
+
+\begin{equation}
+    P(E_1 | E_2) = \begin{cases}
+        \frac{P(E_1E_2)}{P(E_2)} & P(E_2) > 0 \\
+        0 & P(E_2) = 0
+    \end{cases}
+\end{equation}
+
+From this equation, it follows that
+\[
+    P(E_1E_2) = P(E_1 | E_2)P(E_2)
+\]
+
+This holds in general for n events.
+\[
+    P(E_1E_2E_3) = P(E_1 | E_2E_3)P(E_2E_3)
+                 = P(E_1 | E_2E_3)P(E_ 2 | E_3)P(E_3)
+\]
+
+\begin{example}
+    Applying conditions to operations
+
+    \[
+        P(E_1 \cup E_2 | E_3)  = P(E_1 | E_3) + P(E_2 | E_3) - P(E_1E_2 | E_3)
+    \]
+
+    \[
+        P(E_1E_2 | E_3)  = P(E_1|E_2|E_3)P(E_2|E_3) \text{, which follows from (1.1)}
+    \]
+\end{example}
+
+\vspace{.5cm}
+
+\subsection*{Independence}
+Two events are indpendent iff $P(E_1|E_2) = P(E_1)$
+
+We have mutual independence if $P(E_1E_2...E_n) = P(E_1)P(E_2)...P(E_n)$.
+
+\vspace{.5cm}
+
+\subsection*{Theorem of Total Probability}
+Consider an event A and a set of of mutually exclusive and collectively exhaustive events $E_1, E_2, ..., E_3$.
+
+\begin{equation}
+    P(A) = \sum_{i=1}^nP(A|E_i)P(E_i)
+\end{equation}
+
+\vspace{.5cm}
+
+\vspace{.5cm}
+
+\subsection*{Bayes' Rule}
+Consider an event A and a set of of mutually exclusive and collectively exhaustive events $E_1, E_2, ..., E_3$ in S.
+
+\begin{align*}
+    P(AE_j) = P(E_j|A)P(A) = P(A|E_j)P(E_j) \\
+    P(E_j|A) = \frac{P(A|E_j)P(E_j)}{P(A)}\\
+    P(E_j|A) = \frac{P(A|E_j)P(E_j)}{\sum_{i=1}^nP(A|E_i)P(E_i)}
+\end{align*}

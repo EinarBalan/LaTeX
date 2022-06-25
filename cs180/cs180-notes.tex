@@ -252,7 +252,7 @@ If nodes i and j are connected, then M[i][j] = 1 otherwise it is 0.
 
 \begin{itemize}
     \item O(1) to check if two vertices are neighbors.
-    \item O(n) to traverse all neighbors (to find al ledges adjacent to a given vertex).
+    \item O(n) to traverse all neighbors (to find all edges adjacent to a given vertex).
     \item Works better for dense graphs with many edges
 \end{itemize}
 
@@ -928,7 +928,7 @@ If Y cannot be solved in polynomial time (it is NP complete), then X must also b
 \paragraph{Proving NP completeness}
 \begin{itemize}
     \item we know Y is NP complete
-    we want to show X is NP complete
+    \item we want to show X is NP complete
     \item if Y $\leq_p$ X, then X must be NP complete
     \item so if we can show that the problem Y can be transformed in polynomial time to become X, then X is NP complete
     
