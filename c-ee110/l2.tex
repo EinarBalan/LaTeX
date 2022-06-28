@@ -1,0 +1,98 @@
+\chapter{Random Variables}
+A \kw{random variable} is a variable whose specific value cannot be predicted with certaintiy before an experiement. They take on a numerical value for each possible event in the sample space.
+
+\begin{example}
+    Random variables are easy to define. For example,
+    \begin{itemize}
+        \item X = magnitutde of a future earthquake
+        \item Y = yield stress of a material
+        \item Z = peak wind pressure during a given year
+    \end{itemize}
+\end{example}
+
+For a random variable $X$, its outcomes are denoted $x_1, x_2, \ldots, x_n$. For an outcome $x_i$, we denote the probability of that outcome as $P(X = x_i)$.
+
+\section{Discrete Random Variables}
+A random variable is called \kw{discrete} if the number of outcomes is countable. For example, for X = the number of cars on a bridge at a certain time, X is discrete.
+
+Distributions of discrete random variables can be quantified in 2 ways.
+\begin{enumerate}
+    \item Probability Mass Function
+    \[
+        p_X(x_i) = P(X = x_i)
+    \]
+    \begin{center}
+        \img{./img/PMF.png}
+    \end{center}
+
+    \item Cumulative Distribution Function
+    \[
+        F_X(x_i) = P(X \le x_i)
+    \]
+    \begin{center}
+        \img{./img/CDF.png}
+    \end{center}
+\end{enumerate}
+
+Intuitively, adding up $p_X(x_i)$ for all i is equal to $F_x(a)$.
+\[
+    F_X(a) = \sum_{\text{all } x_i \le a} p_X(x_i)
+\]
+
+\subsubsection*{Rules of Discrete Random Variables}
+\begin{itemize}
+    \item $0 \le p_X(x_i) \le 1$
+    \item $\sum_{\text{all } x_i} p_X(x_i) = 1$
+    \item $F_X(-\infty) = 0$
+    \item $F_X(+\infty) = 1$
+    \item $F_X(b) \ge F_X(a) \text{ if } b \ge a$
+\end{itemize}
+All of these rules are fairly intuitive. For example, the probability of any event must be between 0 and 1. Additionally, the sum of all events in a sample space must be 1. 
+
+\section{Continuous Random Variables}
+Random variables are said to be \kw{continuous} if they can take on any real value. As a result, there are $\infty$ possible values for a random variable X. It follows that
+
+\[
+    P(X = x_i) = \frac{1}{\infty} = 0 \text{, for all } i
+\]
+
+We can describe the distribution of continuous random variables in 2 ways.
+\begin{enumerate}
+    \item Probability Density Function
+    \[ 
+        f_X(x_i)dx = P(x_i < X < x_i + dx)
+    \]
+    \begin{center}
+        \img{./img/PDF.png}
+    \end{center}
+
+    We know that occurences in different intervals are mutually exclusive, so it follows that
+    \[
+        P(a < X \le b) = \int_a^bf_X(x)dx
+    \]
+    \item Cumulative Distribuion Function
+    \[
+        F_X(x_i) = P(X \le x_i)  
+    \]
+    \begin{center}
+        \img{./img/CDF2.png}
+    \end{center}
+    Additionally,
+    \[
+        F_X(x_i) = P(X \le x_i) = \int_{-\infty}^{+\infty} f_X(u)du
+    \]
+
+    and it follows from the Fundamental Theorem of Calculus that
+    \[
+        f_X(x) = \frac{d}{dx}F_X(x)
+    \]
+\end{enumerate}
+
+\subsubsection*{Rules of Continuous Random Variables}
+\begin{itemize}
+    \item $f_X(x) \ge 0$
+    \item $\int_{-\infty}^{+\infty}f_X(x)dx = 1 = S$
+    \item $F_X(-\infty) = 0$
+    \item $F_X({}\infty) = 1$ 
+    \item $F_X(b) \ge F_X(a) \text{ if } b \ge a$
+\end{itemize}
