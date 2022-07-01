@@ -79,7 +79,7 @@ We can describe the distribution of continuous random variables in 2 ways.
     \end{center}
     Additionally,
     \[
-        F_X(x_i) = P(X \le x_i) = \int_{-\infty}^{+\infty} f_X(u)du
+        F_X(x_i) = P(X \le x_i) = \int_{-\infty}^{x_i} f_X(u)du
     \]
 
     and it follows from the Fundamental Theorem of Calculus that
@@ -96,3 +96,104 @@ We can describe the distribution of continuous random variables in 2 ways.
     \item $F_X({}\infty) = 1$ 
     \item $F_X(b) \ge F_X(a) \text{ if } b \ge a$
 \end{itemize}
+
+Some of these rules hold in both the discrete and the continuous case.
+
+\section{Joint Random Variables}
+
+Sometime it is useful to consider the probabilistic relationship between two random variables. This is called the joint probability. Just as before, we can use 2 methods to describe the joint distribution of continuous random variables.
+\begin{enumerate}
+    \item Joint Probability Density Function
+    \[
+        f_{X,Y}(x, y)dxdy = P(x < X \le x + dx \cap y < Y \le y + dy) 
+    \]
+    Similarly to single PDF's, we can find the probability of X and Y within a certain region as follows.
+    \[
+        P(a < X \le b \cap c < Y \le d) = \int_a^b\int_c^d f_{X, Y}(u, v)dudv
+    \]  
+
+    Two conditions must hold for joint PDF's
+    \begin{enumerate}
+        \item $f_{X, Y}(x, y) \ge 0$
+        \item $\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty} f_{X, Y}(u, v)dudv$
+    \end{enumerate}
+
+    \vspace{1cm}
+
+    \item Joint Cumulative Distribution Function
+    \[
+        F_{X, Y}(x, y) = P(X \le x \cap Y \le y) = \int_{-\infty}^{x}\int_{-\infty}^y f_{X, Y}(u, v)dudv
+    \]
+    And just as in the single variable case, the Fundamental Theoreom of Calculus can be applied to obtain  
+    \[
+        f_{X,Y}(x, y) = \frac{\delta^2}{\delta x\delta y} F_{X,Y} (x, y)
+    \]  
+\end{enumerate}
+
+\subsubsection*{Marginal Distributions}
+Given the joint distribution of X and Y, we can obtain the distributions of X alone or Y alone. This is called the marginal distribution.
+
+\[
+    f_X(x) = \int_{-\infty}^{+\infty}f_{X, Y}(x, y)dy
+\]
+
+This follows from the fact that the the distribution of y from $-\infty$ to $+\infty$ is 1 and the intersection of any value with 1 is the original value. 
+
+The same style of manipulation can be performed in order to obtain the marginal CDF.
+
+\[
+    F_X(x) = F_X(x, \infty)
+\]
+
+\subsubsection*{Conditional Probability Distributions}
+Conditional probability distributions are used to determine the probability of a variable given the value of another variable. Put another way, $P(X | Y)$.
+
+For continuous random variables, the conditional PDF is
+\[
+    f_{X|Y}(x|y) = \frac{f_{X,Y}(x, y)}{f_Y(y)}
+\]
+
+The cumulative PDF is
+\[
+    F_{X|Y}(x|y) = \int_{-\infty}^{x}f_{X|Y}(u|y)du
+\]
+
+\subsubsection*{Independence}
+Similar independence rules hold for random variables as in the case of events.
+
+Specifically, X and Y are said to be independent if
+\[
+    f_{X|Y}(x| y) = f_X(x) \text{   }\forall y
+\]
+
+The following are equivalent to the above statement
+\begin{itemize}
+    \item $f_{Y|X}(y|x) = f_Y(y)$
+    \item $f_{X,Y}(x, y) = f_X(x)f_Y(y)$
+    \item $F_{X|Y}(x| y) = F_X(x) $
+    \item $F_{Y|X}(y|x) = F_Y(y)$
+    \item $F_{X,Y}(x, y) = F_X(x)F_Y(y)$
+\end{itemize}
+
+We often assume independence in order to simplify calculations.
+
+\subsection*{Joint Discrete Random Variables}
+The rules for joint distributions also apply to discrete random variables. 
+
+Specifically,
+
+\[
+  p_{X, Y} = P(X = x \cap Y = y)
+\]
+
+\[
+    p_{X|Y} = \frac{p_{X,Y}(x, y)}{p_Y(y)}
+\]
+
+\[
+    p_X(x) = \sum_{\text{all } y_i} p_{X, Y}(x, y_i)
+\]
+
+\[
+    p_{X|Y}(x|y) = p_X(X) \text{ given X and Y are independent}
+\]
