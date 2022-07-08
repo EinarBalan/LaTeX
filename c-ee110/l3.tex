@@ -1,0 +1,134 @@
+\chapter {Expectations and Moments}
+Sometimes, it is convenient to use measures that describe the general features of a probability distribution, such as central location, breadth, and skewness. These features are called the \kw{moments} of a random variable.
+
+\section{Expectations}
+Below we will explore several measures of central tendency as well has uncertainty.
+
+\subsubsection*{Central Tendency}
+The most common of the central tendency measures is the \kw{mean}, denoted as $\mu_x$ or $E[X]$. For discrete variables, it is calculated as follows
+\[
+    \mu_x = \sum_{\text{all } i} x_i p_X(x_i) 
+\]
+
+The continuous analog is 
+\[
+    \mu_x = \int_{\text{all } x} xf_X(x)dx
+\]
+
+Another central tendency measure is the \kw{median}, denoted $x_{0.5}$. The median is defined as the as the value of X such that there is an equal probability that a random variable will fall below or above the value. It can be calculated using the CDF.
+\[
+    F_X(x_{0.5}) = 0.5
+\]
+
+A final measure is the \kw{mode}, denoted $\tilde{x}$. The value of the mode is the value which has the highest probability density, and there can be more than one. It can be calculated by finding the global maxima of the PDF function.
+
+Generally the mode, median, and mean hold different values for an asymmetric probability distribution. 
+
+\subsubsection*{Uncertainty}
+The most common measure of uncertainty is the \kw{variance}, denoted $var[X]$ or $\sigma_X^2$. The discrete case is below
+
+\[
+    \sigma_X^2 = \sum_{\text{all }i}(x_i - \mu_X)^2p_X(x_i)  
+\]
+
+And the continuous case follows a similar idea
+
+\[ 
+    \sigma_X^2 = \int_{\text{all } x}(x - \mu_X)^2f_X(x)dx
+\]
+
+The square root of the variance is the \kw{standard deviation}, denoted $\sigma_X$. This measure is generally more preferable than variance when reporting results due to the fact that it has the same units as the random variable (whereas the variance has the square of the original units).
+
+Another option for measuring uncertainty is a unitless value called the \kw{Coefficient of Variation}. This is denoted $\delta_X$.
+
+\[
+    \delta_X = \frac{\sigma_X}{|\mu_X|}
+\]
+
+This measure is useful for comparing random variables with different means, but does not work well when the mean is 0. It works best when the standard deviation is less than the mean.
+
+\subsection*{Expectation Operator}
+Means and variances are special cases of the expectation operator. The expectation of g(X) is defined as 
+
+\[
+    E[g(X)] = \sum_{\text{all } i}g(x_i)p_X(x_i)
+\]
+
+\[
+    E[g(X)] = \int_{\text{all } x}g(x)f_X(x)dx
+\]
+
+By inspection, we can see that the mean is the case when $g(X) = X$ and the variance is the case when $g(X) = (X - \mu_X)^2$
+
+\subsubsection*{Properties of Expectations}
+\begin{itemize}
+    \item $E[g_1(X) + g_2(X)] = E[g_1(X)] + E[g_2(X)]$
+    \item $E[cX] = cE[X]$
+    \item $E[c] = c$
+    \item $E[a + bx] = a + bE[x]$
+    \item $var[cX] = c^2var[X]$
+\end{itemize}
+
+These all follow from the linearity property of integrals and summations.
+
+\section{Moments}
+Given a function $X^m$, $E[X^m]$ is called the m$^\text{th}$ moment of X. The first few moments provide useful information about the distribution of X.
+
+The function $(X - \mu_X)^m$ provides the central moments of X. When $m = 2$, this gives us the variance. When $m = 3$ and it is normalized by the standard deviation, we have a new measure called the \kw{Coefficent of Skewness}.
+
+\[
+    \gamma = \frac{E[(X-\mu_X)^3]}{\sigma_X^3}  
+\]
+
+Positive values of $\gamma$ indicate right skew while negative indicate left skew. The skew of data indicates the direction of a "long tail." The closer $\gamma$ is to 0, the closer we are to a symmetric distribution.
+
+When the 4$^\text{th}$ central moment is normalized by $\sigma_X$, we have the \kw{Kurtosis Coefficient}, denoted $\kappa$. It is a measure of the length of the "tail" in the distribution.
+
+\subsection*{Joint Moments}
+Joint moments can provide useful information about multiple random variables. The \kw{covariance}, or the joint central moment of 2 random variables is computed
+
+\[
+    \sigma_{X, Y} = E[(X - \mu_X)(Y - \mu_y)] = \int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty} (x - \mu_X)(y - \mu_y)f_{X, Y}(x, y)dxdy
+\]
+
+The covariance is a measure of the linear dependence between 2 variables. Using the linearity of the expectation operator we derive
+
+\[
+    \sigma_{X, Y} = E[(X - \mu_X)(Y - \mu_Y)] = E[XY] - \mu_X\mu_Y
+\]
+
+\subsubsection*{Properties of Covariance}
+\begin{itemize}
+    \item the covariance of X with itself is equal to the variance of X
+    \item $|\sigma_{X,Y}| \le \sqrt{\sigma_X^2\sigma_Y^2}$
+\end{itemize}
+
+Note: the covariance of X and Y is sometimes denoted Cov[X, Y].
+
+If we normalize the covariance, we get the \kw{correlation coefficent}.
+
+\[
+    \rho_{X,Y} = \frac{\sigma_{X, Y}}{\sigma_X \sigma_Y}
+\]
+
+The correlation coefficent is a dimensionless measure of linear dependence. When it equals 0, X and Y are said to be uncorrelated. 
+
+It is important to note that if X and Y are independent, they are uncorrelated but the reverse is not necessarily true. If X and Y are uncorrelated this does not imply independence. Two variables are independent if and only if P(A|B) = P(A).
+
+\section{Using Empirical Data}
+Probability Theory does not require real data. However, in our engineering applications of these tools we typically need to make use of observed data when creating our models. We need ways to organize and present our data so that it can be used effectively. These ideas fall under statistics rather than probability (recall that statistics is the field that treats past data while probability can be used to predict future events).
+
+\subsubsection*{Empirical CDF}
+\[
+    y_i = \frac{\text{No. of observations }\le x}{\text{Total no. of observations}}  
+\]
+
+\subsubsection*{Numerical Summaries}
+Sample mean, median, and mode follow the typical definitions. That is the mean is the sum of all values divided by the number of values, the median is the middle value, and the mode is the most common value.
+
+A measure of the variability of a sample is the sample variance, computed as follows:
+\[
+    s_x^2 = \frac{1}{n - 1} \sum_{i = 1}^{n}(x_i - \bar{x})^2
+\]
+
+Sample covariance and coefficent of correlation can be deduced in the same way.

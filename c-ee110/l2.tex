@@ -1,10 +1,10 @@
 \chapter{Random Variables}
-A \kw{random variable} is a variable whose specific value cannot be predicted with certaintiy before an experiement. They take on a numerical value for each possible event in the sample space.
+A \kw{random variable} is a variable whose specific value cannot be predicted with certainty before an experiment. They take on a numerical value for each possible event in the sample space.
 
 \begin{example}
     Random variables are easy to define. For example,
     \begin{itemize}
-        \item X = magnitutde of a future earthquake
+        \item X = magnitude of a future earthquake
         \item Y = yield stress of a material
         \item Z = peak wind pressure during a given year
     \end{itemize}
@@ -150,12 +150,12 @@ Conditional probability distributions are used to determine the probability of a
 
 For continuous random variables, the conditional PDF is
 \[
-    f_{X|Y}(x|y) = \frac{f_{X,Y}(x, y)}{f_Y(y)}
+    f_{X|Y}(x|y) = P(X = x | Y = y) = \frac{f_{X,Y}(x, y)}{f_Y(y)}
 \]
 
-The cumulative PDF is
+The conditional CDF is
 \[
-    F_{X|Y}(x|y) = \int_{-\infty}^{x}f_{X|Y}(u|y)du
+    F_{X|Y}(x|y) = P(X \le x | Y = y) = \int_{-\infty}^{x}f_{X|Y}(u|y)du 
 \]
 
 \subsubsection*{Independence}
