@@ -1,0 +1,75 @@
+\chapter{Probability Models}
+Up to this point, we have discussed general probability distributions. Now, we will discuss several specific probability distributions that are useful.
+
+\section*{Bernoulli Distribution} 
+The simplest scenario deals with a single trial that has a binary result, that is either a success or failure. For example, flipping a coin once.
+
+Given a random variable X with x = \{0, 1\}, the PMF is 
+\[
+    p_X(x) = \begin{cases}
+        p & x = 1 \\
+        1 - p & x = 0 \\
+    \end{cases}
+\]
+
+Some more values of interest:
+\begin{itemize}
+    \item Mean: $E[X] = p$
+    \item Variance: $Var[X] = (1-p)p$
+\end{itemize}
+
+\section*{Binomial Distribution of Bernoulli Sequence} 
+We can repeat the above scenario for multiple trials. Give probability p of success for each trial and that each trial is independent, the number of successes for n trials is said to have a binomial distribution.
+
+The PMF for n trials and probability p for each is 
+\[
+    p_X(x) = {n \choose p} p^x (1 - p)^{n-x}
+\]
+
+Some more values of interest:
+\begin{itemize}
+    \item Mean: $E[X] = np$
+    \item Variance: $Var[X] = np(1-p)$
+    \item Standard Deviation: $\sigma_X = \sqrt{np(1-p)}$ 
+    \item Coefficient of Variation: $\delta_X = \sqrt{\frac{1-p}{np}}$
+    \item Skewness Coefficient: $\gamma_X = \sqrt{\frac{1-2p}{np(1-p)}}$ 
+\end{itemize}
+
+\section*{Geometric Distribution}
+Sometimes we want to know the probability of n failed trials before success. In other words, we want to know when the first sucess will occur. This is described by the geometric distribution.
+
+This is given by 
+\[
+    p_N(n) = p (1-p)^{n-1}
+\]
+
+and the CDF 
+\[
+    F_N(n) = 1 - (1-p)^n
+\]
+
+Some more values of interest:
+\begin{itemize}
+    \item Mean: $\mu_x = \frac{1}{p}$
+    \item Standard Deviation: $\sigma_N = \frac{\sqrt{1-p}}{p}$ 
+    \item Coefficient of Variation: $\delta_N = \sqrt{1-p}$
+\end{itemize}
+
+\section*{Summary}
+\begin{itemize}
+    \item \kw{Bernoulli Distribution}: a single trial where the outcome is either a success or a failure
+    \begin{itemize} 
+        \item the total number of successes, $x$, in $n$ trials has a \kw{binomial distribution} 
+        \item the trial number, $N$, at which the first success occurs follows a \kw{geometric distribution}
+        \item the trial number, $W_k$, at which the kth success occurs follows a \kw{negative binomial distribution}
+    \end{itemize}
+    \item \kw{Poisson Distribution}: describes a random function w/ parameter lambda whose value at time $t$ is number of incidents that have occured since $t = 0$; the parameter $v$ represents the expected number of events in the period $t$ and $\lambda$ is the rate of success per unit time
+    \begin{itemize}
+        \item time to the first occurence of an event is represented by the \kw{exponential distribution}
+        \item time to the kth occurence of an event is represented by the \kw{gamma distribution}
+    \end{itemize}
+\end{itemize}
+\vspace{1cm}
+\begin{center}
+    \img{./img/bernoullivspoisson.png}
+\end{center}
