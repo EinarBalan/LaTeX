@@ -1,0 +1,90 @@
+\chapter{Computation and Representation}
+
+\kw{Major Idea}: What can we compute? What does it mean to compute?
+
+\vspace*{0.5cm}
+
+There are two aspects of computing: 
+\begin{enumerate}
+    \item Data (Representations of Objects)
+    \begin{itemize}
+        \item We can represent numbers in many ways i.e. roman numerals or the place-value system we are familiar with today
+        \item Some representations are easier to work with than others -- to convey the distance to the moon in Roman numerals would fill a small book
+        \item Clearly choosing the right representation can have a \emph{dramatic} effect on computation
+    \end{itemize}
+    \item Algorithms (Operations on Data)
+    \begin{itemize}
+        \item In general, there is more than one way to accomplish the same task; some better than others
+        \item To multiply, we can either perform repeated additions or the typical gradeschool multiplication algorithm
+        \item Gradeschool multiplication is far more efficient as an $O(n^2)$ algorithm compared the to the exponential nature of repeated addition
+        \item Choosing the right algorithm is also incredibly important to computation 
+    \end{itemize}
+\end{enumerate}
+\kw{Takeaway}: It is important to utilize both a good data represntation and a good algorithm in all computing tasks.
+
+\vspace*{0.5cm}
+
+\kw{Representations}
+\begin{itemize}
+    \item In general we can represent many objects as a sequence of 0's and 1's. Anything from images, text, video, audio, databases, etc. can be encoded in binary.
+    \item BIG IDEA: We can compose representations in order to represent any object i.e. if you can represent objects of type T, then you can also represent lists of that object
+\end{itemize}
+
+\begin{definition}
+    Representation, where E is one-to-one
+    \[
+    E: O \rightarrow \{ 0,1 \}^*
+    \] 
+\end{definition}
+
+\begin{example}
+    Represent natural numbers $E: N \rightarrow \{ 0, 1\}^*$
+
+    Couple options:
+    \begin{itemize}
+        \item Unary: E(n) = 0000...0 (n + 1 zeroes)
+        \item Binary: Standard binary encoding defined as follows
+        \begin{equation}
+            NtoB(n) =
+            \begin{cases}
+                0 & \text{if } n = 0\\
+                1 & \text{if } n = 1\\
+                NtoB(\lfloor \frac{n}{2} \rfloor)\circ(n \% 2) & \text{else}
+            \end{cases}
+        \end{equation}
+        \item We know an encoding E is valid iff there exists a decoding function s.t. $D: \{0, 1\}^* \rightarrow O$ and $D(E(x)) = x$
+    \end{itemize}
+\end{example}
+
+\begin{example}
+    $E: Z \rightarrow \{0,1\}^*$
+    \begin{equation}
+        ZtoB(n) =
+        \begin{cases}
+            0 \circ NtoB(n) & \text{if } n >= 0\\
+            1 \circ NtoB(-n) & \text{else}\\
+        \end{cases}
+    \end{equation}
+\end{example}
+
+\begin{example}
+    Represent rational numbers $E: Q \rightarrow \{0,1\}^*$
+    \begin{itemize}
+        \item We know we can represent any rational number with a fraction i.e. a pair of numbers
+        \item So if we can find a way to encode two numbers in a one-to-one way, we can represent any rational number
+        \item Suggestions
+        \begin{enumerate}
+            \item Unary(p) $\circ$ 1 Unary(q)
+            \item Encode length of numerator
+            \item Add padding to shorter number to match lengths
+            \item Utilize new $\overline{ZtoB}: Z \rightarrow \{0,1\}^*$ where each bit is duplicated and a 01 is added to the end
+            \begin{itemize}
+                \item $QtoS(p/q) = \overline{ZtoB}(p) \circ \overline{ZtoB}(q)$
+            \end{itemize}
+        \end{enumerate}
+    \end{itemize}
+\end{example}
+
+\vspace{.5cm}
+
+\kw{Big Idea}: We can represent objects and lists of objects as compositions of representations.

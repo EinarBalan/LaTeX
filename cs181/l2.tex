@@ -1,0 +1,129 @@
+\chapter{Prefix Free Encoding \& Models of Computation}
+
+Nonformally, a prefix free encoding is one that is easy to decode if there are encodings of several objects concatenated together. These lists of objects are easy to decode because, as implied by the name, the prefix free encoding of an object will never be a prefix within the encoding of another distinct object using the same encoding function. 
+
+\begin{definition}
+    Prefix Free Encoding
+    \[
+        E: O \rightarrow \{0,1\}^*  
+    \]
+    E is prefix free if $\forall x \neq y \in O, E(x)$ is not a prefix of E(y)
+\end{definition}
+
+\begin{example}
+    $NtoB$ (binary encoding of natural numbers)
+
+    This encoding is not prefix free. Consider NtoB(2) = 10 and NtoB(5) = 101. 10 is a prefix of 101, so it does not satisfy the PFE property.
+\end{example}
+
+\begin{example}
+    $\overline{ZtoB}: O \rightarrow \{0,1\}^*$
+    
+    This is the same function as in the last lecture, in which bits are duplicated and 01 is added to indicate the end. It IS prefix free because the 01 end symbol will never be found in an encoding before the end of the encoding. 
+\end{example}
+
+\begin{theorem}
+    Suppose we have a prefix-free encoding $E: O \rightarrow \{0,1\}^*$.
+
+    Define $\overline{E}((x_1, x_2, ..., x_3)) = E(x_1) \circ E(x_2) \circ E(x_3) \circ ... \circ E(x_n)$
+
+    Then $\overline{E}$ is a valid encoding of $O^*$.
+\end{theorem}
+
+\begin{proof}
+    Suppose someone gave us the binary sequence $E(x_1) \circ E(x_2) \circ E(x_3) \circ ... \circ E(x_n)$.
+
+    We can decode it as follows:
+    \begin{itemize}
+        \item Keep reading from left to right until the sequence matches an encoding
+        \item Once we find it, chop it off to recover the first object and proceed
+    \end{itemize}
+
+    Thus, since our encoding has a decoder, it is a valid encoding.
+\end{proof}
+
+A quick remark regarding effiency of PFE: 
+\begin{itemize}
+    \item length of PFE(x) is 2|E(x)| + 2, which leads to exponential growth in nested encodings (i.e. lists of lists)
+    \item instead, we can get a conversion where the new encoding has length $|E(x)| + 2log_2(|E(x)|) + 2$ by encoding the length of the objects instead of the data itself
+\end{itemize}
+
+Additionally, concrete code of this encoding and decoding in action can be found here: TODO
+
+\vspace{.5cm}
+
+\kw{Summary} We can view all inputs (images, videos, strings, graphs, etc.) as binary strings.
+
+\hr
+
+\kw{Algorithms}
+
+Informally, algorithms are a series of steps to solve some problem, or a way to transform inputs to a desired output. How can we formalize this?
+
+\begin{definition}
+    Specification
+    
+    Function $f: \{0,1\}^* \rightarrow \{0,1\}^*$
+    
+    i.e. $Mult: N \times N \rightarrow N$
+\end{definition}
+
+Additionally, we can define steps as "some basic operations."
+
+\vspace{.5cm}
+
+\kw{Boolean Circuits}
+A boolean circuit uses AND/OR/NOT as basic operations. For concision, we will omit their definitions. AND is often denoted $\land$, OR is $\lor$, and NOT is $\lnot$.
+
+\begin{example}
+    MAJ3: $\{0, 1\}^3 \rightarrow \{0,1\}$
+
+    \begin{equation}
+        MAJ3(a, b, c)= 
+        \begin{cases}
+            1 & \text{if } a + b + c \ge 2 \\
+            0 & \text{else}
+        \end{cases}
+    \end{equation}
+
+    In terms of boolean operations, this can be defined as follows:
+    \[
+        MAJ3(a,b,c) = (a \land b) \lor (a \land c) \lor (b \land c)
+    \]
+\end{example}
+
+\begin{example}
+    
+    XOR2: $\{0,1\}^2 \rightarrow \{0,1\}$
+    \[
+        XOR2(a, b) = (a \land \lnot b) \lor (\lnot a \land b)
+    \]
+
+    XOR3: $\{0,1\}^3 \rightarrow \{0,1\}$
+    \begin{equation}
+        XOR3(a, b, c) = 
+        \begin{cases}
+            1 & \text{if odd number of a, b, c are 1} \\
+            0 & \text{else}
+        \end{cases}
+    \end{equation}
+
+    Boolean implementation of XOR3:
+    \[
+        XOR3(a, b, c) = XOR2(XOR2(a, b), c)  
+    \]
+    \[
+      XOR3(a, b, c) = a \oplus b \oplus c
+    \]
+\end{example}
+
+In the case of a boolean circuit, "solving the problem" means computing the function and our "basic steps" are our boolean operations. 
+
+Boolean circuits can be represented using DAG's (Directed Acyclic Graphs) in circuit diagrams as follows: 
+\begin{center}
+    \img{./img/xor.jpeg}
+\end{center}
+
+
+
+

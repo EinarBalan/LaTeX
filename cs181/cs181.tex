@@ -1,0 +1,58 @@
+
+\input{../preamble.tex}
+
+\title{CS 181: \\
+        Introduction to Theoretical Computer Science}
+\author{Einar Balan}
+\date{}
+
+\newenvironment{definition}{
+        \vspace{0.5cm}
+        \kw{Definition}
+}
+{
+        \vspace{0.5cm}
+}
+\newenvironment{example}{
+        \vspace{0.5cm}
+        \kw{Example}
+}
+{
+        \vspace{0.5cm}
+}
+\newenvironment{theorem}{
+        \vspace{0.5cm}
+        \kw{Theorem}
+}
+{}
+\newenvironment{proof}{
+        \kw{Proof}
+}
+{
+        \vspace{0.5cm}
+}
+
+\newcommand \theoremproof[2] {
+        \begin{theorem}
+                #1
+        \end{theorem}
+
+        \begin{proof}
+                #2
+        \end{proof}
+}
+\newcommand \hr{
+        \vspace{.25cm}
+        \textcolor[RGB]{180, 180, 180}{\rule{\textwidth}{1pt}}
+        \vspace{.25cm}
+}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\input{l1.tex}
+\input{l2.tex}
+
+\end{document}

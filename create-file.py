@@ -8,10 +8,18 @@ args = parser.parse_args()
 file = args.FILE
 
 string = '''
+
 \\input{../preamble.tex}
 
+\\title{Class Code: \\
+        Class Name}
+\\author{Einar Balan}
+\\date{}
+
 \\begin{document}
-Hello world. 
+
+\\maketitle
+\\tableofcontents
 
 \\end{document}
 '''
