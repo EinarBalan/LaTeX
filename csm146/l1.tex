@@ -1,2 +1,124 @@
-\chapter{Computation and Representation}
-Hello world.
+\chapter{Introduction}
+
+Machine learning is the study of algorithms that improve performance when executing a task based on experience. For example, an algorithm that recognizes hand written digits. The task is the recognition, the performance is measured by the accuracy of recognition, and the experience is the database of human labeled images. Some more applications include reinforcement learning with playing games, language generation, and image generation (stable diffusion).
+
+There are several major types of learning protocols
+\begin{enumerate}
+    \item Supervised Learning
+    \begin{itemize}
+        \item feed in \kw{labeled} data in order to generalize to unencountered, unlabeled data
+        \item given target function $f: x \rightarrow y$ build a model $g$ that mimics the behaviour of f in a generalized way
+        \item we build the model based on the training set and test it on the test set (80:20 split)
+        \item the test set should be labeled in order to measure accuracy of the model (but the model should never see these labels)
+    \end{itemize}
+    \item Unsupervised Learning
+    \begin{itemize}
+        \item given \kw{unlabeled} inputs, cluster them together based on traits in common
+        \begin{center} 
+            \img{./img/clustering.jpeg}
+        \end{center}
+    \end{itemize}
+    \item Reinforcement Learning
+    \begin{itemize}
+        \item give sequences of states \& actions w/ rewards
+        \item learn actions that maximize reward
+    \end{itemize}
+\end{enumerate}
+
+\section*{Challenges in ML}
+\begin{itemize}
+    \item structured inference: classifcation may change based on context
+    \item robustness ambiguities may arise that make classifcation difficult
+    \item adversarial attack: adding a small amount of noise in a systematic way may change classification 
+    \item common sense: humans can reason through ambiguity based on context \& common sense; this is more difficult for machines
+    \item fairness \& inclusion: models may treat different races differently and inadvertently excluse certain groups; stereotypes may also be reinforced
+\end{itemize}
+
+\section*{Defining a Supervised Learning Problem}
+
+Consider the Badges Game in which name badges at a conference were labeled with either a "+" or "-". Given a labeled training set, can we determine what general rules produced the labels?
+
+Several important definitions:
+\begin{itemize}
+    \item instance space - what features are we using to produce labels
+    \item label space - what is our learning task i.e. what labels
+    \item hypothesis space - what kind of model are we using
+    \item loss function - how do we evaluate the performance of our model; what makes a good prediction
+\end{itemize}
+
+\subsection*{Instance Space}
+\begin{itemize}
+    \item consider $\vec{x} \in X$, where $x$ is a feature vector in $X$ our instance space, which is a vector space
+    \item typically $\vec{x} \in \{0,1\}^n$ or $\mathbb{R}^n$
+    \item each dimension of $\vec{x}$ represents a feature
+    \item Examples of features: length of first name, does the name contain the letter X, how many vowels, is the nth letter a vowel, etc.
+    \item Good features are \kw{essential}; we cannot generalize without them
+\end{itemize}
+
+\begin{example}
+    
+    X = [first-char-vowel, first-char-A, first-char-N]
+
+    Naoki Abe = [0, 0, 1]
+\end{example}
+
+\subsection*{Label Space}
+How should we classify based on $\vec{x}$? There are a couple options.
+\begin{itemize}
+    \item Binary $y \in \{-1, 1\}$
+    \item Multiclass $y \in \{1, 2, 3, ..., k\}$
+    \item Regression $y \in \mathbb{R}$ 
+    \item Structured Output $y \in \{1, 2, 3, ..., k\}^N$
+\end{itemize}
+\begin{example}
+    Animal recognition
+    $\vec{x}$: Image Bitmap
+    $y$:
+    \begin{itemize}
+        \item Binary: Is it a lion?
+        \item Multiclass: Is it a lion a cat or a dog?
+        \item Multilabel: Is it a lion, mammal, cat, or dog?
+    \end{itemize}
+\end{example}
+
+\subsection*{Hypothesis Space}
+This is the set of all possible models. We need to find the best one for our use case. Consider an unknown boolean function. A potential hypothesis space could be every possible function.
+
+In general there are $|Y|^|X|$ possible functions from the instance space X to the label space Y. The hypothesis space is typically a subset of these. We can add rules to limit the hypothesis space, but we need to take care that these rules are not too restrictive, as it is possible that \kw{no} simple rule can explain the data.
+
+To \kw{learn} is to remove remaining uncertainty and find the best function/model in our hypothsis space. In general it is a good idea to start the hypothesis space as restrictive, and get more general.
+
+\subsubsection*{General Problem Flow}
+\begin{enumerate}
+    \item Develop a flexible hypothesis space i.e. Decision Tree, Neural Network, Nested Collections, etc
+    \item Develop algorithm for finding the best hypothesis
+    \item Hope that it generalizes beyond the data
+\end{enumerate}
+
+\begin{example}
+    \begin{center}
+        \img{./img/example3.png}
+    \end{center}
+    How to define hypothesis space?
+    \begin{itemize}
+        \item Option 1: Lines separating the two groups
+        \item Option 2: Proximity to existing data represented by circles
+    \end{itemize}
+    Option 1 will likely generalize better. Option 2 will suffer due to \kw{overfitting}. Underfitting, or not fitting the data well enough, is another concern.
+
+    How can we prevent overfitting? Some guidelines:
+    \begin{itemize}
+        \item use a simpler model e.g. linear
+        \item add regularization
+        \item add noise
+        \item halt optimization earlier
+    \end{itemize}
+
+    How can we learn? Brute force or optimization with calculus.
+\end{example}
+
+\subsubsection*{Aside: Bias vs Variance}
+\begin{itemize}
+    \item bias: data is shifted a consistent amount
+    \item variance: data is spread out around a point
+\end{itemize}

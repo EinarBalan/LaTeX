@@ -1,0 +1,14 @@
+\chapter{K-Nearest Neighbors}
+ KNN is a type of supervised learning classifier which uses proximity to make classifications. It can be useful to determine a category for something i.e. spam or not spam, or type of flower. KNN is quite good at this.
+
+ \subsection*{Basic Algorithm}
+\begin{itemize}
+    \item Learning: just store training samples
+    \item Prediction: Find k existing examples closest to input and group them; construct new labels based on k Neighbors
+    \item Issues:
+    \begin{itemize}
+        \item Need to define distance based on the domain i.e. Euclidean, Manhattan, L-p norm, Hamming (\# diff bits), etc.
+        \item What is the best value of k?
+    \end{itemize}
+\end{itemize}
+
