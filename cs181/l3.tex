@@ -1,0 +1,121 @@
+\chapter{Boolean Circuits}
+
+Continuing on from last time, Boolean Circuits use AND/OR/NOT as basic operations and can be represented as DAG's. Let's formally define them.
+
+\begin{definition}
+    Boolean Circuits
+
+    A $(n, m, s)$-Boolean Circuit is a DAG with $n + s$ vertices. $n$ refers to the number of input variables, $m$ is the number of output variables, and $s$ is the size of the circuit.
+    \begin{itemize}
+        \item Exactly n of these vertices are labeled as inputs $x[0], x[1], ..., x[n-1]$
+        \item The other s vertices are AND/OR/NOT gates
+        \begin{itemize}
+            \item Each AND and OR gate has exactly two incoming edges
+            \item Each NOT gate has one incoming edges
+        \end{itemize}
+        \item m of the gates are labeled as outputs $y[0], y[1], ..., y[m - 1]$
+    \end{itemize}
+    \begin{center}
+        \img{./img/boolcirc-example.png}
+    \end{center}
+\end{definition}
+
+We know that DAG's can be topologicallys sorted (i.e. there is a layering of the vertices such that for every edge (i, j), h(i) < h(j)), so Boolean Circuits can be topologically sorted too. This is important for computation of circuit outputs. How can we compute the outputs?
+\begin{itemize}
+    \item layer the DAG via topological sort so that all input vertices are in layer 0
+    \item we have computed in layers 0, 1, ..., k - 1
+    \item now for each vertex in layer k, assign it the value of its operation on its wires (i.e. AND gate should be w1 $\land$ w2)
+    \item output $y \in \{0,1\}^m$ s.t. $y = y[0] \circ y[1] \circ ... \circ y[m-1]$
+\end{itemize}
+
+\subsection*{Choosing Basic Operations}
+We stated in our definition of a boolean circuit that the basic operations it uses are AND/OR/NOT. Why did we pick these operations in particular? Could we have picked some other operations?
+
+\begin{definition}
+    NAND 
+    \[
+        \text{NAND: } \{0,1\}^2 \rightarrow \{0,1\}  
+    \]
+    \[
+        \text{NAND}(a, b) = \lnot(a \land b)
+    \]
+\end{definition}
+
+NAND Circuits are defined similarly to Boolean Circuits, the only difference being the basic operations available. In NAND Circuits, only NAND is used. Is there a meaningful difference between the two? Is one more powerful than the other?
+
+We can show that NAND circuits can be easily simulated using Boolean gates.
+\begin{itemize}
+    \item simply convert NAND gates to and AND followed by a NOT
+    \item NAND $\rightarrow$ AND + NOT
+\end{itemize}
+
+Is the opposite true? Can we express Boolean Circuits only in terms of NAND gates?
+\begin{itemize}
+    \item NOT(a) = NAND(a, a)
+    \item AND(a, b) = NOT(NAND(a, b)) = NAND(NAND(a, b), NAND(a, b))
+    \item OR(a, b) = NAND(NOT(a), NOT(b)) = NAND(NAND(a, a), NAND(b, b))
+\end{itemize}
+So yes, we can simulate a Boolean Circuit with a NAND circuit.
+
+\begin{theorem}
+    Boolean circuits are \kw{equivalent} to NAND circuits in computational power. 
+\end{theorem}
+
+\begin{definition}
+    Equivalent 
+
+    f is computable by a Boolean Circuit $\iff$ f is computable by a NAND circuit.
+\end{definition}
+
+\hr
+
+\theoremproof{
+    
+Every function $f: \{0,1\}^n \rightarrow \{0,1\}^m$ can be computed by a Boolean circuit of size $O(n * m * 2^n)$.
+}
+{
+(for m = 1)
+
+Given $f: \{0,1\}^n \rightarrow \{0,1\}^m$, an arbitrary function mapping boolean strings to binary, define the set 
+\[
+    S = \{\alpha: f(\alpha) = 1\}
+\]
+
+For each binary string $\alpha \in {0, 1}^n$, define 
+\[
+    E_\alpha: \{0, 1\}^n \rightarrow \{0,1\}    
+\]
+\begin{equation}
+    E_\alpha = 
+    \begin{cases}
+        1 & \text{if } x = \alpha \\
+        0 & else
+    \end{cases}
+\end{equation}
+
+\begin{example}
+    So if $\alpha = (1, 1, ..., 1)$, we can construct a circuit using a chain of AND gates in order to compute $E_\alpha$. The same is true if $\alpha = (1, 1, ..., 1, 0)$, except that we must add in a NOT gate after the final AND gate. If we extend this logic to the entire domain of $\{0,1\}^n$, it is clear that we can construct a circuit for arbitrary values of $\alpha$ in the domain. 
+\end{example}
+
+We can use $E_\alpha$ to compute arbitary f. 
+
+Consider the set S from before, which is simply the set of binary strings in which f is 1. We have shown that it is possible to create a circuit for arbitary $E_\alpha$ (which is equal to 1 if the input x = $\alpha$), so it is easy to create a circuit that computes f. It is simply
+\[
+    f(x) = \text{OR}(E_{\alpha_0}(x), E_{\alpha_1}(x), ..., E_{\alpha_{n-1}}(x)))
+\]
+
+which follows from the logic that if x is equal to any one of the binary strings that cause f(x) to be 1, then the circuit should output 1. By chaining together all the circuits we constructed before with OR gates, we can construct the final circuit for arbitary f.
+}
+
+How many gates will we use? 
+\[
+    \text{\# gates used } \le |S|(2n - 1) + (|S| - 1)
+\]
+\[
+    = O(n * 2^n)  
+\]
+
+We can extend this logic beyond the $m = 1$ by using the above to compute each bit of $y$.
+
+\kw{Remark}: We can do better with a circuit of size $O(\frac{2^n}{n})$, but this goes beyond the scope of this class.
+
