@@ -9,6 +9,58 @@
     \begin{itemize}
         \item Need to define distance based on the domain i.e. Euclidean, Manhattan, L-p norm, Hamming (\# diff bits), etc.
         \item What is the best value of k?
+        \item How to aggregate the labels of the nearest neighbors (majority vote, weight by distance, etc)
+        \item How to store the data? (matrix, K-d tree)
     \end{itemize}
 \end{itemize}
 
+\begin{definition}
+    Inductive bias
+
+    The set of assumptions that the learner uses to predict outputs of unseen inputs
+
+    Ex) In KNN, the inductive bias is the the set of input data (the label of a point is similar to the label of nearby points)
+\end{definition}
+
+\subsection*{Hyperparameters}
+A hyperparameter is a parameter that controls aspects of the model, as opposed to features in the data. For example, a hyperparameter could be k or the function used to measure distance. These are not specified by the algorithm and require empirical study to optimize. The best set of parameters is specific to the dataset.
+
+\subsubsection*{Data Splits}
+It is advised to split your dataset into train, dev, and testing sets. The training set is used to train the model, the dev (AKA validation set) is used to find the best hyperparameters, and the test set is used to evaluate the final performance of the model. 
+
+How can we find the best hyperparameters? One way is the following:
+\begin{itemize}
+    \item For each possible value of the parameter
+    \begin{itemize}
+        \item train a model using the training set
+        \item evaluate the performance on the dev set
+    \end{itemize}
+    \item choose the model with the best performance on the dev set
+    \item (optionally) retrain the model on both the training set and the dev set with the best hyperparameters
+    \item evaluate the final model on the test set
+\end{itemize}
+
+How to optimally split data between training and dev? If we have too little training data the model will not be robust and if we have too little dev data the dev dataset will not be representative of the entire dataset.
+
+Solution: \kw{N-fold cross validation}
+\begin{itemize}
+    \item instead of a single training dev split, we split the data into N equal sized parts
+    \item we train and test N different classifiers, and use a different part of the data as the dev set for each classifier
+    \item report the average accuracy and standard deviation of the accuracy
+\end{itemize}
+
+\subsection*{Decision Boundary}
+The KNN algorithm is not explicitly building a function. So what is the implicit function that is being computed? How do we determine a decision boundary in the set of data points?
+
+We use the "Voronoi Diagram." For every point X in a training set S, the \kw{Voronoi Cell} is a polytope consisting of all points closer to x than any other points in S. The Voronoi diagram is the union of all these cells. Basically, its just a diagram indicating areas that are closest to each point. This is for k = 1. For k > 1, it will also partition the space but with a much more complex decision boundary.
+
+\subsection*{Curse of Dimensionality}
+The more dimensions we have, the greater the proportion of points further away from the origin vs close to the origin. This essentially breaks KNN. Even if all features are relevant, in high dimensions, most points are equally far away from eachother, so it is difficult to classify them by proximity. How to deal with this?
+
+In practice, we apply dimensionality reduction. That is, we consolidate dimensions by removing irrelevant features and combining certain features. 
+
+\subsection*{Data Preprocessing}
+\begin{itemize}
+    \item normalize data to have zero mean unit std in each dimensionality
+    \item scale each feature accordingly
+\end{itemize}
