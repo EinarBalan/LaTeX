@@ -119,3 +119,102 @@ We can extend this logic beyond the $m = 1$ by using the above to compute each b
 
 \kw{Remark}: We can do better with a circuit of size $O(\frac{2^n}{n})$, but this goes beyond the scope of this class.
 
+\hr
+
+Some functions, such as addition and multiplication, are frequently used. As a result, engineers work to make far more efficient circuits for them than guaranteed above. Addition can be computed in an $O(n)$ circuit while multiplication can be computed in an $O(n^2)$ circuit. However, some functions require an exponential number of gates to compute. We will show this.
+
+\vspace{.5cm}
+
+\kw{Big Idea} We can encode circuits as binary strings. 
+
+Two corollaries to this idea: 
+\begin{enumerate}
+    \item Some functions need exponential size circuits
+    \item Universal circuits exist (i.e. general computers)
+\end{enumerate}
+
+\theoremproof{
+    Every (n, m, s) NAND Circuit can be represented by a binary string of length O((n + s)log(n + s)).
+}
+{
+    We define size$_{n, m}$(s) to be all circuits on n inputs, m outputs, with at most s gates. The goal is to find an encoding E from this function to binary strings.
+
+    What do we need to specify in a NAND circuit?
+    \begin{itemize}
+        \item how many inputs? n
+        \item how many outputs? m
+        \item how many gates? $s_0 \le s$
+        \item which nodes correspond to output variables (list of indices corresponding to y[i])
+        \item links between gates (pairs of nodes whose outputs are inputs to current index node)
+    \end{itemize}
+
+    We can store these features as a tuple and encode it in the standard nested PFE.
+
+    \begin{example}
+        \begin{center}
+            \img{./img/circuit-encoding.png}
+        \end{center}
+    \end{example}
+
+    How exactly to get valid encoding of list shown above?
+    \begin{itemize}
+        \item for n, m, and size we encode them with PFE
+        \item same for node output numbers (we know there are m of them)
+        \item same for pairs (simply read two of them at a time when decoding, we know there will be 2 * $s_0$ integers b/c 2 integer inputs for every gate)
+    \end{itemize}
+
+    How many bits are we using?
+    \begin{itemize}
+        \item recall that the PFE of an integer $a$ takes $\le 2log_2(a)$ bits
+        \item $2log_2(n) + 2log_2(m) + 2 log_2(s_0)$ for first 3 integers
+        \item $m * 2log_2(n + s_0)$ for m integers in output list
+        \item $2s_0 * 2log_2(n + s_0)$ for $2s_0$ integers in pairs
+        \item adding these terms together we determine that this is $\le 12(n+s)log_2(n+s)$ as stated in the theorem
+    \end{itemize}
+}
+
+\hr
+
+Now we show the first corollary.
+
+\theoremproof{
+    There exists functions $f: \{0, 1\}^n \rightarrow \{0,1\}$ that require circuits of size $\frac{c*2^n}{n}$ for c > 0.
+}
+{
+Some definitions.
+
+\[
+    \text{All}_n = \{ f:\{0,1\}^n \rightarrow \{0, 1\} \}
+\]
+The above function is the class of all functions from n-length binary strings to 0 or 1.
+
+\[
+    SIZE_n(s) = \{ \text{All functions with 1 bit output computable by circuits of size} \le s \}
+\]
+
+We want to show that $|All_n| > |SIZE_n(\frac{c*2^n}{n})|$.
+\begin{itemize}
+    \item Counting $All_n$
+    \begin{itemize}
+        \item we know there are $2^n$ possible inputs
+        \item each of these has 2 possible outputs
+        \item so we have $2^{2^n}$ possible functions (2 possible outputs over $2^n$ rows)
+    \end{itemize}
+    \item Counting $SIZE_n(s)$
+    \begin{itemize}
+        \item idea: count using encodings
+        \item \# circuits $\le$ number of binary strings of length $12(n + s)log_2(n + s)$
+        \item we know the number of strings of length $\le l$ is $2^0 + 2^1 + 2^2 + 2^3 + ... + 2^l = 2^{l + 1} - 1$ (geometric series)
+        \item so the number of circuits $\le 2^{12(n+s)log_2(n+s) + 1} - 1$
+    \end{itemize}
+\end{itemize}
+
+To finish we need to compare $|ALL_n|$ to $|SIZE_n(s)|$.
+}
+
+
+
+
+
+
+

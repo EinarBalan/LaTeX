@@ -1,0 +1,107 @@
+
+\documentclass[11pt]{article}
+  
+%%% LATEX COMMON Packages 
+
+\usepackage[bookmarks,colorlinks,breaklinks]{hyperref}  % PDF hyperlinks, with coloured links
+\hypersetup{linkcolor=blue,citecolor=blue,filecolor=blue,urlcolor=blue} % all blue links
+\usepackage{amsmath,amsfonts,amsthm,amssymb,environ,xstring}
+\usepackage{dsfont}
+\usepackage{fullpage}
+\usepackage{mdframed}
+\newcommand{\ignore}[1]{}
+\newcommand \kw[1]{\textbf{#1}}
+\newenvironment{answer}{
+\vspace{.5cm}
+\kw{Answer}
+}
+{
+
+}
+
+\title{\bf{CS 181: Homework 1}}
+\author{ Einar Balan}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item Let $S, T$ be two finite sets such that there is a one-to-one mapping from $S$ to $T$ and a one-to-one mapping from $T$ to $S$. Show that $|S| = |T|$ (i.e., the two sets have the same number of elements). [1 point]
+
+\begin{answer}
+    Towards a contradiction, assume $|S| \ne |T|$. This means that there must be at least one more element in S than T or vice versa. 
+    
+    Define $F: S \rightarrow T$ and $G: T \rightarrow S$, which are both one to one. 
+
+    Because F is one to one, $\forall x \neq x' \in S \implies F(x) \neq F(x') \in T$. That is, for all distinct elements in S there is a unique mapping in T for that element. Consider the case where $|S| < |T|$. By the pidgeonhole principle, we know that there is at least one distinct x, x' pair s.t. their mappings are the same. Thus F cannot be one to one and we have reached a contradiction. Therefore $|S| \text{ is not} > |T|$.
+
+    We repeat the same logic for G to conclude that $|T| \text{ is not} > |S|$. So $|S| = |T|$ if F and G are one to one. 
+    
+    \qed
+\end{answer}
+\pagebreak
+
+\item Exercise 2.4 [1 point]. (Note: The constant 1000 is there for slack and not  a specific one.)
+
+\begin{answer}
+We can encode the graph using adjacency lists. For the vertex set $[n]$, we can produce a human readable encoding where the ith index of the list corresponds to a list of nodes that the ith node shares an edge with. We can then encode each value in the list using the optimal prefix free encoding described in class w/ length $|E(n)| + 2log_2(|E(x)|) + 2$. After doing this for each value, we can pass the list through the same encoder and concatenate the output of every list together. This will be a valid encoding. Put more formally,
+\[
+    l_i = \{PFE(n) : \text{ if edge (i, n) exists } \forall n \in [n]\}
+\]
+
+\[
+    E: G_n \rightarrow \{0,1\}^{cnlogn}
+\]
+\[
+    E = PFE(l_0) \circ PFE(l_1) \circ ... \circ PFE(l_n)
+\]
+
+In order to decode:
+\begin{itemize}
+    \item keep reading until 01 reached
+    \item chop the part that was read off and decode the numbers using standard PFE decoder for natural numbers to get a list of neighbors in ith index
+    \item draw graph w/ edges to neighbors indicated by list
+    \item repeat until all bits have been read
+\end{itemize}
+
+To count the number of bits:
+\begin{itemize}
+    \item for $n \in N, |E(n)| = log_2(n)$
+    \item the PFE of each number will take $log_2(n) + 2log_2(log_2(n)) + 2$ bits
+    \item so each list will be $10(log_2(n) + 2log_2(log_2(n)) + 2)$ bits
+    \item the PFE of a list will then be $10(log_2(n) + 2log_2(log_2(n)) + 2) + 2log_2(10(log_2(n) + 2log_2(log_2(n)) + 2)) + 2$ bits
+    \item so in total we have $n(10(log_2(n) + 2log_2(log_2(n)) + 2) + 2log_2(10(log_2(n) + 2log_2(log_2(n)) + 2)) + 2)$ bits since we have n lists 
+    \item this is less than $1000nlog_2n$ for sufficiently large n 
+\end{itemize}
+
+\qed
+\end{answer}
+
+\pagebreak
+
+\item Prove that the set $\{AND,NOT\}$ is universal. [1 point] 
+
+\begin{answer}
+As shown in class, NAND is universal. To show $\{\text{AND},\text{NOT}\}$ is universal, we can show that any NAND circit can be implemented using only AND/NOT and vice versa.
+\begin{itemize}
+    \item to construct NAND in terms of AND and NOT, we can replace very NAND gate with an AND gate followed by a NOT gate
+    \item to construct NOT using only NAND
+    \begin{itemize}
+        \item NOT(a) = NAND(a, a)
+    \end{itemize}
+    \item to construct AND using only NAND
+    \begin{itemize}
+        \item AND(a, b) = NOT(NAND(a, b))
+        \item AND(a, b) = NAND(NAND(a, b), NAND(a, b))
+    \end{itemize}
+\end{itemize}
+So $\{\text{AND},\text{NOT}\}$ is universal. 
+
+\qed
+\end{answer}
+\pagebreak
+
+\item Exercise 3.4. To be more precise, the problem is asking you to show that there is a function that {\bf cannot} be computed by a Boolean circuit that is only allowed to use AND/OR (so NOT gates not allowed). As a further hint, you can show that there is a function that takes two inputs and has one output that cannot be computed in such a way (no matter how many AND/OR gates you use). [1 point]
+\end{enumerate}
+
+\end{document}
