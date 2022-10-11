@@ -1,0 +1,39 @@
+\chapter{Deterministic Finite Automata}
+
+Circuits are a great model for bounded input lengths. But what if we want to compute on some unbounded input? We know we can determine a finite answer to an infinite class of questions using an algorithm. Can we use this to create a model of computation for unbounded inputs?
+
+Consider XOR:
+\[
+    \text{XOR}: \{0,1\}^* \rightarrow \{0,1\}
+\]
+\begin{equation}
+    \text{XOR}(x) = 
+    \begin{cases}
+        1 & \text{if number of inputs equal to 1 is odd} \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{equation}
+
+We can define an algorithm for XOR as follows:
+\begin{itemize}
+    \item def XOR(x):
+    \begin{itemize}
+        \item ans = 0
+        \item for i in range(len(x)):
+        \begin{itemize}
+            \item ans = (ans + x[i]) \% 2
+        \end{itemize}
+        \item return ans
+    \end{itemize}
+\end{itemize}
+
+This is an exmaple of aa "Single Pass Constant Memory Algorithm." We can create a diagram to represent it as follows:
+\begin{center}
+    \img{./img/XOR-fsm.png}
+\end{center}
+
+\begin{definition}
+    Deterministic Finite Automaton (DFA)
+
+    DFA with c states over \{0, 1\} is a pair $D \equiv (T, S)$, where $T: [c] \times \{0, 1\} \rightarrow [c]$ and $S \subseteq [c]$. T is known as the transition function and defines the inputs that cause a transition in state. For example, if the current state is 0 and the input bit is 1, the transition function might output 1 to indicate a change in state from 0 to 1. S is the acceptor. 1 is output if the final state is a state $\in$ S.
+\end{definition}

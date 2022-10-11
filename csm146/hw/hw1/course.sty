@@ -1,0 +1,68 @@
+\usepackage[colorlinks=true]{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{ifthen}
+\usepackage{fancyvrb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+\usepackage{multirow}
+\usepackage{enumitem}
+
+\usepackage{comment}
+\usepackage[usenames,dvipsnames,svgnames,table,hyperref]{xcolor}
+
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\matr}[1]{\boldsymbol{#1}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\VerbatimFootnotes
+\makeatletter
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+\renewcommand*{\theenumi}{\alph{enumi}}
+\renewcommand*\labelenumi{(\theenumi)}
+\renewcommand*{\theenumii}{\roman{enumii}}
+\renewcommand*\labelenumii{\theenumii.}
+
+\parindent 0in
+\parskip 7.2pt
+
+\newif\ifsoln
+\solntrue
+% \solnfalse
+
+
+\ifsoln
+\newcommand{\buildingforsolution}{1}
+\else
+\newcommand{\buildingforsolution}{0}
+\fi
+
+\newcommand{\ifnotsolution}[1]{\ifthenelse{\equal{\buildingforsolution}{1}}{}{#1}}
+\newcommand{\ifsolution}[1]{\ifthenelse{\equal{\buildingforsolution}{1}}{#1}{}}
+\newcommand{\solution}[1]{\ifsolution{{\color{blue}{\bf Solution:} {#1}}}}
+
+\newcommand{\problemworth}[1]{[#1 pts]}
+\ifsoln
+\newcommand{\itemworth}[1]{{\bf (#1 pts)}}
+\else
+\newcommand{\itemworth}[1]{{\bf (#1 pts)}}
+\fi
+
+\newcommand*{\vertbar}{\rule[1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+
+\usepackage{multicol}
+
+
+% Course name and edition
+\newcommand{\cnum}{CM146}
+\newcommand{\ced}{Fall 2022}
+\newcommand{\ctitle}[3]{\title{\vspace{-0.5in}\cnum, \ced\\Problem Set #1: #2\\Due #3}}

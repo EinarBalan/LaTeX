@@ -1,0 +1,98 @@
+\documentclass[11pt]{article}
+\usepackage{url}
+\usepackage{graphicx}
+
+\usepackage{course}
+\begin{document}
+
+
+\ctitle{1}{Decision trees and k-Nearest Neighbors}{
+Oct. 25, 2022 at 11:59 pm
+
+}
+\author{}
+\date{}
+\vspace{-1in}
+\maketitle
+\vspace{-0.75in}
+
+
+\blfootnote{Parts of this assignment are adapted from course material by Andrea Danyluk (Williams), Tom Mitchell, Matt Gormley and Maria-Florina Balcan (CMU), Stuart Russell (UC Berkeley), Carlos Guestrin (UW), Dan Roth (UPenn) and Jessica Wu (Harvey Mudd). }
+
+
+
+\ifsoln 
+\else
+\section*{Submission instructions}
+\begin{itemize}
+\item 
+Submit your solutions electronically on the course Gradescope site as PDF files.
+\item Please package your code (.ipynb) for Problem 3 and submit it to BruinLearn.
+\item If you plan to typeset your solutions, please use the LaTeX solution template. If you must submit scanned handwritten solutions, please use a black pen on blank white paper and a high-quality scanner app.
+\end{itemize}
+\fi
+
+\ifnotsolution{\newpage}
+
+
+
+\section{Splitting Heuristic for Decision Trees \problemworth{25}}
+
+Recall that the ID3 algorithm iteratively grows a decision tree from the root downwards. On each iteration, the algorithm replaces one leaf node with an internal node that splits the data based on one decision attribute (or feature). In particular, the ID3 algorithm chooses the split that reduces the entropy the most, but there are other choices. For example, since our goal in the end is to have the lowest error, why not instead choose the split that reduces error the most? In this problem, we will explore one reason why reducing entropy is a better criterion.
+
+Consider the following setting. Let us suppose each example is described by 4 boolean features: $X = \langle X_1, \ldots, X_4 \rangle$, where $X_i \in \{0, 1\}$. Furthermore, the target function to be learned is $f : X \rightarrow Y$, where $Y =  X_1 \wedge X_2$. That is, $Y = 1$ if $X_1 = 1$ or $X_2 = 1$ otherwise. Suppose that you have the following training data contains all of $2^4$ possible examples:
+\begin{table}[H]
+\centering
+\begin{tabular}{cccc|c}
+$X_1$ & $X_2$ & $X_3$ & $X_4$ & $Y$\\ \hline
+0 & 0 & 0 & 0 & 0\\
+1 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0\\
+1 & 1 & 0 & 0 & 1\\
+0 & 0 & 1 & 0 & 0\\
+1 & 0 & 1 & 0 & 0\\
+0 & 1 & 1 & 0 & 0\\
+1 & 1 & 1 & 0 & 1\\
+\end{tabular}
+\quad \quad \quad \quad
+\begin{tabular}{cccc|c}
+$X_1$ & $X_2$ & $X_3$ & $X_4$ & $Y$\\ \hline
+0 & 0 & 0 & 1 & 0\\
+1 & 0 & 0 & 1 & 0\\
+0 & 1 & 0 & 1 & 0\\
+1 & 1 & 0 & 1 & 1\\
+0 & 0 & 1 & 1 & 0\\
+1 & 0 & 1 & 1 & 0\\
+0 & 1 & 1 & 1 & 0\\
+1 & 1 & 1 & 1 & 1\\
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+\item \itemworth{5} Consider constructing a decision tree with only one leaf (the tree in which root is a leaf node and has no internal node) based on these 4 attributes. What is the best $1$-leaf decision tree and what is its error rate (i.e., number of mistakes / total number of data) on these $2^4$ training examples? 
+
+\solution{
+
+(Write your solution here.)
+
+}
+
+\item \itemworth{5} Follow the previous question. Now, let's consider constructing a decision tree with one split. Is there a split that can reduce the error rate? Please specify the attribute that can reduce the error rate if your answer is yes. Otherwise, please discuss why is not. 
+
+\item \itemworth{5} What is the entropy of the output label $H(Y)$ (rounding to 2 decimal places).
+
+\item \itemworth{5} What is the information gain if we split the data by the attribute $X_1$ ? (rounding to 2 decimal places)
+
+\item \itemworth{5} What is the information gain if we split the data by the attribute $X_3$? (rounding to 2 decimal places)
+
+\end{enumerate}
+
+\ifsoln 
+\else
+\clearpage
+\fi
+
+\input{knn}
+\input{coding}
+
+\end{document}

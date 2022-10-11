@@ -175,13 +175,14 @@ Two corollaries to this idea:
 
 \hr
 
-Now we show the first corollary.
+\subsubsection*{Corollary 1. Some Functions Require Exponential Size Circuits}
 
 \theoremproof{
     There exists functions $f: \{0, 1\}^n \rightarrow \{0,1\}$ that require circuits of size $\frac{c*2^n}{n}$ for c > 0.
 }
 {
-Some definitions.
+
+First some definitions.
 
 \[
     \text{All}_n = \{ f:\{0,1\}^n \rightarrow \{0, 1\} \}
@@ -209,8 +210,49 @@ We want to show that $|All_n| > |SIZE_n(\frac{c*2^n}{n})|$.
     \end{itemize}
 \end{itemize}
 
-To finish we need to compare $|ALL_n|$ to $|SIZE_n(s)|$.
+To finish we need to compare $|ALL_n|$ to $|SIZE_n(s)|$. We will skip the algebraic manipulation (see lecture notes for that), but the conclusion is that $|ALL_n|$ > $|SIZE_n(s)|$ where $s = \frac{2^n}{24n}$. Therefore $\exists$ functions on n bits that require $\frac{2^n}{24n}$ gates to compute.
 }
+
+\hr
+
+\subsubsection*{Corollary 2: Universal Circuits}
+
+We know that we can encode a circuit as a binary string. Let's define a a function to take advantage of this fact.
+
+\begin{definition}    
+    EVAL: $\{0, 1\}^{S(n, m, s)} \times \{0,1\}^n \rightarrow \{0,1\}^m$
+
+    \begin{equation}
+        \text{EVAL}(C, x) = 
+        \begin{cases}
+            C(x) & \text{if C is a valid circuit} \\
+            0^m & \text{else}
+        \end{cases}
+    \end{equation}
+\end{definition}
+
+\begin{theorem}
+    There is a circuit for EVAL$_{n, m, s}$ of size $O(s^2logs)$.
+\end{theorem}
+
+\hr
+
+One last major idea: Circuits are efficient.
+
+\begin{theorem}
+    Physical Extended Church-Turing Thesis(PECTT)
+
+    If a function can be computed using s physical resources, then it can be computed by a circuit that uses roughly s gates. In other words, circuits are about as efficient as we can get in terms of computation.    
+\end{theorem}
+
+
+\subsubsection*{Summary}
+\begin{itemize}
+    \item circuits can be implemented on physical devices
+    \item every functin can be computed by circuits
+    \item some functions require exponential size circuits
+    \item universal circuits of size $cs^2logs$ can simulations all size s circuits
+\end{itemize}
 
 
 

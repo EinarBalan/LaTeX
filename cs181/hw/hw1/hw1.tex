@@ -67,7 +67,7 @@ In order to decode:
 To count the number of bits:
 \begin{itemize}
     \item for $n \in N, |E(n)| = log_2(n)$
-    \item the PFE of each number will take $log_2(n) + 2log_2(log_2(n)) + 2$ bits
+    \item the PFE of each number will take $log_2(n) + 2log_2(log_2(n)) + 2$ bits (this is the length of the more efficient PFE discussed briefly in class)
     \item so each list will be $10(log_2(n) + 2log_2(log_2(n)) + 2)$ bits
     \item the PFE of a list will then be $10(log_2(n) + 2log_2(log_2(n)) + 2) + 2log_2(10(log_2(n) + 2log_2(log_2(n)) + 2)) + 2$ bits
     \item so in total we have $n(10(log_2(n) + 2log_2(log_2(n)) + 2) + 2log_2(10(log_2(n) + 2log_2(log_2(n)) + 2)) + 2)$ bits since we have n lists 
@@ -102,6 +102,50 @@ So $\{\text{AND},\text{NOT}\}$ is universal.
 \pagebreak
 
 \item Exercise 3.4. To be more precise, the problem is asking you to show that there is a function that {\bf cannot} be computed by a Boolean circuit that is only allowed to use AND/OR (so NOT gates not allowed). As a further hint, you can show that there is a function that takes two inputs and has one output that cannot be computed in such a way (no matter how many AND/OR gates you use). [1 point]
+
+\begin{answer}
+    First, we show that the circuit described, $C$, is monotone. We can easily show that the operations AND and OR are monotone as follows:
+
+    \begin{center}
+        \begin{tabular}{ |c|c| }
+            AND & \\
+            \hline
+            00 & 0 \\
+            01 & 0 \\
+            10 & 0 \\
+            11 & 1 \\
+        \end{tabular} 
+        \; \;
+        \begin{tabular}{ |c|c| }
+            OR & \\
+            \hline
+            00 & 0 \\
+            01 & 1 \\
+            10 & 1 \\
+            11 & 1 \\
+        \end{tabular}
+    \end{center}
+
+    Both of these functions satisfy the property that if any bit in the input is changed from a 0 to a 1, the output can never decrease in value. To be more concrete, for two binary strings that are bitwise $\le$ each other, $C(x) \le C(x')$.
+
+    If we have any composition of AND and OR (both of which we have shown to be monotone), we will also have a monotone function that satisfies $x, x' \in \{0,1\}^n, x_i \le x_i' \text{ for every } i \in [n] \implies C(x) \le C(x')$. Consider two monotonic functions $f$ and $g$. We know that if $x \le x'$, then $f(x) \le f(x')$. This implies that $g(f(x)) \le g(f(x'))$ since the output values of the function are no different than the input values and can be treated functionally identically as inputs to other monotone functions.
+
+    Therefore, $C$ must be monotone since it is a composition of two monotone functions. Now we will show that $C$ cannot compute a function, and is therefore the set \{AND, OR\} is not universal. Consider $f$:
+    \begin{center}
+        \begin{tabular}{ |c|c| }
+            $f$ & \\
+            \hline
+            00 & 1 \\
+            01 & 0 \\
+            10 & 0 \\
+            11 & 0 \\
+        \end{tabular}
+    \end{center}
+    $f$ is not monotone bc $f(00) > f(01)$ (changing the second bit from 0 to 1 causes a decrease in value). It follows that $C$ must not be able to compute $f$ since $C$ can only compute monotone functions. Therefore, $C$ is not universal.
+
+    \qed
+\end{answer}
+
 \end{enumerate}
 
 \end{document}
