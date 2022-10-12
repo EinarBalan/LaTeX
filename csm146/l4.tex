@@ -1,0 +1,84 @@
+\chapter{Linear Models}
+
+In linear models, a hyperplane separates the data space in order to classify the data. Data points on either side of the hyperplane are classified differently. In two dimensions, a line is drawn to separate the data.
+
+\begin{center}
+    \img{./img/linearmodel-data.png}
+\end{center}
+
+The hypothesis space consists of many potential linear models, some of which are better than others. In general, to be "better" means that the model separates the data better than other models.
+
+We have two parameters for our linear model: w and b. w is a column vector representing how much each feature should be weighted and b is the bias.
+
+\begin{center}
+    \img{./img/linear-model-params.png}
+\end{center}
+
+We classify based on if $w^Tx + b > 0$ or $ < 0$.
+
+\begin{example}
+    If a line represented by $w^Tx + b = 0$ passes through (0, 1) and (3, 0), what are w and b?
+
+    To solve we simply set up a system of equations over $w_1x_1 + w_2x_2 + b = 0$.
+
+    \begin{align*}
+        0x_1 + 1x_2 + b = 0 \\
+        3x_1 + 0x_2 + b = 0
+    \end{align*}
+    \begin{align*}
+        3x_1 - 1x_2 = 0 \\
+        3x_1 = x_2
+    \end{align*}
+
+    So one solution is $w^T = [1, 3]$ and $b = -3$. Note that there are infinitely many solutions.
+\end{example}
+
+\begin{definition}
+    Linear Models for Binary Classification
+
+    Given training set $D = \{(x, y), x \in \mathbb{R}^d, y \in \{-1, 1\}$, we can learn a hypothesis function $h \in H$.
+    \[
+        H = \{h | h(x) = sgn(w^Tx + b)\}  
+    \]
+    where y = h(x) and sgn(z) outputs 1 if z >= 0 and -1 otherwise. 
+
+    This can be modeled with the following picture:
+    \begin{center}
+        \img{./img/linear-class-diagram.png}
+    \end{center}
+
+    We can also add the bias term to the weight vector and a single 1 term at the end of x to reduce complexity of notation.
+\end{definition}
+
+See slides for an example of converting a decision tree to a linear model.
+
+\subsection*{Perceptrons}
+To learn is to find the best parameters. In this case, w and b. There are several algorithms to do so such as the perceptron, logistic regression, linear support vector machines, and more. Different methods will define the "best parameters" in a different way. First we will cover perceptrons. 
+
+The main idea behind the perceptron algorithm is to learn from mistakes. Concretely, it is the following:
+\begin{itemize}
+    \item For (x, y) in D:
+    \item $\hat{y} = sgn(w^Tx)$
+    \item if $\hat{y} \neq y, w \leftarrow w + yx$
+\end{itemize}
+
+Essentially, for a misprediction we are adjusting the decision boundary in order correct our mistake. After enough mistakes, we will converge (if possible).
+
+We can expand on this idea by adding \kw{epochs}, or more iterations of the algorithm being performed on our data. We continue these epochs until the hyperplane converges. This is one hyperparameter. We can also add $\eta$ as a scaling factor to our adjustment term $yx$ (i.e. $w \leftarrow w + \eta yx$). This is another hyperparameter.
+
+It is important to not that a linear model \kw{cannot} represent all functions. In fact, it can only separate linarly separable functions. As a consequence, functions like XOR cannot be learned. However, if a data is linearly separable, the perceptron algorithm will always converge (Convergence Theorem). The converge rate depends on the difficulty of the problem. If it is not, the algorithm will enter an infinite loop.
+
+To quantify difficulty, lets dicuss margin.
+
+\begin{definition}
+    Margin
+
+    If a hyperplane can separate the data, the margin of a hyperplane for a dataset is the distance between the hyperplane and the data point nearest to it.
+
+    The margin of a dataset ($\gamma$) is the maximum margin possible for that dataset using any weight vector.
+\end{definition}
+
+We can quantify the difficulty with $\frac{R}{\gamma}$ where $\forall i,  ||x_i|| \le R $ ($x_i$ is a feature vector). The \kw{Mistake Bound Theorem} states that the perceptron algorithm will make at most $(\frac{R}{\gamma})^2$ mistakes on the training sequence. Note that the number of mistakes is not the same as the number of data points seen. 
+
+Perceptrons are good when the data is linearly separable. Unfortunately, in the real world this is very often not the case. We will see ways to deal with this.
+
