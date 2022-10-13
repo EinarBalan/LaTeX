@@ -37,3 +37,133 @@ This is an exmaple of aa "Single Pass Constant Memory Algorithm." We can create 
 
     DFA with c states over \{0, 1\} is a pair $D \equiv (T, S)$, where $T: [c] \times \{0, 1\} \rightarrow [c]$ and $S \subseteq [c]$. T is known as the transition function and defines the inputs that cause a transition in state. For example, if the current state is 0 and the input bit is 1, the transition function might output 1 to indicate a change in state from 0 to 1. S is the acceptor. 1 is output if the final state is a state $\in$ S.
 \end{definition}
+
+\begin{example}
+    
+    Consider the function below:
+    \begin{equation}
+        D(x) =
+        \begin{cases}
+            1 & \text{if number of 1's in x is divisble by 3} \\
+            0 & \text{else}
+        \end{cases}
+    \end{equation}
+
+    A DFA for this function is as follows
+    \begin{center}
+        \img{./img/dfa-2.png}
+    \end{center}
+
+    The transition function T is shown below and S, the set of accepting states is \{0\}. If we wanted to modify the function be 1 if number of 1's mod 3 was 1, we can simply modify S to \{1\}. 
+
+    \begin{center}
+        \begin{tabular}{ |c|c|c| }
+            inital & bit & state \\
+            \hline
+            0 & 0 & 0 \\
+            1 & 0 & 1 \\
+            2 & 0 & 2 \\
+            0 & 1 & 1 \\
+            1 & 1 & 2 \\
+            2 & 1 & 0 \\
+        \end{tabular}
+    \end{center}
+
+\end{example}
+
+\begin{example}
+    \begin{equation}
+        D(x) = 
+        \begin{cases}
+            1 & \text{if x ends in} 1 \\
+            0 & \text{else}
+        \end{cases}
+    \end{equation}
+
+    The DFA for the above function is as follows:
+    \begin{center}
+        \img{./img/dfa-3.png}
+    \end{center}
+\end{example}
+
+\begin{example}
+    \begin{equation}
+        D(x) = 
+        \begin{cases}
+            1 & \text{if x has alternating bits} 1 \\
+            0 & \text{else}
+        \end{cases}
+    \end{equation}
+
+    For example, f(01010) = f(10101) = 1 while f(01001) = 0.
+
+    The DFA for the above function is as follows:
+    \begin{center}
+        \img{./img/dfa-4.png}
+    \end{center}
+\end{example}
+
+\begin{example}
+    Design a DFS that outputs 1 on strings with the same start and end bit. For example, f(011110) = 1 while f(0110101) = 0.
+
+    The DFA for the above function is as follows:
+    \begin{center}
+        \img{./img/dfa-5.png}
+    \end{center}
+\end{example}
+
+\subsection*{Anatomy of a DFA}
+Every DFA has \emph{unbounded input length} and bounded
+\begin{itemize}
+    \item number of states C
+    \item transition function T
+    \item set of accepting states S
+\end{itemize}
+
+Some more important symbols representing DFA parameters:
+\begin{itemize}
+    \item set of states Q of cardinality C
+    \item alphabet $\Sigma$ (we will use binary)
+    \item starting state $s_0$ (we will use 0)
+    \item the language $L_f$, where $f$ is the function computed by D and $L_f = \{x: f(x) = 1\}$
+\end{itemize}
+
+\hr
+
+\subsection*{Composition of DFA's}
+It may be useful to put together several DFA's and connect them with an operation. For example, consider $f_1$ computed by DFA $D_1$ and $f_2$ computed by DFA $D_2$. We may want to find $f = f_1(x) \land f_2(x)$. Can we compute f using a single DFA?
+
+It's important to once again note that DFA's can \kw{only} be used to compute single pass, constant memory algorithms. Therefore, we must find a way to compute $f_1$ and $f_2$ within the same pass if we want to compute $f$.
+
+This may be trivial at times, such as in the case where $f_1$ determines if there are an even number of 1's and $f_2$ determines if there are a multiple of 3 1's. In this case, we need only create a DFA that outputs 1 if there are a multiple of 6 1's. Let's try to generalize this beyond the special case.
+
+\theoremproof{
+    DFA's are closed under "ANDs". $f_1, f_2$ are computable by DFA's $\iff f_1 \land f_2$ computable by DFA's.
+
+    Put another way, if $L_1, L_2$ are recognized by DFA's, then there is a DFA that recognizes $L_1 \cap L_2$.
+}
+{
+    We have $D_1 = (T_1, S_1)$ that computes $f_1$ with $C_1$ states and and $D_2 = (T_2, S_2)$ that computes $f_2$ with $C_2$ states. We want to compute $f_1 \land f_2$. The idea is to run $D_1$ and $D_2$ in parallel.
+
+    We will have $C_1 \times C_2$ states represented as (i, j) pairs, where $i \in \{0, 1, ..., C_1 - 1\}$ and $j \in \{0, 1, ..., C_2 - 1\}.$
+
+    We will define $T: (C_1 \times C_2) \times \{0,1\} \rightarrow C_1 \times C_2$. In particular, $T((i, j), a) = (T_1(i, a), T_2(j, a)).$ In other words, we simply use the transition functions from each DFA to find the next ordered pair to transition to. In this way, we are computing each function in parallel.
+
+    Finally, we define $S = \{(i, j): i \in S_1 \text{ and } j \in S_2\}$. This completes the construction. 
+}
+
+We can repeat the same idea for OR, with the only difference being how we define S. For OR, $S = \{(i, j): i \in S_1 \text{ or } j \in S_2\}$. NOT is trivial as well, as we simply need to take the complement of the existing DFA's accepting set. 
+
+\hr 
+
+In practice, DFA's are often used for recognizing patterns. To discuss this, we introduce a new definition.
+
+\begin{definition}
+    Concatenation
+
+    f, g are functions from binary strings to binary. The concatenation of f, g $f \circ g = 1 \iff f(x_1) = 1 \text{ and } g(x_2) = 1$ where $x_1, x_2$ are consecutive substrings of x.
+\end{definition}
+
+Can we compute the concatenation of any two functions using a DFA?
+
+    
