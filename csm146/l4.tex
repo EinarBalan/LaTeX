@@ -52,7 +52,7 @@ We classify based on if $w^Tx + b > 0$ or $ < 0$.
 
 See slides for an example of converting a decision tree to a linear model.
 
-\subsection*{Perceptrons}
+\section{Perceptrons}
 To learn is to find the best parameters. In this case, w and b. There are several algorithms to do so such as the perceptron, logistic regression, linear support vector machines, and more. Different methods will define the "best parameters" in a different way. First we will cover perceptrons. 
 
 The main idea behind the perceptron algorithm is to learn from mistakes. Concretely, it is the following:
@@ -76,9 +76,57 @@ To quantify difficulty, lets dicuss margin.
     If a hyperplane can separate the data, the margin of a hyperplane for a dataset is the distance between the hyperplane and the data point nearest to it.
 
     The margin of a dataset ($\gamma$) is the maximum margin possible for that dataset using any weight vector.
-\end{definition}
 
-We can quantify the difficulty with $\frac{R}{\gamma}$ where $\forall i,  ||x_i|| \le R $ ($x_i$ is a feature vector). The \kw{Mistake Bound Theorem} states that the perceptron algorithm will make at most $(\frac{R}{\gamma})^2$ mistakes on the training sequence. Note that the number of mistakes is not the same as the number of data points seen. 
+    We can quantify the difficulty with $\frac{R}{\gamma}$ where $\forall i,  ||x_i|| \le R $ ($x_i$ is a feature vector). The \kw{Mistake Bound Theorem} states that the perceptron algorithm will make at most $(\frac{R}{\gamma})^2$ mistakes on the training sequence. We can see that $\gamma$ and the number of mistakes are inversely proportional, meaning that a larger margin indicates an easier problem. Intuitively, this makes sense as the decision boundary does not need to be tuned as tightly if the margin is high, resulting in fewer mistakes being needed to tune the parameters. Note that the number of mistakes is not the same as the number of data points seen. 
 
 Perceptrons are good when the data is linearly separable. Unfortunately, in the real world this is very often not the case. We will see ways to deal with this.
+\end{definition}
 
+\section{Logistic Regression}
+As discussed, if the data is not linearly separable the perceptron algorithm will not converge. Another approach is to "model the probability" with logistic regression. Here the idea is to have discrete labels $y$, but to predict $P(y = 1 | x)$ rather than the label itself. In other words, we want to build a model h(x) where
+\[
+    h(x) = \sigma(w^Tx + b) \approx P(y = 1 | x)
+\]  
+and 
+\[
+    \sigma(x) = \frac{exp(x)}{1 + exp(x)} = \frac{1}{1+exp(-x)}
+\]
+
+\subsection*{Why Sigmoid?}
+Probability by definition is a number between 0 and 1. We use the sigmoid function because it has a domain over $\mathbb{R}$ and a range between 0 and 1. That is, it maps all real numbers to (what looks like) a probability. Intuitively, our decision boundary will be where $\sigma(x) = \frac{1}{2}$ because the value is equally likely to be classifed either way (Note that right now we are discussing binary classification).
+
+\subsection*{Training Logistic Regression}
+We want to find the best w and b such that the predicted probabilities most closely align with their true labels.
+
+\begin{definition}
+    Maximum Likelihood Estimator
+
+    Let $X_1, ..., X_N$ be independent and identically distributed with PDF $p(x|\theta)$. The likelihood function $L(\theta)$ is defined as 
+    \[
+        L(\theta) = p(X_1, ..., X_N | \theta) = \prod_{i=1}^{N}p(X_i | \theta)
+    \]
+
+    The maximum likelihood estimator $\hat{theta}$ is the value of $\theta$ such that $L(\theta)$ is maximized.
+\end{definition}
+
+We can train our model using the above idea. Essentially, we will find w and b by maximizing P(S | w, b). There is no closed form solution for this optimazation. Instead, we must apply another strategy. The first we will look at is gradient descent.
+
+\section{Gradient Descent}
+\begin{center}
+    \img{./img/gradient-descent.png}
+\end{center}
+We can solve the logistic regression optimzation and determine the maximum likelihood estimator using gradient descent. The intuition behind gradient descent is that we are looking for the best direction to reach a location. In this case, the best direction is given by the gradient and the location is the global minimum of our function. Concretely, the steps are as follows:
+\begin{enumerate}
+    \item start at a random point
+    \item determine a descent direction
+    \item choose a step size
+    \item update
+    \item repeat until stopping criterion is satisfied
+\end{enumerate}
+\img{./img/gradient-descent-alg.png}
+
+
+Choosing the right step size $\eta$ is important. If it is too small it will take too long to reach a minimum, and if it is too large we will rubberband back and forth repeatedly.
+\begin{center}
+    \img{./img/gradient-descent-eta.png}
+\end{center}

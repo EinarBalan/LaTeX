@@ -1,4 +1,4 @@
-\chapter*{Decision Trees}
+\chapter{Decision Trees}
 
 Consider the sample dataset below: 
 \begin{center}
@@ -12,7 +12,7 @@ Based on this tree, we can see that a red triangle would be labeled B.
 
 Many decisions can be modeled as tree structures in this way.
 
-\subsection*{Decision Tree Representation}
+\section{Representation}
 \begin{itemize}
     \item decision trees are classifiers for instances represented as feature vectors
     \item nodes are tests for feature values 
@@ -22,7 +22,7 @@ Many decisions can be modeled as tree structures in this way.
 
 We can use decision trees to express any boolean function. How do we learn the decision tree?
 
-\subsection*{Algorithm}
+\section{Algorithm}
 We recursively build the decision tree top down with funcion ID3(S, Attributes, Label) as follows:
 \begin{itemize}
     \item base case: if all examples are labeled the same, then return a single node with the label
@@ -38,7 +38,7 @@ We recursively build the decision tree top down with funcion ID3(S, Attributes, 
 
 How do we determine the "best" attribute to split? The goal is to create the smallest decision tree possible (which can be accomplished w/ a greedy heuristic, sometimes). The problem itself is NP-hard, but it is good enough to be optimal most of the time. 
 
-\subsection*{Information Gain}
+\section{Information Gain}
 Information gain is the heuristic described above. The idea is that gaining information will reduce uncertainty, which can be measured by entropy. The formal definition of entropy H for a set S is as follows
 \[
     H[S]   = -P_+log_2(P_+) - P_-log_2(P_-)

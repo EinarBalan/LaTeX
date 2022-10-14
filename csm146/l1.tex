@@ -25,7 +25,7 @@ There are several major types of learning protocols
     \end{itemize}
 \end{enumerate}
 
-\section*{Challenges in ML}
+\section{Challenges in ML}
 \begin{itemize}
     \item structured inference: classifcation may change based on context
     \item robustness ambiguities may arise that make classifcation difficult
@@ -34,7 +34,7 @@ There are several major types of learning protocols
     \item fairness \& inclusion: models may treat different races differently and inadvertently excluse certain groups; stereotypes may also be reinforced
 \end{itemize}
 
-\section*{Defining a Supervised Learning Problem}
+\section{Defining a Supervised Learning Problem}
 
 Consider the Badges Game in which name badges at a conference were labeled with either a "+" or "-". Given a labeled training set, can we determine what general rules produced the labels?
 
@@ -46,7 +46,7 @@ Several important definitions:
     \item loss function - how do we evaluate the performance of our model; what makes a good prediction
 \end{itemize}
 
-\subsection*{Instance Space}
+\subsection{Instance Space}
 \begin{itemize}
     \item consider $\vec{x} \in X$, where $x$ is a feature vector in $X$ our instance space, which is a vector space
     \item typically $\vec{x} \in \{0,1\}^n$ or $\mathbb{R}^n$
@@ -62,7 +62,7 @@ Several important definitions:
     Naoki Abe = [0, 0, 1]
 \end{example}
 
-\subsection*{Label Space}
+\subsection{Label Space}
 How should we classify based on $\vec{x}$? There are a couple options.
 \begin{itemize}
     \item Binary $y \in \{-1, 1\}$
@@ -81,14 +81,14 @@ How should we classify based on $\vec{x}$? There are a couple options.
     \end{itemize}
 \end{example}
 
-\subsection*{Hypothesis Space}
+\subsection{Hypothesis Space}
 This is the set of all possible models. We need to find the best one for our use case. Consider an unknown boolean function. A potential hypothesis space could be every possible function.
 
 In general there are $|Y|^|X|$ possible functions from the instance space X to the label space Y. The hypothesis space is typically a subset of these. We can add rules to limit the hypothesis space, but we need to take care that these rules are not too restrictive, as it is possible that \kw{no} simple rule can explain the data.
 
 To \kw{learn} is to remove remaining uncertainty and find the best function/model in our hypothsis space. In general it is a good idea to start the hypothesis space as restrictive, and get more general.
 
-\subsubsection*{General Problem Flow}
+\section{General Problem Flow}
 \begin{enumerate}
     \item Develop a flexible hypothesis space i.e. Decision Tree, Neural Network, Nested Collections, etc
     \item Develop algorithm for finding the best hypothesis
@@ -117,7 +117,7 @@ To \kw{learn} is to remove remaining uncertainty and find the best function/mode
     How can we learn? Brute force or optimization with calculus.
 \end{example}
 
-\subsubsection*{Aside: Bias vs Variance}
+\subsection*{Aside: Bias vs Variance}
 \begin{itemize}
     \item bias: data is shifted a consistent amount
     \item variance: data is spread out around a point

@@ -1,7 +1,7 @@
 \chapter{K-Nearest Neighbors}
  KNN is a type of supervised learning classifier which uses proximity to make classifications. It can be useful to determine a category for something i.e. spam or not spam, or type of flower. KNN is quite good at this.
 
- \subsection*{Basic Algorithm}
+ \section{Basic Algorithm}
 \begin{itemize}
     \item Learning: just store training samples
     \item Prediction: Find k existing examples closest to input and group them; construct new labels based on k Neighbors
@@ -22,10 +22,10 @@
     Ex) In KNN, the inductive bias is the the set of input data (the label of a point is similar to the label of nearby points)
 \end{definition}
 
-\subsection*{Hyperparameters}
+\section{Hyperparameters}
 A hyperparameter is a parameter that controls aspects of the model, as opposed to features in the data. For example, a hyperparameter could be k or the function used to measure distance. These are not specified by the algorithm and require empirical study to optimize. The best set of parameters is specific to the dataset.
 
-\subsubsection*{Data Splits}
+\subsection{Data Splits}
 It is advised to split your dataset into train, dev, and testing sets. The training set is used to train the model, the dev (AKA validation set) is used to find the best hyperparameters, and the test set is used to evaluate the final performance of the model. 
 
 How can we find the best hyperparameters? One way is the following:
@@ -49,18 +49,18 @@ Solution: \kw{N-fold cross validation}
     \item report the average accuracy and standard deviation of the accuracy
 \end{itemize}
 
-\subsection*{Decision Boundary}
+\section{Decision Boundary}
 The KNN algorithm is not explicitly building a function. So what is the implicit function that is being computed? How do we determine a decision boundary in the set of data points?
 
 We use the "Voronoi Diagram." For every point X in a training set S, the \kw{Voronoi Cell} is a polytope consisting of all points closer to x than any other points in S. The Voronoi diagram is the union of all these cells. Basically, its just a diagram indicating areas that are closest to each point. This is for k = 1. For k > 1, it will also partition the space but with a much more complex decision boundary.
 
-\subsection*{Curse of Dimensionality}
+\section{Curse of Dimensionality}
 The more dimensions we have, the greater the proportion of points further away from the origin vs close to the origin. This essentially breaks KNN. Even if all features are relevant, in high dimensions, most points are equally far away from eachother, so it is difficult to classify them by proximity. How to deal with this?
 
 In practice, we apply dimensionality reduction. That is, we consolidate dimensions by removing irrelevant features and combining certain features. 
 
-\subsection*{Data Preprocessing}
+\section{Data Preprocessing}
 \begin{itemize}
-    \item normalize data to have zero mean unit std in each dimensionality
+    \item normalize data to have zero mean and unit std in each dimensionality
     \item scale each feature accordingly
 \end{itemize}
