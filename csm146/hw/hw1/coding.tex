@@ -58,6 +58,17 @@ The code has been included in \texttt{plot\_histograms} and \texttt{plot\_histog
 
 For each feature, what trends do you observe in the data? (Please only describe the general trend. No need for more than two sentences per feature.) 
 
+\solution{
+    \begin{itemize}
+        \item cap-shape: For both edible and inedible mushrooms the distribution is apprximately symmetrical with edible being slightly skewed left and inedible being slightly skewed right.
+        \item cap-color: For both, cap color seems to be evenly spread throughout all possible cap colors. There is no clear trend.
+        \item gill-color: For inedible, most gill-color is $<$ 4 while there is no clear trend for edible.
+        \item stalk-root: Inedible is largely skewed right while there is no clear trend for edible.
+        \item veil-type: There is a clear split between edible and inedible; edible is veil-type $>$ 0 while inedible is veil-type $<$ 0.
+        \item ring-number: There is a split between edible and inedible; edible is (mostly) ring-number $>$ 1 while inedible is (mostly) ring-number $<$ 1.
+    \end{itemize}
+}
+
 \subsection{Training and Evaluating Models \problemworth{55}}
 
 Now, let's use \verb|scikit-learn| to train a \verb|DecisionTreeClassifier| and \verb|KNeighborsClassifier| on the data.
@@ -71,14 +82,26 @@ Your goal is to implement and evaluate another baseline classifier, \verb|Random
 
 Implement the missing portions of \verb|RandomClassifier| according to the provided specifications. Then train your \verb|RandomClassifier| on the entire training data set, and evaluate its training error. 
 
+\solution{
+    Error: 0.503
+}
+
 
 \item \itemworth{5} Now that we have a baseline, train and evaluate a \verb|DecisionTreeClassifier| (using the class from \verb|scikit-learn| and referring to the documentation as needed). Make sure you initialize your classifier with the appropriate parameters; in particular, use the `entropy' criterion discussed in class. What is the training error of this classifier?
 
-
-
+\solution{
+    Error: 0.055
+}
 
 \item \itemworth{10} Similar to the previous question, train and evaluate a \verb|KNeighborsClassifier| (using the class from \verb|scikit-learn| and referring to the documentation as needed). Use $k$=3, 11 and 19 as the number of neighbors and report the training error of this classifier. If we implement KNN model from scratch, what operations we should do in the \verb|fit| method?
 
+\solution{
+    Error (k = 3): 0.064
+    Error (k = 11): 0.070
+    Error (k = 19): 0.076
+
+    If implemented from scratch, we would need to store the data in our chosen data structure within the fit method. 
+}
 
 \item \itemworth{10} So far, we have looked only at training error, but as we learned in class, training error is a poor metric for evaluating classifiers. Let's use cross-validation instead.
 
@@ -94,6 +117,14 @@ Find out the best value of $k$ using 5-fold cross validation and the F1 Score me
 Then plot the validation score against the number of neighbors, $k$. Include this plot in your writeup. What is the best value of $k$ and what is the corresponding score?
 
 You may find the \verb|cross_val_score(...)| from \verb|scikit-learn| helpful. 
+
+\solution{
+    The best value of k is 13 with a score of 0.9297682709447415.
+
+    \begin{center}
+        \img{./3e.png}
+    \end{center}
+}
 
 
 \item \itemworth{10} One problem with decision trees is that they can \emph{overfit} to training data, yielding complex classifiers that do not generalize well to new data. Let's see whether this is the case.

@@ -1,0 +1,81 @@
+\chapter{Non-Deterministic Finite Automata}
+
+To begin discussion of NFA's, we will first discuss function concatenations. For convenience, the definition is repeated below:
+
+\begin{definition}
+    Concatenation
+
+    f, g are functions from binary strings to binary. The concatenation of f, g $f \circ g = 1 \iff f(x_1) = 1 \text{ and } g(x_2) = 1$ where $x_1, x_2$ are consecutive substrings of x.
+\end{definition}
+
+\begin{example}
+    Function Concatenation
+
+    Consider $f_1$ and $f_2$. $f_1$ returns 1 for all x and $f_2$ returns 1 if x starts with 1 and has length exactly 4. Both of these are computable by DFA's as shown below (the constant one is pretty obvious so it has been omitted). 
+
+    \begin{center}
+        \img{./img/dfa-6.png}
+    \end{center}
+
+    Can we compute the concatenation of these two functions using a DFA? In fact, we can. Using just 16 states, we can use a DFA to compute it. To clarify what exactly we're computing, $f_1 \circ f_2(001010) = 1$ since $f_1(00) = 1$ and $f_2(1010) = 1$.
+\end{example}
+
+\begin{example}
+    
+    Consider a function $f_{reverse}(x)$, which simply returns the value of f when input with the reverse of x i.e. the bits are written right to left. Can we compute this with a DFA? 
+
+    It seems to be exactly the opposite of what we can compute using a DFA. DFA's always implement one pass, constant memory algorithms and it would seem necessary to violate this in order to implement $f_reverse$. We will revisit this subject. 
+\end{example}
+
+\subsection*{Non-Deterministic Finite Automata}
+\begin{center}
+    \img{./img/nfa-1.png}
+\end{center}
+
+NFA's are similar to DFA's, with some small variations:
+\begin{itemize}
+    \item they can have mulitple outgoing edges with the same states
+    \item some edges can be missing (by convention, this indicates they lead to dead states)
+    \item some edges are labeled $\varepsilon$
+\end{itemize}
+
+\begin{example}
+    \begin{center}
+        \img{./img/nfa-2.png}
+    \end{center}
+
+    The above represents the branching diagram of the NFA. If any branch has a state within S after the last bit is read, then 1 is output.
+\end{example}
+
+\begin{definition}
+    Non-Deterministic Finite Automata
+
+    An NFA, N is defined by a transition function and a set of accepting states. So N = (T, S).
+
+    \begin{gather}
+        T: [C] \times \{0, 1, \varepsilon\} \rightarrow \text{Power}([c]) \\
+        S \subseteq [c] \\
+        Power([c]) = \{I: I \subseteq [c] \}
+    \end{gather}
+
+    In other words, the transition function is mapping the current state and the current bit input to a subset of all states in the NFA.
+\end{definition}
+
+\subsection*{Why NFA's}
+One might wonder, what are NFA's good for? Well, we can use them to compute the concatenation from earlier where $f_1$ is a constant and $f_2$ is 1 if the first bit is 0 and the input length is exactly 4. Logically, the concatenation of these two outputs 1 if the 4th bit from the end is 1 and 0 otherwise. The NFA is pictured below:
+\begin{center}
+    \img{./img/nfa-3.png}
+\end{center}
+
+Important Takeaway: In general, if two functions are computable by DFA's, we can compute their concatentation using an NFA in which we simply add $varepsilon$ transitions pointing from accepting states of the first function to the start of the second.
+\begin{center}
+    \img{./img/nfa-4.png}
+\end{center}
+
+\subsection*{Kleen* Operation on Functions}
+We already discussed Kleen* as a set operation, but as a function operation it is defined as f*(x) = 1 if x can be broken up into $x_0, x_1, ..., x_n$ such that $f(x_i) = 1$ for all i.
+
+Building upon the takeaway from earlier, if f is computable by a DFA, then f* is computable by an NFA. We simply add a dummy state leading into the previous DFA's initial state and add epsilon transitions pointing from all accepting states to the initial state.
+\begin{center}
+    \img{./img/nfa-5.png}
+\end{center}

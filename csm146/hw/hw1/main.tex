@@ -15,6 +15,7 @@ Oct. 25, 2022 at 11:59 pm
 \vspace{-1in}
 \maketitle
 \vspace{-0.75in}
+\newcommand \img[1]{\includegraphics[width=0.5\linewidth]{#1}}
 
 
 \blfootnote{Parts of this assignment are adapted from course material by Andrea Danyluk (Williams), Tom Mitchell, Matt Gormley and Maria-Florina Balcan (CMU), Stuart Russell (UC Berkeley), Carlos Guestrin (UW), Dan Roth (UPenn) and Jessica Wu (Harvey Mudd). }
@@ -72,20 +73,47 @@ $X_1$ & $X_2$ & $X_3$ & $X_4$ & $Y$\\ \hline
 \item \itemworth{5} Consider constructing a decision tree with only one leaf (the tree in which root is a leaf node and has no internal node) based on these 4 attributes. What is the best $1$-leaf decision tree and what is its error rate (i.e., number of mistakes / total number of data) on these $2^4$ training examples? 
 
 \solution{
-
-(Write your solution here.)
-
+    The best 1-leaf decision tree is just a 0 leaf node, meaning every input will be classified as 0, with a 25\% error rate. 
 }
 
 \item \itemworth{5} Follow the previous question. Now, let's consider constructing a decision tree with one split. Is there a split that can reduce the error rate? Please specify the attribute that can reduce the error rate if your answer is yes. Otherwise, please discuss why is not. 
 
+\solution{
+    There is no split that will reduce the error rate. The minimum possible error rate with a split will still be 25\%.
+}
+
 \item \itemworth{5} What is the entropy of the output label $H(Y)$ (rounding to 2 decimal places).
+
+\solution{
+    $$ H(y) = -.25log_2(.25) - .75log_2(.75) = .81 $$
+    
+}
 
 \item \itemworth{5} What is the information gain if we split the data by the attribute $X_1$ ? (rounding to 2 decimal places)
 
+\solution{
+    \begin{gather*}
+        S_0 = 0 - log_2(1) = 0 \\
+        S_1 = -.5log_2(.5) - .5log_2(.5) = 0 \\
+        \\
+        \text{Gain}(Y, X_1) = .81 - (0 + 0) = .81
+    \end{gather*}
+}
+
 \item \itemworth{5} What is the information gain if we split the data by the attribute $X_3$? (rounding to 2 decimal places)
 
+\solution{
+    \begin{gather*}
+        S_0 = -.25log_2(.25) - .75log_2(.75) = .81 \\
+        S_1 = -.25log_2(.25) - .75log_2(.75) = .81 \\
+        \\
+        \text{Gain}(Y, X_3) = .81 - .5(.81 + .81) = 0
+    \end{gather*}
+}
+
 \end{enumerate}
+
+\pagebreak
 
 \ifsoln 
 \else
@@ -93,6 +121,8 @@ $X_1$ & $X_2$ & $X_3$ & $X_4$ & $Y$\\ \hline
 \fi
 
 \input{knn}
+\pagebreak
+
 \input{coding}
 
 \end{document}

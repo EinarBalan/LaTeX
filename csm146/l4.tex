@@ -106,7 +106,7 @@ We want to find the best w and b such that the predicted probabilities most clos
         L(\theta) = p(X_1, ..., X_N | \theta) = \prod_{i=1}^{N}p(X_i | \theta)
     \]
 
-    The maximum likelihood estimator $\hat{theta}$ is the value of $\theta$ such that $L(\theta)$ is maximized.
+    The maximum likelihood estimator $\hat{\theta}$ is the value of $\theta$ such that $L(\theta)$ is maximized.
 \end{definition}
 
 We can train our model using the above idea. Essentially, we will find w and b by maximizing P(S | w, b). There is no closed form solution for this optimazation. Instead, we must apply another strategy. The first we will look at is gradient descent.
