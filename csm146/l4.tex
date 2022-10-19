@@ -107,9 +107,12 @@ We want to find the best w and b such that the predicted probabilities most clos
     \]
 
     The maximum likelihood estimator $\hat{\theta}$ is the value of $\theta$ such that $L(\theta)$ is maximized.
+
+    Concretely, the MLE is 
+    $$  \text{argmax}_{w, b} \sum_{i=1}^{m}log(\sigma(y_i(w^Tx_i + b)))$$ (after some algebraic manipulation).
 \end{definition}
 
-We can train our model using the above idea. Essentially, we will find w and b by maximizing P(S | w, b). There is no closed form solution for this optimazation. Instead, we must apply another strategy. The first we will look at is gradient descent.
+We can train our model using the above idea. Essentially, we will find w and b by maximizing P(S | w, b). There is no closed form solution for this optimazation. Instead, we must apply another strategy. We will look at gradient descent.
 
 \section{Gradient Descent}
 \begin{center}
@@ -130,3 +133,115 @@ Choosing the right step size $\eta$ is important. If it is too small it will tak
 \begin{center}
     \img{./img/gradient-descent-eta.png}
 \end{center}
+
+We can apply gradient descent in order to minimize our log likelihood function (AKA our loss function) in logistic regression. We define 
+
+$$ L(w, b) = \text{arg min} \sum_{i=1}^{m}log(1+exp(-y_i(w^Tx_i + b)))$$
+
+$L$ is our loss function. Recall that it comes from our model $h(x) = \sigma(w^Tx+b) \approx P(y = 1 | x)$ where $\sigma = \frac{1}{1+exp(-z)}$.
+
+We can take its gradient via the following series of steps. 
+
+\begin{align*}
+    \nabla L(w, b) = \sum_{i=1}^{m} \nabla log(1+exp(-y_i(w^Tx_i + b))) \\
+     = \sum_{i=1}^{m} \nabla log(\frac{1}{\sigma(y_i(w^Tx_i+b)}))
+\end{align*}
+
+
+We take the gradient of the reciprocal sigmoid function without yet applying the chain rule.
+\begin{align*}
+    \nabla log\frac{1}{\sigma(z)} = \nabla log(1+exp(-z)) = \frac{exp(-z)}{1+exp(-z)} \\
+    = -\frac{1 + exp(-z) - 1}{1 + exp(-z)} = -1 + \frac{1}{1 + exp(-z)} \\
+    = \sigma(z) - 1
+\end{align*}
+
+Now to apply chain rule.
+\begin{align*}
+    \nabla_w L(w, b) = \sum_{i=1}^m \nabla_w log\frac{1}{\sigma(y_i(w^Tx_i + b))} \\
+    = \sum_{i=1}^m (\sigma(y_i(w^Tx_i +b)) - 1)y_ix_i \\
+    \\
+    \nabla_b L(w, b) = \sum_{i=1}^m (\sigma(y_i(w^Tx_i +b)) - 1)y_i \\
+\end{align*}
+
+This completes the derivation of our partial gradients. To apply them to our logistic regression, we use the following algorithm:
+
+\vspace{.25cm}
+
+\kw{Gradient Descent}
+\begin{itemize}
+    \item initialize w
+    \item For every epoch
+    \begin{itemize}
+        \item compute $\nabla_wL(w,b)$ and $\nabla_bL(w,b)$
+        \item $w \gets w - \eta \nabla_w L(w,b)$
+        \item $b \gets b - \eta \nabla_b L(w,b)$
+    \end{itemize}
+    \item return w and b
+\end{itemize}
+
+\vspace{.25cm}
+
+This algorithm can get quite expensive. Consider a large data set. We need to compute $\sigma(y_i(w^Tx_i + b)) - 1$ for every data point $(x_i, y_i)$. In addition, gradient descent typically requires many iterations to converge. This adds up to many operations that need to be performed. Can we do better?
+
+\section*{Stochastic Gradient Descent}
+Rather than compute the gradient at all points in our training set to do a single update, we use a single point in order to perform an update. These changes accumulate to approximate the overall gradient. So, in effect, the only difference is how frequently we update our parameters.
+
+\vspace{.25cm}
+
+\kw{Stochastic Gradient Descent}
+\begin{itemize}
+    \item initialize w
+    \item For every epoch
+    \begin{itemize}
+        \item sample a data point $(x_i, y_i)$ from S
+        \item compute $\nabla_wL_i(w,b)$ and $\nabla_bL_i(w,b)$
+        \item $w \gets w - \eta \nabla_w L_i(w,b)$
+        \item $b \gets b - \eta \nabla_b L_i(w,b)$
+    \end{itemize}
+    \item return w and b
+\end{itemize}
+
+\section*{Linear Regression}
+Linear regression seeks to approximate a real value output y based on input x. It is essentially drawing a line of best fit for the data. We use Least Mean Squares Regression (LMS) to compute it.
+
+$$ \text{argmin}_{w,b}\frac{1}{2} \sum_{i=1}^m (y_i - (w^Tx_i + b))^2 $$
+
+As the name suggests, we are finding the parameters that minimize the squares of the difference of the labels and the predicted values. This can be done with stochastic gradient descent. 
+
+\section{Evaluation Metrics}
+Sometimes accuracy and error rates can be misleading. Consider a data set that is heavily biased towards one of the labels i.e. the majority of the labels are classified negative. A lazy majority classifier could outperform a classifier that received a substantial amount of training! Obviously, this is not ideal and we should find a better evaluation metric that takes into account how balanced a dataset is.
+
+A useful tool is the confusion matrix. Consider the following dataset.
+\begin{center}
+    \begin{tabular} {| c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+        \hline
+        True label & - & - & - & - & - & + & - & - & - & - & - & + & - & - &  + & - & - \\
+        \hline
+        Predicted label & - & - & - & - & - & + & + & - & - & - & - & - & + & - &  + & - & - \\
+        \hline
+    \end{tabular}
+\end{center}
+\vspace{.5cm}
+The confusion matrix is the following:
+\begin{center}
+    \begin{tabular}{| c | c | c |}
+        & True Label Positive & True Label Negative \\
+        \hline
+        Predicted Label Positive & 2 (True Positive) & 2 (False Positive) \\
+        \hline
+        Predicted Label Negative & 1 (False Negative) & 16 (True Negative) \\
+    \end{tabular}
+\end{center}
+
+\begin{gather*}
+    \text{Accuracy} = \frac{TP + TN}{TP + TN + FN + FP} = \frac{18}{21} = .86 \\
+    \text{Precision} = \frac{TP}{TP + FP} = \frac{2}{4} = .5 \\
+    \text{Recall} = \frac{TP}{TP + FN} = \frac{2}{3} \approx .67 \\
+\end{gather*}
+
+We can see that both the precision and the recall are much lower than the accuracy due the imbalanced dataset.
+
+We can define a new metric, the F1 score, which is just the harmonic mean of the precision and recall.
+$$
+\frac{1}{F_1} = (\frac{1}{P} + \frac{1}{R}) \ 2
+$$

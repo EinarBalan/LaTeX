@@ -1,0 +1,21 @@
+\chapter{Non-Linear Classifiers}
+What if is impossible to create a good linear separation of the data? In this case, we may want to look into models that allow for non-linear decision bounaries.
+
+\begin{center}
+    \img{./img/non-linear-db.png}
+\end{center}
+
+\section{Neural Networks}
+Designed to mimic the brain, neural networks are capable of producing non-linear decision boundary models. Each neural network, is made up of many \kw{nodes} connected by \kw{links}. Each link as an associated weight and activation level. Every node has an input function (typically just a weighted sum of inputs), an activation function, and an output. The following diagram models a single node:
+
+\begin{center}
+    \img{./img/nn-node.png}
+\end{center}
+
+There are many possible activation functions including:
+\begin{itemize}
+    \item sigmoid $\sigma(x) = \frac{1}{1 + e^-x}$
+    \item hyperbolic tangent $tanh(x) = \frac{e6x-e^-x}{e^x+e^-x}$
+    \item step function
+    \item ReLU, which returns 0 if x $\leq$ 0 or x if x > 0
+\end{itemize}
