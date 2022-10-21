@@ -19,3 +19,83 @@ There are many possible activation functions including:
     \item step function
     \item ReLU, which returns 0 if x $\leq$ 0 or x if x > 0
 \end{itemize}
+
+The steps for a "feed forward" neural network are the following (where x is input layer and $\theta^{(i)}$ is the weight matrix for layer i):
+\begin{itemize}
+    \item $z^{(2)} = \theta^{(1)}x$
+    \item $a^{(2)} = g(z^{(2)})$
+    \item concatenate 1 to start of $a^{(2)}$ (to account for bias)
+    \item and repeat for remaining layers
+\end{itemize}
+
+\begin{example}
+    
+    let $\theta^{(1)} = \begin{bmatrix}
+        1 & 0 & 0 & 1 \\
+        0 & -1 & 1 & 0 \\
+        2 & 0 & 1 & 1 
+    \end{bmatrix}$, $\theta^{(2)} = \begin{bmatrix}
+        0 & 1 & 1 & 0 
+    \end{bmatrix}$, step function as activation function, and $x = \begin{bmatrix}
+        1 \\
+        0 \\
+        2 \\
+        1
+    \end{bmatrix}$
+
+    What is the output with x as input?
+
+    $z^{(2)} = \theta^{(1)}x = \begin{bmatrix}
+        2 \\ 2 \\ 5
+    \end{bmatrix} \implies a^{(2)} = \begin{bmatrix}
+        1 \\ 1 \\ 1 \\ 1
+    \end{bmatrix} \implies z^{(3)} = 2 \implies$ output = 1. 
+\end{example}
+
+\begin{example}
+    \begin{center}
+        \img{./img/rectangle-nn.png}
+    \end{center}
+
+    We want to classify all points within the rectangle as positive, and all others as negative. Show a feed forward neural network that accomplishes this. 
+
+    First, we notice that the rectangle consists of four lines, which can be representedas the following set of inequalities
+    \begin{equation*}
+        \begin{cases}
+            x_1 > 0 & \\
+            5 - x_1 > 0 & \\
+            x_2 > 0 & \\
+            2 - x_2 > 0 & \\
+        \end{cases}
+    \end{equation*}
+
+    From this we construct our first weight matrix (with first column as constant, second as $x_1$ coefficient, and third as $x_2$ coefficient)
+    \[ \theta^{(1)} = \begin{bmatrix}
+        0 & 1 & 0 \\
+        5 & -1 & 0 \\
+        0 & 0 & 1 \\
+        2 & 0 & -1 \\
+    \end{bmatrix} 
+    \]
+
+    We want all values in $a^{(2)}$ to be 1 (indicating the point falls satisfies all the equations), so we the set the bias to be -3.5. Therefore,
+    \[
+        \theta^{(2)} = \begin{bmatrix}
+            -3.5 & 1 & 1 & 1 & 1
+        \end{bmatrix}
+    \]
+
+    We can take this further and construct any arbitrary decision boundary by combining examples such as the one above in multiple layers. 
+\end{example}
+
+\section{Training Neural Networks}
+We can use stochastic gradient descent, except our loss function is changed to 
+\[
+    J(\theta)   = -\sum_i^m[y_ilogh_\theta(x_i) + (1-y_i)log(1-h_\theta(x_i))]
+\]
+How do we compute $\nabla J(\theta)$? We need to use an algorithm called back propogation.
+
+\subsection*{Back Propogation}
+Backpropogation utilizes the chain rule to compute a gradient.
+
+TODO: wtf was he talking about bro

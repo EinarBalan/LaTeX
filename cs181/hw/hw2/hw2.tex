@@ -11,23 +11,21 @@
 \usepackage{tikz}
 \usepackage{graphicx}
 \newcommand{\ignore}[1]{}
+\newcommand \kw[1]{\textbf{#1}}
+\newenvironment{answer}{
+\vspace{.5cm}
+\kw{Answer} 
 
+}
+{
+\pagebreak
+}
 
 \title{\bf{CS 181: Homework 2}}
 \author{ Einar Balan}
 \date{}
 \begin{document}
 \maketitle
-\begin{mdframed}
-\textsc{Guidelines}:
-\begin{itemize}
-\item Upload your assignments to Gradescope by 9:59 PM. 
-\item Follow the instructions mentioned on the course webpage for uploading to Gradescope very carefully (including starting each problem on a new page and matching the pages with the assignments); this makes it easy and smooth for everyone. As the guidelines are simple enough, bad uploads will not be graded. 
-\item You may use results proved in class without proofs as long as you state them clearly.
-\item Most importantly, make sure you adhere to the policies for academic honesty set out on the course \href{https://hackmd.io/@raghum/introtcs}{webpage}. The policies will be enforced strictly. Homework is a stepping stone for exams; keep in mind that reasonable partial credit will be awarded and trying the problems will help you a lot for the exams.
-\item All problem numbers correspond to our text 'Introduction to Theory of Computation' by Boaz Barak. So, exercise a.b refers to Chapter a, exercise b.
-\end{itemize}
-\end{mdframed}
 
 
 
@@ -38,8 +36,12 @@
 
 Now compare the number of circuits to the number of m-bit output functions as we did in class. You don't have to redo the arithmetic calculations we did in class - you can use those simplifications as is.]
 
+\begin{answer}
+    
+\end{answer}
+
 \item Answer the following for the DFA shown in the figure [.75 point]:\\
-\includegraphics[width=2in]{DFA}
+\includegraphics[width=2in]{DFA.png}
 
 \begin{enumerate}
 \item What is the set of accept states?
@@ -47,17 +49,37 @@ Now compare the number of circuits to the number of m-bit output functions as we
 \item Write down an accepting input for the machine.
 \end{enumerate}
 
+\begin{answer}
+    a) $S = \{3\}$ \\ 
+    b) $0 \rightarrow 1 \rightarrow 2 \rightarrow 2 \rightarrow 0 \rightarrow 1 \rightarrow 2 \rightarrow 2$ \\ 
+    c) 01
+\end{answer}
+
 \item Draw a DFA that accepts strings which contain $011$ as a substring. For instance, $001100$, $00110$, $00000110111$ would be accepted whereas $010100$ should not be. [1 point]
 
 [Hint: Think along the following lines: As you go over the input, you should initially skip all 1's. If you see a 0, then you may be onto something - it could be the first 0 of your sequence. If you see a 0 now, you can 'reset'. If you see a 1, you know you've seen a 0 and a 1. What should you look for next? You don't have to prove that you are correct - just the diagram with some explanations to make the grading easier would be enough.]
+
+\begin{answer}
+    \includegraphics[scale=.2]{dfa-3.jpg}
+
+    Following the hint, the DFA shown will only progress towards the accepting state if the sequence 011 is followed. If it is not, then the state is reset back to 0. However, if 011 is encountered then the DFA enters a persistent accepting state. That is, it is not possible to leave the accepting state once it has been entered. This is consistent with the fact that if 011 is encountered within an input then the input string will always contain 011 (it won't magically disappear somewhere).
+\end{answer}
 
 \item Use the construction we did in class to build a NFA for the Kleene star operation to build a NFA that accepts the strings $(\{01, 001\})^*$. [.75 point]
 
 [Hint: Start with a DFA that only accepts $\{01, 001\}$ and then use the construction in class. You don't have to prove your construction works - just a diagram is enough (with some verbal explanations for clarity).]
 
+\begin{answer}
+    \includegraphics[scale=.15]{nfa-4.jpg}
+\end{answer}
+
 \item For a language $L$, define $DROPLAST(L)$ to be the language containing all strings that can be obtained by removing the last symbol of a string in $L$. Thus, $DROPLAST(L) = \{x: xb \in L, \text{ for some }b \in \{0,1\}\}$. Show that if $L$ is computable by a DFA, then DROPLAST(L) is computable by a NFA. [.5 points]
 
 [Hint: Think of adding appropriate $\varepsilon$ transitions to accepting states. You don't have to prove your construction works - just a diagram is enough (with some verbal explanations for clarity).]
+
+\begin{answer}
+    
+\end{answer}
 
 \end{enumerate}
 

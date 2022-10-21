@@ -79,3 +79,64 @@ Building upon the takeaway from earlier, if f is computable by a DFA, then f* is
 \begin{center}
     \img{./img/nfa-5.png}
 \end{center}
+
+\begin{example}
+    Construct an NFA where L = \{ all strings that have a 1 in the last three positions \}.
+
+    \begin{center}
+        \img{./img/nfa-6.png}
+    \end{center}
+
+    This works by branching off at bit and checking 1) if there are less than or equal to three bits remaining and 2) if one of those bits is a 1 (we only progress to an accepting state if 1 is seen and we go to dead state if more than three bits are read).
+\end{example}
+
+\hr 
+
+Recall the $f_{\text{reverse}}$ example. $f_{\text{reverse}}(x)$ is one if $f$ is 1 when the input string is the reverse of x. If $f$ is computable by a DFA, what about $f_{\text{reverse}}$? 
+
+We can compute it with an NFA! The process is as follows:
+\begin{enumerate}
+    \item add a new start state to the DFA for f
+    \item add $\varepsilon$ transitions from new starting state to all previous accepting states
+    \item reverse the direction of all arrows
+    \item make old start state the new accept state
+\end{enumerate}
+
+\section{NFA's vs DFA's: Computability}
+One might wonder, are NFA's more powerful than DFA's? They seem to have more functionality with epsilon transitions and multiple possible outgoing edges from the same input bit, so one would expect that this is the case. However, a \kw{mind boggling} theorem shows that this is not the case! 
+
+\theoremproof{
+    Every NFA has an equivalent DFA!
+
+    For every NFA N, $\exists$ a DFA D such that N(x) = D(x) $\forall$ x. As a result, the concatenation of two functions, the kleene star operation on a function, and 
+}
+{
+    The main idea is that for each level of our NFA input tree we need to know what states are reachab le at that level. We can merge redundant states at the same level into one. 
+
+    First, we will assume the case where there are no $\varepsilon$ transitions. Given an NFA $N = (T_N, S_N)$The goal is to find a DFA $D = (T_D, S_D)$ such that $N(x) = D(x) \forall x \in \{0,1\}^*$. If the NFA is on states [c], we will construct a DFA whose states corresond to subsets of Power([c]) i.e. if c = 3, the DFA states will be $\emptyset, \{0\}, \{1\}, \{2\}, \{0, 1\}, \{1, 2\}, \{0, 2\}, \{0, 1, 2\}$. The number of states in our new DFA is $2^c$.
+
+    We construct $T_D$ with the following: 
+    $$ T_D: Power([c]) \times \{0,1\} \rightarrow Power([c])$$
+    $$ T_D(I, a) = \bigcup_{i \in I}T_N(i, a) $$
+
+    And the accepting states:
+    $$ S_D = \{ R \subseteq [c]: R \cap S_T \neq \emptyset $$
+
+    The start state should just be \{0\}.
+
+    In words for each of these, for each element in I we group together the results from $T_N$ removing duplicates. For $S_D$, we include all subsets that have a value in the original set of accepting states.
+
+    \hr 
+
+    What if we add epsilon transitions?
+
+    \begin{definition}
+        Eps(I) = all states reachable by taking $varepsilon$ edges from i + \{i\}
+    \end{definition}
+
+    To finish, we simply wrap our transition function and new start state with Eps and we are done.
+
+    $$ T_D(I, a) = Eps(\bigcup_{i \in I}T_N(i, a)) $$
+    The start state should just be Eps(\{0\}).
+    \qed
+}
