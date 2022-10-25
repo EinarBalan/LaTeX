@@ -38,6 +38,30 @@ Now compare the number of circuits to the number of m-bit output functions as we
 
 \begin{answer}
     
+    We start by definining two functions (similar to what we did in class)
+
+    \[
+        \text{All}_{n,m} = \{ f: \{0, 1\}^n \rightarrow \{0, 1\}^m \}
+    \]
+    \[
+        \text{SIZE}_{n, m}(s) = \{ \text{All functions with m bit outputs computable by a circuit of size } \le s\}
+    \]
+
+    The goal is to show $|\text{All}_{n,m}| > |\text{SIZE}_{n, m}(\delta m \frac{2^n}{n})|$. If this is the case, then there must be some functions that require more than size $\delta m \frac{2^n}{n}$.
+
+    We showed in class that $|\text{SIZE}_{n, m}(s)|$ is $\le (2)2^{12(n + s)log_2(n+s)}$. To count the size of $|\text{All}_{n,m}|$, we consider the fact that there are $2^n$ rows and $2^m$ possible choices of output per row. This results in $(2^m)^{2^n}$ posisble functions. Now we must show that, for sufficiently large m and n (as stated by Professor on EdStem),
+    \[
+        (2^m)^{2^n} > (2)2^{12(n + s)log_2(n+s)}
+    \]  
+
+    Simplifying and substituting s we get 
+    \[
+        (2^m)^{2^n} > 2^{12(n^2 + \delta m * 2^n)}
+    \]
+
+    Now we can simply pass in arbitrary values, $\delta = \frac{1}{120}, m = 7$, and $n = 7$. Computing this we get that $5.283 \times 10^{269} > 9.504 \times 10^{203}$, which is clearly true. This same thing holds as m and n increase. The goal is shown.
+
+    \qed
 \end{answer}
 
 \item Answer the following for the DFA shown in the figure [.75 point]:\\
@@ -60,9 +84,9 @@ Now compare the number of circuits to the number of m-bit output functions as we
 [Hint: Think along the following lines: As you go over the input, you should initially skip all 1's. If you see a 0, then you may be onto something - it could be the first 0 of your sequence. If you see a 0 now, you can 'reset'. If you see a 1, you know you've seen a 0 and a 1. What should you look for next? You don't have to prove that you are correct - just the diagram with some explanations to make the grading easier would be enough.]
 
 \begin{answer}
-    \includegraphics[scale=.2]{dfa-3.jpg}
+    \includegraphics[scale=.18]{dfa-3.jpg}
 
-    Following the hint, the DFA shown will only progress towards the accepting state if the sequence 011 is followed. If it is not, then the state is reset back to 0. However, if 011 is encountered then the DFA enters a persistent accepting state. That is, it is not possible to leave the accepting state once it has been entered. This is consistent with the fact that if 011 is encountered within an input then the input string will always contain 011 (it won't magically disappear somewhere).
+    Following the hint, the DFA shown will only progress towards the accepting state if the sequence 011 is followed. If it is not, then the state is reset back to the state where a 0 has been seen. However, if 011 is encountered then the DFA enters a persistent accepting state. That is, it is not possible to leave the accepting state once it has been entered. This is consistent with the fact that if 011 is encountered within an input then the input string will always contain 011 (it won't magically disappear somewhere).
 \end{answer}
 
 \item Use the construction we did in class to build a NFA for the Kleene star operation to build a NFA that accepts the strings $(\{01, 001\})^*$. [.75 point]
@@ -71,6 +95,8 @@ Now compare the number of circuits to the number of m-bit output functions as we
 
 \begin{answer}
     \includegraphics[scale=.15]{nfa-4.jpg}
+
+    We use the same idea from class, and in the previous problem except we have a branching path now to allow for two different accepted strings. Dead state when the string does not follow the pattern of one of the strings within the set.
 \end{answer}
 
 \item For a language $L$, define $DROPLAST(L)$ to be the language containing all strings that can be obtained by removing the last symbol of a string in $L$. Thus, $DROPLAST(L) = \{x: xb \in L, \text{ for some }b \in \{0,1\}\}$. Show that if $L$ is computable by a DFA, then DROPLAST(L) is computable by a NFA. [.5 points]
@@ -78,14 +104,16 @@ Now compare the number of circuits to the number of m-bit output functions as we
 [Hint: Think of adding appropriate $\varepsilon$ transitions to accepting states. You don't have to prove your construction works - just a diagram is enough (with some verbal explanations for clarity).]
 
 \begin{answer}
-    
+    Considering we have a DFA computing L, we simply need to add $\varepsilon$ transitions from all states feeding into accepting states and remove any 0,1 transitions into the accepting states. The diagram below shows an example of this.
+
+    \includegraphics[scale=.125]{nfa-5.jpg}
 \end{answer}
 
 \end{enumerate}
 
 \end{document}
 
-\item For a language $L$, define $DROPOUT(L)$ to be the language containing all strings that can be obtained by removing one symbol from a string in $L$. Thus, $DROPOUT(L) = \{a c : abc \in L, a, c \in \{0,1\}^*, b \in \{0,1\}\}$. Show that the class of regular languages is closed under DROPOUT. That is if $L$ is regular, then so is $DROPOUT(L)$. [1 point]
+% \item For a language $L$, define $DROPOUT(L)$ to be the language containing all strings that can be obtained by removing one symbol from a string in $L$. Thus, $DROPOUT(L) = \{a c : abc \in L, a, c \in \{0,1\}^*, b \in \{0,1\}\}$. Show that the class of regular languages is closed under DROPOUT. That is if $L$ is regular, then so is $DROPOUT(L)$. [1 point]
 
-[Hint: Try to desgin a NFA for DROPOUT(L). To do so try to guess `where' the drop occurs, and use the idea from part(a). One idea is have two copies of the DFA for $L$, and then connect them based on a `guess' for where the drop is. So for example, think about how you would recognize a string obtained from L by dropping the second symbol. ]
+% [Hint: Try to desgin a NFA for DROPOUT(L). To do so try to guess `where' the drop occurs, and use the idea from part(a). One idea is have two copies of the DFA for $L$, and then connect them based on a `guess' for where the drop is. So for example, think about how you would recognize a string obtained from L by dropping the second symbol. ]
 

@@ -206,7 +206,7 @@ We want to show that $|All_n| > |SIZE_n(\frac{c*2^n}{n})|$.
         \item idea: count using encodings
         \item \# circuits $\le$ number of binary strings of length $12(n + s)log_2(n + s)$
         \item we know the number of strings of length $\le l$ is $2^0 + 2^1 + 2^2 + 2^3 + ... + 2^l = 2^{l + 1} - 1$ (geometric series)
-        \item so the number of circuits $\le 2^{12(n+s)log_2(n+s) + 1} - 1$
+        \item so the number of circuits $\le 2 * 2^{12(n+s)log_2(n+s)}$
     \end{itemize}
 \end{itemize}
 

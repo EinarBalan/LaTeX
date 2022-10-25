@@ -110,6 +110,15 @@ Implement the missing portions of \verb|error(...)| according to the provided sp
 
 Next, use your \verb|error(...)| function to evaluate the training error and (cross-validation) test error and test micro averaged \href{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html?highlight=f1\%20score#sklearn.metrics.f1_score}{F1 Score} of each of your four models (for the \verb|KNeighborsClassifier|, use $k=11$). To do this, generate a random $85/15$ split of the training data, train each model on the $85\%$ fraction, evaluate the error on both the $85\%$ and the $15\%$ fraction, and repeat this $100$ times to get an average result.
 
+\solution{
+    Answers formatted as (training error, test error, f1 score)
+    \begin{itemize}
+        \item MajorityVoteClassifier: (0.4667225950783002, 0.4671417260490902, 0.5328582739509095)
+        \item RandomClassifier: (0.49947427293064883, 0.5001583531274743, 0.4998416468725258)
+        \item DecisionTreeClassifier: (0.05469658836689039, 0.054758511480601735, 0.945241488519398)
+        \item KNeighborsClassifier: (0.06751957494407158, 0.07050673000791768, 0.9294932699920825) 
+    \end{itemize}
+}
 
 \item \itemworth{10} One way to find out the best value of $k$ for \verb|KNeighborsClassifier| is $n$-fold cross validation.
 Find out the best value of $k$ using 5-fold cross validation and the F1 Score metric. Run cross validation for all odd numbers ranging from 1 to 100 as the number of neighbors.
@@ -134,5 +143,12 @@ One way to prevent decision trees from overfitting is to limit their depth. Run 
 Then plot the average training F1 Score and test F1 score against the depth limit. Include this plot in your writeup, making sure to label all axes and include a legend for your classifiers. What is the best depth limit to use for this data? Do you see overfitting? Justify your answers using the plot.
 
 You may find \verb|cross_validate| from \verb|scikit-learn| helpful when you want both training scores and validation scores.
+
+\solution{
+    There is no overfitting no matter how high the max depth is. The f1 score simply levels out around d = 10 for both trianing and test as seen below. This result is unexpected as it would seem logical that what should happen is that the train score increases with depth and the test error decreases dramatically after a certain point due to overfitting. 
+    \begin{center}
+        \img{./3f.png}
+    \end{center}
+}
 
 \end{enumerate}

@@ -140,3 +140,90 @@ One might wonder, are NFA's more powerful than DFA's? They seem to have more fun
     The start state should just be Eps(\{0\}).
     \qed
 }
+
+\begin{example}
+    Given an NFA,
+    \begin{center}
+        \img{./img/nfa-7.png}
+    \end{center}
+
+    We can construct a DFA like the following (incomplete diagram),
+    \begin{center}
+        \img{./img/dfa-7.png}
+    \end{center}
+
+    Note that the $\emptyset$ state denotes the dead state. We create a state for each subset of states in the NFA and use the formula above to get arrows. The accepting states are simply all sets that contain the accepting states from the
+\end{example}
+
+\section{Pattern Matching}
+In a standard pattern matching problem, we have some 
+"text" and a "pattern," with the length of the pattern being much shorter than the length of the text. The question is, does the pattern occur within the text?
+
+A naive O(m * n) algorithm is the following (assuming p is lengthm and x is length n):
+\begin{verbatim}
+def patternmatch(x, p):
+    l = len(p)
+    for i in range(0, len(x) - l):
+    if x[i, i + l] == p:
+        return 1
+    return 0
+\end{verbatim}
+
+We can do better. Using the Knuth-Morris-Pratt (KMP) algorithm, we get an O(m + n) single-pass algorithm
+\begin{itemize}
+    \item given P, first find a DFA D on m + 1 states O(m)
+    \item for any string x, p occurs in x $\iff$ D(x) = 1
+    \item now mimic behaviour of D on x O(n)
+\end{itemize}
+
+\hr
+
+\subsection*{Regular Expressions}
+Regular expressions are a programming tool used to efficiently find some pattern within some text. We will formally define them here.
+
+\begin{definition}
+    
+    Base cases:
+    \begin{itemize}
+        \item "0" is a regex
+        \item "1" is a regex
+        \item $\emptyset$ is a regex
+        \item $varepsilon$ is a regex (empty string)
+    \end{itemize}
+
+    Compound cases ($r_1, r_2$ are regex):
+    \begin{itemize}
+        \item $r_1r_2$ (concatenation) is a valid regex
+        \item $r_1^*$ is a valid regex (repetition 0-n times)
+        \item $(r_1 | r_2)$ is a valid regex (r1 or r2)
+    \end{itemize}
+\end{definition}
+
+\begin{example}
+    \begin{enumerate}
+        \item Does x = 0 match (0 | 1)? yes
+        \item x = 01 match (0 | 1)(0 | 1)? yes
+        \item x = 00 match (0 | 1)1(0 | 1)? no
+        \item What matches $(0 | 1)^*$? All strings
+        \item $(0 | 1)^*0$? strings ending in 0
+        \item $(10)^*$? repetitions of 10
+        \item $(0(10)^* | (10)^*1 | (01)^* | (10)^*)$? all strings with alternating symbols
+        \item $0^*10^*10^*10^*$ strings with exactly three 1's
+        \item $((0^*10^*10^*10^*)^* | 0^*)$? all strings with number of ones divisible by 3
+        \item $(0 | 1)^* 1 (0|1)(0|1)(0|1)$? all strings with 1 4th bit from the end
+    \end{enumerate}
+\end{example}
+
+\begin{theorem}
+    Regex is computationally equivalent to a DFA.
+
+    For every regex r, there is a DFA D such that the output of the regex is the same as the output of the DFA for all x. 
+
+    For every DFA D, there is a regex r such that the output of the regex is the same as the output of the DFA for all x.
+\end{theorem}
+
+We can compute regex pattern matching in O(n * m) time. The GREP algorithm is the following:
+\begin{itemize}
+    \item conver the regex to an equivelant NFA N with O(m) states and transitions in O(m) time
+    \item simulate NFA N on the input X in O(m * n) time
+\end{itemize}
