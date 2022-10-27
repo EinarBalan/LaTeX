@@ -1,0 +1,61 @@
+\chapter{Computational Learning Theory}
+
+We will discuss the difference between learning and memorizing and Probably Approximately Correct (PAC) Learning. For PAC we want to answer the question, how much training data do we need to get a good classifier (i.e. a classifier that has a high probability of having a low error on a test set). First we will discuss the monotone conjunction function class.
+
+\section{Learning Monotone Conjunctions}
+First off, a monotone conjunction is a class of functions in which the only "operation" being performed is logical and i.e. $f(x_1, x_2, x_3) = x_1 \land x_2 \land x_3$.
+
+First off, we say a concept is learnable if you don't need to see all possible examples to make a good prediction. For example, you've probably never seen the arithmetic problem 1234 + 2332 before, but you can determine the answer is 3566. This makes arithmetic learnable. The important question is, how much training data do we need in order to train a good classifier (also known as our sample complexity)?
+
+\begin{definition}
+    PAC learnable
+
+    We say a function is PAC learnable if the number of examples we need to see is polynomial to the parameters defining the concept
+\end{definition}
+
+Set up
+\begin{itemize}
+    \item Instance Space: X, the set of examples
+    \item Concept Space: C, the set of possible target functions where $f \in C$ is the hidden target function
+    \item Hypothesis Space: H, the set of possible hypothesis mappings that the learning algorithm will explore
+    \item Training Instances: S x \{-1, 1\}: positive and negative examples of the target concept drawn from distribution D (a subset of X)
+    \item What we want: a hypothesis $h \in H$ such that h(x) = f(x)
+    \item Assumption: training and test data are both drawn independently and identically distributed from X
+\end{itemize}
+
+Note that it's possible for the concept space and hypothesis space to not line up completely, meaning the target function might not always be found in the hypothesis space. For now, we will assume that C = H.
+
+\hr
+
+We can define a simple algorithm for learning monotone conjunctions.
+
+Consider the following data formatted as <x, f(x)>:
+
+<(1, 1, 1, 1, 1, 1, ..., 1, 1), 1> \\
+<(1, 1, 1, 0, 0, 0, ..., 0, 0), 0> \\
+<(1, 0, 1, 1, 1, 0, ..., 0, 1), 1> \\
+<(1, 1, 1, 1, 1, 1, ..., 0, 1), 1> \\
+<(1, 1, 1, 1, 1, 0, ..., 1, 1), 0> \\
+<(1, 1, 1, 0, 0, 0, ..., 0, 1), 1> \\
+<(1, 1, 1, 1, 1, 1, ..., 0, 1), 0> \\
+
+How do we determine f? Well, we know that f is a monotone conjunction, so it only consists of and operations. As a result, a variable cannot be included in f if it is equal to 0 while the output is 1. We simply search all of our data to find these counter examples and remove all variables with this quality. For example, the function cannot include $x_2$ because the third row of data is a counterexample.
+
+This algorithm is good, but it does not guarantee that we will find our exact target function f. There might be a counter example for a variable that we simply have not seen. It is useful to quantify how likely we are to see a counterexample when we have N examples in our training set.
+
+\begin{definition}
+    Error of hypothesis
+
+    Given a distribution D over examples, the error of a hypothesis h with respect to a target concept f is 
+    \[
+        err_D(h) = P_{x \sim D}[h(x) \neq f(x)]
+    \]
+\end{definition}
+
+\kw{Theorem}
+
+Suppose we are learning a monotone conjunctive concept with n dimensional boolean features using m training examples. if
+\[
+    m > \frac{n}{\epsilon}(log(n) + log(\frac{1}{\delta}))  
+\]
+then with probability $> 1 - \delta$, the error of the learned hypothesis will be less than $\epsilon$. The derivation for this is available in lecture 11 slides.

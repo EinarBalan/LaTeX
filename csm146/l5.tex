@@ -96,7 +96,8 @@ We can use stochastic gradient descent, except our loss function is changed to
 How do we compute $\nabla J(\theta)$? We need to use an algorithm called back propogation.
 
 \subsection*{Back Propogation}
-Backpropogation utilizes the chain rule to compute a gradient.
+Backpropogation utilizes the chain rule to compute a gradient. It's important to understand back propogation in order debug neural networks when issues arise. For example, sometimes the gradient of a function might go to zero at postive or negative infinity (such as in the sigmoid function). Back propogation is more difficult in this case and the algorithm needs to be adjusted.
 
 TODO: wtf was he talking about bro https://medium.com/@karpathy/yes-you-should-understand-backprop-
 e2f06eab496b
+

@@ -1,0 +1,94 @@
+\chapter{Multiclass Classification}
+
+Multiclass classification occurs when we have k possible classes that our data can potentially fall into. In the basic case, each input should belong to exactly 1 of these classes (however this is not always the case, as seen in multilabel classification). There are two key ideas to solve multiclass classification: 1) we can train k binary classifiers and make the final decision based on the binary classifiers or 2) train a single classifier to consider all cases simultaneously. 
+
+\section{Binary Decomposition}
+\begin{enumerate}
+    \item One Against All Strategy
+    \begin{itemize}
+        \item decompose into k binary problems (i.e. is a classification satisifed or not)
+        \item learn k of the above models
+        \item in the ideal case, only the correct label will have a positive score from the classifier (however this is typically not the case)
+        \item how to decide which class to classify as if multiple have positive scores?
+        \item one way is to just pick the most positive (i.e. the max score class) "Winner takes all"
+        \item Analysis
+        \begin{itemize}
+            \item not always possible to learn bc not all points are linearly separable from the others (i.e. if a class falls between two classes)
+            \item the output range of each classifer might not be the same leading to one classifier dominating the others despite data being closer to the decision boundary; this is because each of the classifiers are trained independently
+            \item easy to implement and works well in practice
+        \end{itemize}
+    \end{itemize}
+    \item One Against One Strategy
+    \begin{itemize}
+        \item this also decomposes the problem in binary classification
+        \item while training we only consider two classes at a time, which are usually linearly separable; we need more classifers here (K choose 2)
+        \item for each class pair, positive examples will be of one of the labels while negative will be of the other label
+        \item this is more complex as each label gets k - 1 comparisons; the output of the binary classifer may not be coherent
+        \item we compare each one to one classifer and count the number of times each label wins; the majority is the overall winner
+        \item sometimes there will be a tie; in this case we can look at the one to one classifer for the tied classes and return its output
+    \end{itemize}
+\end{enumerate}
+
+\vspace*{.5cm}
+
+Comparing these two:
+\begin{enumerate}
+    \item One Against All
+    \begin{itemize}
+        \item O(K) weight vectors to train and store
+        \item training set of the binary classifers may be unbalanced (most labels do not belong to a certain class)
+        \item less expressive and requires a strong assumption (data is linearly separable from all other classes)
+    \end{itemize}
+    \item One Against One
+    \begin{itemize}
+        \item O($K^2$) weight vectors to train and store
+        \item size of training set for a pair of labels could be small, leading to overfitting
+        \item need large space to store the model
+    \end{itemize}
+\end{enumerate}
+
+\begin{example}
+    
+    Consider we have a 10 class classification problem with 29 features, each class has 1000 examples.
+
+    \begin{enumerate}
+        \item How many parameters in total for linear models with one-vs-one? (10 choose 2) * (29 + 1)
+        \item How many parameters in total for linear models with one-against-all? (10) * (29 + 1)
+        \item How large is the training data for each one-vs-one classifier? 1000 per class -> 2000 for each classifier
+        \item How large is the training data for each one-against-all classifier? 1000 for positive class, 9000 for negative -> 10,000
+    \end{enumerate}
+\end{example}
+
+\subsubsection*{Problems with Decomposition }
+\begin{itemize}
+    \item learning optimizes over local metrics rather than global; does not guarantee good global performance
+    \item a poor decomposition leads to poor performance i.e. if the local problems are difficult or irrelevant
+\end{itemize}
+
+For these reasons, we might want to use \kw{Multiclass Logistic Regression}.
+
+\section{Multiclass Logistic Regression}
+
+Recall that in binary logistic regression we model probability with seek to minimize the log likelihood
+\[
+    min_w(\frac{1}{2}w^Tw + C \sum_i log(1 + e^{-y_i(w^Tx_i)}))  
+\]
+
+Labels are generated with the following probability distribution:
+\[
+    P(y = 1|x, w)  = \frac{1}{1+e^{-w^Tx}}
+\]
+
+We will make the assumption that we can use the following in multiclass logistic regression (log-linear model)
+\[
+    P(y|x, w) = \frac{exp(w_y^Tx)}{\sum_{y' \in \{1, 2,...,k\}}exp(w_{y'}^Tx)}
+\]
+This is also known as the softmax function. We can control the "peakedness" of the distribution using the temperature as shown below:
+\[
+    P(y|x, w) = \frac{s(y) / \sigma}{\sum_{y' \in \{1, 2,...,k\}}exp(s(y) / \sigma)} 
+\]
+
+We can train using maximum log likelihood estimation. So we end up trying to minimize the following:
+\[
+    min_w (\sum_i[log(\sum_{k \in \{1,2,...,k\}} exp(w_k^Tx_i)) - w_{y_i}^Tx_i])  
+\]
