@@ -327,3 +327,37 @@ We can use this to prove that in the example above, MAJ is not regular.
     
     \qed
 \end{proof}
+
+\begin{example}
+    
+    Prove $L = \{0^k10^k | k \ge 1\}$ is not regular.
+
+    Suppose L was regular. Then there must exist p for which PL holds. Consider x = $0^p 1 0^p$. By PL, we must be able to split x into abc where length(ab) $\leq$ p. Following a similar argument to proof for MAJ, we can see that the split between a and b must fall within the first round of 0's, and therefore we cannot repeat b an arbitrary number of times or there will be an unequal number of 0's in the first section and the second section. abbc is not in L, but PL says it should be. We have reached a contradiction.
+\end{example}
+
+\begin{example}
+
+    Prove PALINDROME = \{ x: x = reverse(x) \} is not regular.
+
+    We pick the same string as in the previous example and pump it to show PALINDROME is not regular.
+\end{example}
+
+\begin{example}
+    
+    Prove $L = \{ 1^{n^2}: n \ge 1\}$ is not regular. i.e. all strings with only 1's and number of 1's is a square.
+
+    Suppose L is regular. There exists some number p such that PL holds. Consider X = $1^{p^2}$.  By PL, we should be able to split up x into a, b, and c such that length(ab) $le$ p and length(b) is not 0. 
+    Is abbc in the language? We know that the length(abbc) $\le p^2 + p$ in the case where length b = p and a = 0. This is less than the next square $(p + 1)^2 = p^2 + 2p + 1$, which shows abbc is not in the language. This is a contradiction, so the language is not regular. 
+\end{example}
+
+Note: There are languages that are not computable by DFAs, but you cannot prove this with Pumping Lemma (Beyond the scope of this course, but we could use Myhill-Nerode Theorem).
+
+\vspace{2cm}
+
+\begin{proof}
+    Pumping Lemma
+
+    The idea is that we have a DFA with p states and a string x with length > p. By the pigeonhole principle, as we travel along the DFA there must be at least one repeated state that forms a loop. We will call the inputs along this loop b, the inputs before the loop a, and the inputs after the loop c. Since b is along a loop, no matter how many times we repeat it the string must be accepted. Since we have reached a state we have not seen, the length of ab must be <= p (since there are p states and one of them has been repeated before seeing the last states). Said another way, no more than p states must have been visited before we encounter a loop.
+
+    See a more rigorous proof by construction in the class notes for lecture 11.
+\end{proof}

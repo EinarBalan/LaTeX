@@ -1,0 +1,10 @@
+\chapter{Turing Machines}
+
+As we showed in the last chapter with our discussion of Pumping Lemma, DFA's are not able to compute all functions. For example, it is impossible to compute if a string is a palindrome using a DFA. This is due to the limitation of memory and only single pass algorithms. Can we create a model that can computes on arbitrary length inputs and is not subject to these limitations? 
+
+We will discuss Turing Machines, introduced by Alan Turing in 1936. This model of computation is as powerful as it gets. It will give us the ability to move the "head" both directions on input and read and write to a variable amount of memory. Essentially,
+
+\[
+    \text{Turing Machines} = \text{DFAs + left/right movement on input + read/write memory}
+\]
+
