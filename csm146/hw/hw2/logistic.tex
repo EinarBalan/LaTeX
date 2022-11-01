@@ -1,0 +1,84 @@
+\section{Logistic Regression \problemworth{20}}
+
+Consider the logistic regression model for binary classification that takes input features $\vect{x}_i\in R^m$ and predicts $y_i \in \{-1,1\}$. 
+As we learned in class, the logistic regression model fits the probability $P(y_i = 1|\vect{x}_i)$ using the \textit{sigmoid} function:
+\begin{equation}
+    P(y_i = 1) = \sigma(\vect{w}^T \vect{x}_i+b) = \frac{1}{1+ \exp(-\vect{w}^T\vect{x}_i-b)},
+\end{equation}
+where the sigmoid function is as follows, for any $z\in\mathbb{R}$,
+\[
+\sigma(z)=(1+\exp(-z))^{-1}.
+\]
+Given $N$ training data points, we learn the logistic regression model by minimizing the following loss function:
+\begin{equation}
+\label{eq:j}
+J(\vect{w}, b) = 
+  \frac{1}{N} \sum_{i=1}^{N}\log\Big(1+\exp\big(-y_i(\vect{w}^T \vect{x}_i+b)\big)\Big).
+\end{equation}
+\begin{enumerate}
+\item \itemworth{7} Prove the following. For any $z\in\mathbb{R}$, the derivative of the sigmoid function is as follows: 
+\begin{equation*}
+    \frac{d\sigma(z)}{dz} = \sigma(z)\big(1 - \sigma(z)\big).
+\end{equation*}
+(Hint: use the chain rule. And $\frac{d}{dx}\exp(x)=\exp(x)$.)
+
+\solution{
+
+(Write your solution here.)
+
+}
+\end{enumerate}
+
+Suppose we are updating the weight $\mathbf{w}$ and bias term $b$ with the gradient descent algorithm and the learning rate is $\alpha$. We can derive the update rule as
+\[w_j \leftarrow w_j - \alpha\frac{\partial J(\mathbf{w},b)}{\partial w_j},\; \text{where}\; \frac{\partial J(\mathbf{w},b)}{\partial w_j}=\frac{1}{N}\sum_{i=1}^N  \Big(\sigma\big(y_i(\vect{w}^T \vect{x}_i+b)\big) - 1\Big) y_ix_{i,j}\]
+where $w_j$ denotes the j-th element of the weight vector $\mathbf{w}$ and $x_{i,j}$ denotes the j-th element of the vector $\mathbf{x}_i$. And 
+\[
+b\leftarrow b-\alpha\frac{\partial J(\mathbf{w},b)}{\partial b},\; \text{where} \;\frac{\partial J(\mathbf{w},b)}{\partial b}=\frac{1}{N}\sum_{n=1}^N\Big(\sigma\big(y_i(\vect{w}^T \vect{x}_i+b)\big) - 1\Big) y_i
+\]
+
+We now compare the stochastic gradient descent algorithm for logistic regression with the Perceptron algorithm. Let us define residue for example $i$ as $\delta_i=1-\sigma\big(y_i(\vect{w}^T \vect{x}_i+b)\big)$. Assume the learning rate for both algorithms is $\alpha$.
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item \itemworth{5} If the data point $(\mathbf{x}_i,y_i)$ is correctly classified with high confidence, say $y_i=1$ and $\mathbf{w}^\top\mathbf{x}_i + b = 5$. What will be the residue? For the logistic regression, what will be the update with respect to this data point? What about the update of the Perceptron algorithm? (\textbf{Hint}: you may assume $\sigma(5)\approx 0.9933$. The answer should take the form $w_j\leftarrow w_j-[?]$ or $w_j\leftarrow w_j+[?]$ where you fill in $[?]$. You can directly use $x_{i,j}$ and $\alpha$ as variables.)
+
+
+
+\item \itemworth{5} If the data point $(\mathbf{x}_i,y_i)$ is misclassified, say $y_i=1$ and $\mathbf{w}^\top\mathbf{x}_i + b = -1$. What will be the residue and how is the weight updated for the two algorithms? (\textbf{Hint}: you may assume $\sigma(-1)\approx 0.2689$.)
+
+
+
+\item \itemworth{3} For the update step in SGD and perceptron algorithm, is the influence of the input data $\mathbf{x}_i$ of the same magnitude? If not, what is the difference?
+
+
+\end{enumerate}
+
+\section{Regularization \problemworth{10}}
+Data is separable in one dimension if there exists a threshold $t$ such that all data that have values less than $t$ in this dimension have the same class label. Suppose we train logistic regression for infinite iterations according to our current gradient descent update on the training data that is separable in at least one dimension.
+\begin{enumerate}
+\item \itemworth{2} (multiple choice) If the data is linearly separable in dimension $j$, i.e. $x_{i,j}<t$ for all $(\mathbf{x}_i,y_i)$ such that $y_i=-1$. Which of the following is true about the corresponding weight $w_j$ when we train the model for infinite iterations?
+
+\begin{itemize}
+\item[(A)] The weight $w_j$ will be 0.
+\item[(B)] The weight $w_j$ will be encouraged to grow continuously during each iteration of SGD
+and can go to infinity or -infinity.
+\end{itemize}
+
+
+
+
+
+\item \itemworth{5} We now add a new term (called $l2$-regularization) to the loss function
+\begin{equation}
+\label{eq:j}
+J(\vect{w}, b) = 
+  \frac{1}{N} \sum_{i=1}^{N}\log\Big(1+\exp\big(-y_i(\vect{w}^T \vect{x}_i+b)\big)\Big) +  0.1 \sum^M_{j=0}w_j^2.
+\end{equation}
+What will be the update rule of $w_j$ for the new loss function?
+
+
+
+\item \itemworth{3} How does $l2$ regularization help correct the problem in (a)?
+
+
+\end{enumerate}

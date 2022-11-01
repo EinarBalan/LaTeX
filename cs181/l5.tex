@@ -219,11 +219,111 @@ Regular expressions are a programming tool used to efficiently find some pattern
 
     For every regex r, there is a DFA D such that the output of the regex is the same as the output of the DFA for all x. 
 
-    For every DFA D, there is a regex r such that the output of the regex is the same as the output of the DFA for all x.
+    For every DFA D, there is a regex r such that the output of the regex is the same as the output of the DFA for all x. A function is considered \kw{regular} if there is a regex (or DFA) computing it.
 \end{theorem}
 
 We can compute regex pattern matching in O(n * m) time. The GREP algorithm is the following:
 \begin{itemize}
-    \item conver the regex to an equivelant NFA N with O(m) states and transitions in O(m) time
+    \item convert the regex to an equivelant NFA N with O(m) states and transitions in O(m) time
     \item simulate NFA N on the input X in O(m * n) time
 \end{itemize}
+
+\begin{proof}
+    By construction,
+
+    We defined regex inductively, so we will alos build the NFA for a regex inductively.
+
+    Base cases:
+    \begin{itemize}
+        \item "0" 
+        \begin{itemize}
+            \item \img{./img/regex-nfa-1.png}
+        \end{itemize}
+        \item "1"
+        \begin{itemize}
+            \item \img{./img/regex-nfa-2.png}
+        \end{itemize}
+        \item "$\varepsilon$" (empty string)
+        \begin{itemize}
+            \item \img{./img/regex-nfa-3.png}
+        \end{itemize}
+    \end{itemize}
+
+    Compound cases:
+    \begin{itemize}
+        \item concatenation i.e. r = $r_1r_2$
+        \begin{itemize}
+            \item we saw that we can compute the concatenation of two NFA's by adding epsilon transitions from the accepting state of the first to the initial state of the second
+        \end{itemize}
+        \item union i.e. r = $r_1 | r_2$
+        \begin{itemize}
+            \item we can compute or of two NFA's by adding an epsilon transition from the start of one to the start of the other
+        \end{itemize}
+        \item kleen* i.e. r = $r_1*$
+        \begin{itemize}
+            \item we saw that we can compute kleen* by adding a new (accepting) start state and epsilon transitions from accepting states to initial starting state
+        \end{itemize}
+    \end{itemize}
+
+    We have shown that there is an equivalent NFA for every regex. A regex can be converted into an NFA in linear time (as done in GREP).
+\end{proof}
+
+\hr 
+
+How can an NFA be simulated efficiently? If an NFA has m states, we can simulate it on a string of length n in $O(nm^2)$ time by only keeping track of one copy for each reachable branch.
+
+\hr 
+
+\section{Can DFA's compute everything?}
+
+We know that DFA's are good for algorithms that require only constant memory and a single pass. Does this suffice for any function? Consider the following:
+
+\begin{equation*}
+    MAJ(x) = 
+    \begin{cases}
+        1 & \text{if at least half the input bits are 1} \\
+        0 & \text{else}
+    \end{cases}
+\end{equation*}
+
+MAJ is not regular, meaning there is no DFA that can compute MAJ. This is because we have to "count" the nuber of bits that are 1. 
+
+\begin{example}
+    
+    $L_1 = \{ x: \text{contains an equal number of 0's and 1's}\} $
+
+    This is also not computable by DFA's for the same reason.
+\end{example}
+
+Based on these two examples, one might thing that anytime "counting" is required for a function that it is not regular. However, this is not necessarily the case. In some cases, there might be shortcuts that yield the same result using a DFA. Consider the following
+
+\[
+    L_2 = \{x: \text{contains an equal number of (01)'s and (10)'s}\}
+\]
+
+$L_2$ is actually regular! In this case, there are an equal number of 01 and 10 if and only if the start and end bits are the same. So we can easily create a DFA for this. 
+
+In order to prove functions are not regular, we make use of the "Pumping Lemma."
+
+\subsection*{Pumping Lemma}
+If f is a regular function, there exists a number p such that every string x where f(x) = 1 of length $\ge$ p, can be written as x = $a \circ b \circ c$.
+\begin{itemize}
+    \item $f(a \circ b^i \circ c) = 1$ for all $i \ge 0$
+    \item length of b > 0
+    \item length of $a \circ b \le p$
+\end{itemize}
+
+Intuitive description: If a language L is regular then every sufficiently long string $x \in L$ has a piece that can be repeated an arbitrary number of times while still being in L.
+
+We can use this to prove that in the example above, MAJ is not regular.
+
+\begin{proof}
+
+    Towards a contradiction, suppose MAJ is regular. This implies there must exist a number P such that the conditions of pumping lemma hold.
+
+    Consider the string x that has p 0's followed by p 1's. By pumping lemma, there should be a way to split x into three pieces such that the middle piece can be repeated an arbitrary number of times and the properties of pumping lemma still hold. However this is not the case due to the condition that the length of ab must be less than p. 
+
+    Due to this restriction in length, the split between a and b will always be inside the 0's, meaning b will consist only of 0's. We cannot repeat b an arbitrary number of times because this will cause the output of the function to change to 0. This is a contradiction. Therefore, MAJ is not regular.
+    
+    \qed
+\end{proof}

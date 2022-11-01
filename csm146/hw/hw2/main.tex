@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{dsfont}
+\usepackage{minted}
+
+\usepackage{course}
+\begin{document}
+
+\ctitle{2}{Logistic Regression and Neural Networks}{
+Nov. 15, 2022 at 11:59 pm
+}
+\author{}
+\date{}
+\vspace{-1in}
+\maketitle
+\vspace{-0.75in}
+
+\blfootnote{Parts of this assignment are adapted from course material by Andrea Danyluk (Williams), Tom Mitchell, Matt Gormley and Maria-Florina Balcan (CMU), Stuart Russell (UC Berkeley), Carlos Guestrin (UW), Dan Roth (UPenn) and Jessica Wu (Harvey Mudd). }
+
+
+
+\ifsoln 
+\else
+\section*{Submission instructions}
+\begin{itemize}
+\item 
+Submit your solutions electronically on the course Gradescope site as PDF files.
+\item Please package your code (.ipynb) for Problem 3 and submit it to BruinLearn.
+\item If you plan to typeset your solutions, please use the LaTeX solution template. If you must submit scanned handwritten solutions, please use a black pen on blank white paper and a high-quality scanner app.
+\end{itemize}
+\fi
+
+\ifnotsolution{\newpage}
+
+\ifsoln 
+\else
+\clearpage
+\fi
+
+\input{logistic}
+\input{nn}
+\input{coding}
+
+\end{document}
