@@ -13,6 +13,7 @@
 \usepackage{amsmath}
 \usepackage{array}
 \usepackage{booktabs}
+\usepackage[most]{tcolorbox}
 
 % change chapter style
 \usepackage{titlesec, blindtext, color}
@@ -70,4 +71,12 @@
         \vspace{.25cm}
         \textcolor[RGB]{180, 180, 180}{\rule{\textwidth}{1pt}}
         \vspace{.25cm}
+}
+\newtcolorbox{thesisframe}[1][]{
+  enhanced,
+  arc=0pt,
+  outer arc=0pt,
+  colback=white,
+  boxrule=0.8pt,
+  #1
 }
