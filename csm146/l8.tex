@@ -1,0 +1,70 @@
+\chapter{Kernel Methods}
+
+We saw in previous chapters that linear models such as perceptrons and logistic regression could not classify data that was not linearly separable with 100\% training accuracy. However, it may be possible to create some mapping for non-linearly separable data that makes it linearly separable, and thus learnable for linear models. Consider the image below. 
+
+\begin{center}
+    \img{./img/non-linear-data.png}
+\end{center}
+
+The data appears to not be separable linearly.  However, if we introduce a new feature $x^2$, we can separate it as follows.
+
+\begin{center}
+    \img{./img/non-linear-mapping.png}
+\end{center}
+
+We can use this idea to modify our perceptron algorithm to allow it to converge when data is not linearly separable in 2 dimensions. Here, $\phi(x) = [x, x^2]^T$.
+
+Modified Perceptron Algorithm
+\begin{itemize}
+    \item Initialize $w \leftarrow 0 \in \mathbb{R}^{2n}$
+    \item For (x, y) in D:
+    \begin{itemize}
+        \item if $yw^T \phi(x) \leq 0$
+        \begin{itemize}
+            \item $w \leftarrow w + y \phi(x)$
+        \end{itemize}
+    \end{itemize}
+    \item return w
+\end{itemize}
+
+\vspace{1cm}
+What if our mapping function is more complex i.e. mapping data to infinite dimensions? We can use the fact that the perceptron algorithm essentially just builds a linear combination throughout its run time to create a more specialized version of the algorithm. We can consider $w = \sum_{i = 1}^{m} \alpha_i y_i x_i$ where $\alpha_i$ is the number of mistakes the perceptron made on $x_i$.
+
+Modified (Again) Perceptron Algorithm
+\begin{itemize}
+    \item Initialize $a \leftarrow 0 \in \mathbb{R}^{m}$
+    \item For $(x_i, y_i)$ in D:
+    \begin{itemize}
+        \item if $y_i \sum_j \alpha_j y_j \phi(x_i)^T \phi(x_j) \leq 0$
+        \begin{itemize}
+            \item $\alpha_i \leftarrow \alpha_i + 1$
+        \end{itemize}
+    \end{itemize}
+    \item return $\alpha$
+\end{itemize}
+
+We can compute the dot product $\phi(x_i)^T \phi(x_j)$ efficiently even at high dimensions. In fact, it scales at $O(D)$ where D is the number of dimensions. The \kw{Kernel Trick} allows us to save time/space by computing the value of our kernel function by performing operations in the original space (without a feature transformation!) 
+
+\begin{definition}
+    Kernel function
+
+    A kernel function k satisifies 
+    \begin{gather*}
+        k(x_m, x_n)   = k(x_n, x_m) \\
+        k(x_m, x_n) = \phi(x_m)^T \phi(x_n)
+    \end{gather*}
+    for some function $\phi$.
+    
+    For example, $(x_m^Tx_n)^2$ is a kernel because it is the linear product of the following mapping
+
+    \begin{align*}
+        \phi: x = \begin{pmatrix}
+            x_1 \\
+            x_2
+        \end{pmatrix} \rightarrow \phi(x) = \begin{pmatrix}
+            x_1^2 \\
+            \sqrt{2}x_1x_2 \\
+            x_2^2
+        \end{pmatrix}
+    \end{align*}
+\end{definition}

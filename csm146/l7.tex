@@ -52,6 +52,8 @@ This algorithm is good, but it does not guarantee that we will find our exact ta
     \]
 \end{definition}
 
+\section{PAC Learnability}
+
 \kw{Theorem}
 
 Suppose we are learning a monotone conjunctive concept with n dimensional boolean features using m training examples. if
@@ -59,3 +61,5 @@ Suppose we are learning a monotone conjunctive concept with n dimensional boolea
     m > \frac{n}{\epsilon}(log(n) + log(\frac{1}{\delta}))  
 \]
 then with probability $> 1 - \delta$, the error of the learned hypothesis will be less than $\epsilon$. The derivation for this is available in lecture 11 slides.
+
+We say a concept class C is \kw{PAC Learnable} by a learner L using hypothesis space H if the algorithm produces with probability (1 - $\delta$) a hypothesis that has error at most $\varepsilon$ where the m training samples is polynomial in $1 / \varepsilon$, $1 / \delta$, n and size(H) and is efficiently learnable in polynomial time. Essentially, if there is polynomial space complexity and polynomial time complexity, it is PAC Learnable.
