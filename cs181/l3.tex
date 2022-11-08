@@ -125,13 +125,8 @@ Some functions, such as addition and multiplication, are frequently used. As a r
 
 \vspace{.5cm}
 
-\kw{Big Idea} We can encode circuits as binary strings. 
+\kw{Big Idea} We can encode circuits as binary strings. Two corollaries to this idea: 1. Some functions need exponential size circuits and 2. Universal circuits exist (i.e. general computers)
 
-Two corollaries to this idea: 
-\begin{enumerate}
-    \item Some functions need exponential size circuits
-    \item Universal circuits exist (i.e. general computers)
-\end{enumerate}
 
 \theoremproof{
     Every (n, m, s) NAND Circuit can be represented by a binary string of length O((n + s)log(n + s)).
@@ -154,8 +149,6 @@ Two corollaries to this idea:
         \begin{center}
             \img{./img/circuit-encoding.png}
         \end{center}
-    \end{example}
-
     How exactly to get valid encoding of list shown above?
     \begin{itemize}
         \item for n, m, and size we encode them with PFE
@@ -171,6 +164,9 @@ Two corollaries to this idea:
         \item $2s_0 * 2log_2(n + s_0)$ for $2s_0$ integers in pairs
         \item adding these terms together we determine that this is $\le 12(n+s)log_2(n+s)$ as stated in the theorem
     \end{itemize}
+    \end{example}
+
+    
 }
 
 \hr

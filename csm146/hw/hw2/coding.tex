@@ -106,6 +106,17 @@ where $N$ is the number of examples, $C$ is the number of classes, and $\mathds{
 \item \itemworth{5}
 Prove the equivalence of the current setup of the one-layer network with a logistic regression model. Mainly, we want to show that the predicted output and the loss terms are equivalent for both the models for a given $(\mathbf{x}_n, y_n)$.
 
+\solution{
+    For both logistic regression and the one layer neural network, the output function models probability using the same function: $\sigma(W^Tx_n)$, so the output will be the same. The cross entropy loss also simplifies to the loss function used in logistic regression in one layer ($\sum_n log(p_n)$) which we show below. 
+
+    \begin{gather*}
+        -\sum_{n=0}^{N} \sum_{c=0}^{C}  \mathds{1}(c=y_n) \log (\mathbf{p}_{n, c}) \\
+        = -\sum_{n=0}^N \mathds{1}(y_n=0)log(p_{n,c=0}) + \mathds{1}(y_n=1)log(p_n{n,c=1}) \text{ (one of these terms is 0)}\\
+        = -\sum_{n=0}^Nlog(p_n) \\
+    \end{gather*}
+    $\hfill \Box$
+}
+
 \item \itemworth{3}
 Implement the constructor of \verb|OneLayerNetwork| with \verb|torch.nn.Linear| and implement the \verb|forward| function to compute the outputs of the single fully connected layer i.e. $\sigma(\mathbf{W}_1^\top \mathbf{x}_n)$. Notice that we use the sigmoid function here as the activation.
 
@@ -174,13 +185,55 @@ Now we will compare the performance of both the models by plotting the loss and 
 
 Generate a plot depicting how \verb|one_train_acc|, \verb|one_valid_acc|, \verb|two_train_acc|, \verb|two_valid_acc| varies with epochs. Include the plot in the report and describe your findings.
 
+\solution{
+
+    I found that the two layer neural network performed worse initially, but after several more training epochs passed it began to perform better than the single layer neural network.
+    \includegraphics[width=.4\linewidth]{hw2-images/loss-plot.png}
+    \includegraphics[width=.4\linewidth]{hw2-images/acc-plot.png}
+}
+
 \item \itemworth{4}
 Calculate and report the test accuracy of both the one-layer network and the two-layer network. Explain why we get such results.
+
+\solution{
+
+    One Layer Accuracy: 0.7798891663551331 and Two Layer Accuracy: 0.8368963003158569. For one layer, the test accuracy is slightly improved from the train accuracy while for two it is slightly lower than train. The differences are quite low so it may just be due to chance and how the data was split between training and test sets. The two layer accuracy is likely higher because it is able to determine a better decision boundary for the data due to the hidden layer.
+}
 
 \item \itemworth{5}
 Model analysis is a really important component for improving the model performance. In this part, you will implement the function for confusion matrix and create the confusion matrix for the validation data. Report the confusion matrix and your observations for future improvements. You may utilize the \verb|confusion_matrix| library from sklearn - \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html}.
 
+\solution{
+
+    One layer NN: $\begin{bmatrix}
+        358 & 164 \\
+        82 & 469
+    \end{bmatrix}$, Two layer NN: $\begin{bmatrix}
+        387 & 135 \\
+        40 & 511
+    \end{bmatrix}$ 
+
+    Observation: In both cases, there are more false positives than false negatives so in the future we could modify our data regularization or training process.
+}
+
 \item \itemworth{5}
 Neural networks are sensitive to hyperparameters. In this part, you will tune some hyperparameters to improve the model performance further. We will consider only the \verb|TwoLayerNetwork| for the tuning. By changing only the default hyperparameters specified above, show an improvement in the model performance (an improvement of $1$ point in test accuracy will be awarded full credit). Report your old and new model training/validation loss curves, accuracy curves and test accuracies. Also report the new tuned hyperparameter values. 
 
+\solution{
+
+    For hyperparameters:
+    \begin{itemize}
+        \item lr = 0.002
+        \item hidden\_size = 12
+        \item activation = `sigmoid'
+        \item num\_epochs = 50
+    \end{itemize}
+
+    Test accuracy was 0.8733174800872803 up from 0.8368963003158569.
+
+    \includegraphics[width=.4\linewidth]{hw2-images/improved-loss-plot.png}
+    \includegraphics[width=.4\linewidth]{hw2-images/improved-acc-plot.png}
+    
+    The old curves can be found in part (h).
+}
 \end{enumerate}

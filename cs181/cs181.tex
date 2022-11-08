@@ -6,42 +6,56 @@
 \author{Einar Balan}
 \date{}
 
+\newenvironment{unbreakingbox}[1]{
+        \vspace{0.25cm}
+        \begin{absolutelynopagebreak}
+        \begin{mdframed}
+        \kw{#1}
+} 
+{
+        \end{mdframed}
+        \end{absolutelynopagebreak}
+        \vspace{0.25cm}
+}
+
 \newenvironment{definition}{
-        \vspace{0.5cm}
-        \kw{Definition}
+        \begin{unbreakingbox}{Definition}
 }
 {
-        \vspace{0.5cm}
+        \end{unbreakingbox}
 }
 \newenvironment{example}{
-        \vspace{0.5cm}
-        \kw{Example}
+        \begin{unbreakingbox}{Example}
 }
 {
-        \vspace{0.5cm}
+        \end{unbreakingbox}
 }
 \newenvironment{theorem}{
-        \vspace{0.5cm}
-        \kw{Theorem}
-}
-{}
-\newenvironment{proof}{
-        \kw{Proof}
+        \begin{unbreakingbox}{Theorem}
 }
 {
-        \vspace{0.5cm}
+        \end{unbreakingbox}
+}
+\newenvironment{proof}{
+        \begin{unbreakingbox}{Proof}
+}
+{
+        \end{unbreakingbox}
 }
 
 \newcommand \theoremproof[2] {
-        \begin{theorem}
-                #1
-        \end{theorem}
-
-        \vspace{.5cm}
-        
-        \begin{proof}
-                #2
-        \end{proof}
+        \vspace{.25cm}
+        \begin{absolutelynopagebreak}
+        \begin{mdframed}
+                \kw{Theorem}
+                        #1 
+                
+                \vspace{.25cm}
+                \kw{Proof}
+                        #2
+        \end{mdframed}
+        \end{absolutelynopagebreak}
+        \vspace{.25cm}
 }
 
 

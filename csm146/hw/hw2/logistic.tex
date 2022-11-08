@@ -24,8 +24,16 @@ J(\vect{w}, b) =
 
 \solution{
 
-(Write your solution here.)
-
+\begin{gather*}
+  \sigma = (1 + exp(-z))^{-1} \\
+  \begin{split}
+    \frac{d\sigma}{dz} & = -exp(-z)(1+exp(-z))^{-2} = \frac{-exp(-z)}{(1+exp(-z))^2}  \\
+    & = \left( \frac{-1}{1 + exp(-z)}\right) \left(\frac{-exp(z)}{1+exp(-z)}\right)\\
+    & = -\sigma(z)\left(\frac{-1-exp(z) + 1}{1+exp(-z)}\right) \\
+    & = \sigma(z)(1 - \frac{1}{1+exp(-z)}) = \sigma(z)(1 - \sigma(z))
+  \end{split}
+\end{gather*}
+$\hfill \Box$
 }
 \end{enumerate}
 
@@ -42,13 +50,27 @@ We now compare the stochastic gradient descent algorithm for logistic regression
 \setcounter{enumi}{1}
 \item \itemworth{5} If the data point $(\mathbf{x}_i,y_i)$ is correctly classified with high confidence, say $y_i=1$ and $\mathbf{w}^\top\mathbf{x}_i + b = 5$. What will be the residue? For the logistic regression, what will be the update with respect to this data point? What about the update of the Perceptron algorithm? (\textbf{Hint}: you may assume $\sigma(5)\approx 0.9933$. The answer should take the form $w_j\leftarrow w_j-[?]$ or $w_j\leftarrow w_j+[?]$ where you fill in $[?]$. You can directly use $x_{i,j}$ and $\alpha$ as variables.)
 
+\solution{
+  $\delta_i = 1 - \sigma(5) \approx .0067$ 
 
+  Logistic Regression: $w_j \leftarrow w_j - \alpha(-.0067x_{i,j})$ \\
+  Perceptron: Not updated since there was no mistake.
+}
 
 \item \itemworth{5} If the data point $(\mathbf{x}_i,y_i)$ is misclassified, say $y_i=1$ and $\mathbf{w}^\top\mathbf{x}_i + b = -1$. What will be the residue and how is the weight updated for the two algorithms? (\textbf{Hint}: you may assume $\sigma(-1)\approx 0.2689$.)
 
+\solution{
+  $\delta_i = 1 - \sigma(-1) \approx .7311$ 
 
+  Logistic Regression: $w_j \leftarrow w_j - \alpha(-.7311x_{i,j})$ \\
+  Perceptron: $w \leftarrow w + \alpha x_i$
+}
 
 \item \itemworth{3} For the update step in SGD and perceptron algorithm, is the influence of the input data $\mathbf{x}_i$ of the same magnitude? If not, what is the difference?
+
+\solution{
+  Influence larger for perceptron since the whole weight vector is updated rather than just the jth element.
+}
 
 
 \end{enumerate}
@@ -64,9 +86,9 @@ Data is separable in one dimension if there exists a threshold $t$ such that all
 and can go to infinity or -infinity.
 \end{itemize}
 
-
-
-
+\solution{
+  B is true.
+}
 
 \item \itemworth{5} We now add a new term (called $l2$-regularization) to the loss function
 \begin{equation}
@@ -76,9 +98,18 @@ J(\vect{w}, b) =
 \end{equation}
 What will be the update rule of $w_j$ for the new loss function?
 
-
+\solution{
+  \[
+    w_j \leftarrow w_j - \alpha \left[ \frac{1}{N}\sum_{i=1}^N  \Big(\sigma\big(y_i(\vect{w}^T \vect{x}_i+b)\big) - 1\Big) y_ix_{i,j} + 0.2 \sum_{j = 0}^M w_j \right]
+  \] 
+}
 
 \item \itemworth{3} How does $l2$ regularization help correct the problem in (a)?
 
+\solution {
+  The problem occurs because the model tries to predict as close to 0 or 1 as possible, but it can never reach 0 or 1 due to the way the loss function is defined. So the weights are pushed infinitely in the respective direction to make this happen. By adding the weight as a term outside of the sigmoid, we prevent the weight from increasing to infinity to get as close to 0 or 1 as possible since increasing infinitely would take the whole term to infinity rather than the target.
+
+  \href{https://stats.stackexchange.com/questions/469799/why-is-logistic-regression-particularly-prone-to-overfitting-in-high-dimensions}{Here} is a good source explaining this in more detail.
+}
 
 \end{enumerate}

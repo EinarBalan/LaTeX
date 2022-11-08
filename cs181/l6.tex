@@ -43,16 +43,16 @@ In each step of computation, we are in a state i and read the bit at the head of
 
 Computation:
 \begin{verbatim}
-    Start with head at x[0]
-    State: "0" (starting state)
-    Repeat:
-        (new_state, new_symbol, A) = delta(current_state, Tape[Head])
-        cur_state = new_state
-        Tape[Head] = new_symbol
-        if A == L: Head = max(0, Head - 1)
-        if A == R: Head += 1
-        if A == S: Head = Head
-        if A == H: exit()
+Start with head at x[0]
+State: "0" (starting state)
+Repeat:
+    (new_state, new_symbol, A) = delta(current_state, Tape[Head])
+    cur_state = new_state
+    Tape[Head] = new_symbol
+    if A == L: Head = max(0, Head - 1)
+    if A == R: Head += 1
+    if A == S: Head = Head
+    if A == H: exit()
 \end{verbatim}
 
 By convention if a Turing Machine M halts on an input, then the output is the contents of the tape up to and including the head. If M does not halt, M(x) = "$\perp$". We say a function is computed by a TM M if f(x) = M(x) for all x. A language L is recognized by M if $x \in L \implies M(x) = 1$ and $x \notin L \implies M(x) = 0$.
@@ -86,18 +86,18 @@ By convention if a Turing Machine M halts on an input, then the output is the co
     
     Pseudocode:
     \begin{verbatim}
-        1. Scan to to the right until a 0 is found
-        2. If no 0 is found:
-            "clean up" the tape and return 1
-        3. If a 0 is found:
-            Mark the 0 as seen 
-            Go to the start of the tape
-            Scan the input to find a 1
-            If 1 found:
-                Mark 1 as seen
-                Go to start
-            If 1 not found:
-                clean up and return 0
+    1. Scan to to the right until a 0 is found
+    2. If no 0 is found:
+        "clean up" the tape and return 1
+    3. If a 0 is found:
+        Mark the 0 as seen 
+        Go to the start of the tape
+        Scan the input to find a 1
+        If 1 found:
+            Mark 1 as seen
+            Go to start
+        If 1 not found:
+            clean up and return 0
     \end{verbatim}
     
     Click \href{http://turingmachinesimulator.com/shared/ftcgvwwbaj}{here} for a visualization.   
@@ -110,16 +110,16 @@ By convention if a Turing Machine M halts on an input, then the output is the co
 
     Pseudocode:
     \begin{verbatim}
-        1. Enter state that remembers the first bit x: GoEndx and mark first bit as seen 
-        (overwrite with a)
-        2. Go to the end
-        3. If the last bit matches x 
-            Replace it with nothing and proceed to first unseen bit
-            Repeat
-        4. If the last bit does not match x
-            Clean up the tape and return 0
-        5. If there are no bits remaining that have not been seen:
-            Clean up the tape and return 1
+    1. Enter state that remembers the first bit x: GoEndx and mark first bit as seen 
+    (overwrite with a)
+    2. Go to the end
+    3. If the last bit matches x 
+        Replace it with nothing and proceed to first unseen bit
+        Repeat
+    4. If the last bit does not match x
+        Clean up the tape and return 0
+    5. If there are no bits remaining that have not been seen:
+        Clean up the tape and return 1
     \end{verbatim}
 
     I will omit the precise transition function definitions, but that along with a visualization can be found \href{http://turingmachinesimulator.com/shared/mngibtvnaj}{here}. 
@@ -133,19 +133,144 @@ From these two examples, we can see that Turing Machines are more powerful than 
 \end{theorem}
 
 \begin{theorem}
+
     A function f is computable if there exists a TM M for which f(x) = M(x) for all x. 
 \end{theorem}
 
 \vspace{1cm}
 
-
-\begin{thesisframe}
+\begin{mdframed}[backgroundcolor=framebackground]
     \kw{Thesis}
     Church-Turing Thesis
     
     \vspace{.25cm}
 
     Every function that is computable by physical means is computable by a Turing Machine.
-\end{thesisframe}
+\end{mdframed}
 
+\pagebreak
 
+The fact that every python program (and in fact every implementation of a function) can be simulated using a Turing Machine buys us some very nice abilities. We call them, "Having Our Cake and Eating it Too."
+
+\begin{definition}
+    HOCAEIT Principle
+
+    HOC: To show something is computable you can use a high level programming language. \\
+    EIT: To show something is uncomputable, we only have to show that turing machines cannot compute it.
+\end{definition}
+
+\section{Universality}
+
+Just like for circuits, we can create a universal turing machine that can simulate all turing machines. As before, we use the idea of code as data to implement this. If we can encode a Turing Machine as a binary string then we can pass them as input to a Turing Machine (which essentially compiles \& executes it). First, let us think about how we might encode any arbitrary Turing Machine.
+
+\subsection*{Encoding}
+Recall the definition of a Turing Machine, which can be completely described by a transition function $\delta: [k] \times \Sigma \rightarrow [k] \times \Sigma \times \{ L, R, S, H \}$, where k is the number of states and $\Sigma$ is the alphabet. We can represent every possible set of inputs and outputs to $\delta$ as a 5-tuple as in the following table:
+
+\vspace{.25cm}
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \bf{State} & \bf{Input} & \bf{New State} & \bf{Write Bit} & \bf{Action} \\
+        \hline
+        0 & $a_0$ & 17 & $a_{10}$ & R \\
+        \hline 
+        0 & $a_1$ & 10 & $a_4$ & L \\
+        \hline 
+        ... & ... & ... & ... & ... \\
+        \hline 
+        k - 1 & $a_{l - 1}$ & 4 & $a_0$ & S \\
+        \hline 
+    \end{tabular}
+\end{center}
+\vspace{.25cm}
+
+We use this fact to determine the following encoding form where l is the number of symbols in the alphabet and k is the number of states:
+
+\[
+    (k, l, ((0, a_0, 17, a_10, R), (0, a_1, 10, a_4, L), ..., (k - 1), a_{l-1}, 4, a_0, S))
+\]
+
+We then encode every integer as a binary string using $ZtoB$ and every tuple using some prefix free encoding. In total the length of the encoding will $O(kl(logk + logl))$. 
+\begin{itemize}
+    \item we have $kl$ tuples
+    \item each tuple has 5 integers, which can be represented in $O(logk + logl)$ (since each integer is at most max($k, l$))
+\end{itemize}
+
+\begin{theorem}
+
+    A turing machine M can be represented as a binary string of length $O(kl(logk + logl))$ denoted $\left<M\right>$. 
+\end{theorem}
+
+Note: This is a one-to-one relationship, so there are strings that are not valid turing machines. In this case, we pair these strings with the trivial TM that always outputs 0. 
+
+\pagebreak
+
+\subsection*{Evaluation}
+Now that we have successfully encoded our TM, we want to define a function that can determine the output of any encoded TM passed into it.
+
+\begin{definition}
+    $EVAL: \{0, 1\}^* \rightarrow \{0, 1\}^* \text{ }\cup \perp$
+
+    \begin{equation*}
+        EVAL(M, x) = \begin{cases}
+            M(x) & \text{if M is a valid TM} \\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{equation*}
+\end{definition}
+
+\theoremproof{
+    
+    EVAL is computable (Turing 1936). There exists a TM U such that $U(M, x) = EVAL(M, x)$ $\forall$ inputs.
+}
+{
+    
+    We can use the HOC principle to show that EVAL is computable by a TM by showing it is computable with a Python program. The specific program is as follows (notice it is very similar to the psuedocode we used to define Turing Machines)
+
+    \begin{center}\img{./img/tm-python.png}\end{center}
+
+    We know that since every program has a corresponding TM, there must be a TM to compute EVAL.
+}
+
+\subsection*{Implications of Universality}
+
+A universal TM is essentially just a general purpose computer. Any function can be computed using it. We have relatively small universal TM's using just 25 states and the standard alphabet. This implies that we can compleley describe a model to compute any function using just 500 numbers (25 states x 4 symbols x 5-tuple).
+
+Some more notes:
+\begin{itemize}
+    \item this brings up the concept of metacircular evaluators; for example the C compiler is written in C 
+    \item universality transcends the specific model  
+    \begin{itemize}
+        \item there exists a python program that runs all python programs
+        \item there exists a python program that compiles and executes all java programs
+    \end{itemize}
+\end{itemize}
+
+\begin{definition}
+    Turing Complete Languages
+
+    Anything that can be used to simulate a universal turing machine is considered turing complete. The implications of this are quite interesting$:$ any turing complete language can be used to implement any programming language or compute any function that is computable. For example, theoretically we can use \LaTeX{} to write a C compiler or HTML+CSS to write a Python interpreter (both of these are Turing Complete)! 
+    
+    Check \href{https://en.wikipedia.org/wiki/Turing_completeness#Examples}{here} for more examples of Turing Complete languages (including some very unexpected ones like Minecraft).
+\end{definition}
+
+\section{Uncomputability}
+The statement "A function is computable if there is a Turing Machine that computes it" implies the existence of uncomputable functions and indeed this is true.
+
+\begin{theorem}
+    There exist uncomputable functions.
+    
+    A function f is uncomputable if it cannot be computed by a TM.
+\end{theorem}
+
+Consider a new function, the "Toddler" function, that we define below:
+
+\begin{gather*}
+    \text{Todd}: \{0, 1\}^* \rightarrow \{0, 1\} \\
+    \text{Todd}(\left<M\right>) = \begin{cases}
+        1 & \text{if $M(\left<M\right>)$ halts and the first bit of output is 0} \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{gather*}
+
+We will see that TODD is uncomputable.
