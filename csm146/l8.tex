@@ -68,3 +68,76 @@ We can compute the dot product $\phi(x_i)^T \phi(x_j)$ efficiently even at high 
         \end{pmatrix}
     \end{align*}
 \end{definition}
+
+\begin{example}
+    For $x \in \mathbb{R}^2$, show $(4+9x_i^Tx_j)^2$ is a valid kernel.
+
+    We need to show that $(4+9x_i^Tx_j)^2 = \phi(x_m)^T \phi(x_n)$ for some $\phi$.
+
+    \begin{equation*}
+        \begin{split}
+            (4+9x_i^Tx_j)^2 &= (4+9x_{i,1}x_{j,1} + 9x_{i,2}x_{j,2})^2 \\
+            &= (16 + 81x_{i,1}^2x_{j,1}^2 + 81x_{i,2}^2x_{j,2}^2 + 2 * 4 * 9x_{i,1}x_{j,1} + 2 * 9x_{i,1}x_{j,1} * 9x_{i,2}x_{j,2} + 2 * 9x_{i,2}x_{j,2} * 4) \\
+            &= \begin{bmatrix}
+                4 \\
+                9x_{i,1}^2 \\
+                9x_{i,2}^2 \\
+                6\sqrt{2}x_{i,1} \\
+                9\sqrt{2}x_{i,1}x_{i,2} \\
+                6\sqrt{2}x_{i,2} \\
+            \end{bmatrix}^T \begin{bmatrix}
+                4 \\
+                9x_{i,1}^2 \\
+                9x_{j,2}^2 \\
+                6\sqrt{2}x_{j,1} \\
+                9\sqrt{2}x_{j,1}x_{j,2} \\
+                6\sqrt{2}x_{j,2} \\
+            \end{bmatrix}
+        \end{split}
+    \end{equation*}
+    \qed{}
+
+\end{example}
+
+\begin{absolutelynopagebreak}
+    We can have several types of kernels. We saw the polynomial kernel above. 
+    \begin{itemize}
+        \item Linear kernel: $x^Ty$
+        \item Polynomial kernel: $(x^Ty + c)^d$
+        \item RBF kernel (infinite dimensions): $\exp(-\frac{||x-x'||^2}{2\sigma^2})$
+    \end{itemize}
+\end{absolutelynopagebreak}
+
+Moving from our modified Perceptron (Dual Perceptron) Algorithm above, we get to the kernel perceptron algorithm. Rather than compute the dot product at high dimension we save computations by computing the kernel function:
+
+\kw{Kernel Perceptron Algorithm}:
+\begin{itemize}
+    \item Initialize $a \leftarrow 0 \in \mathbb{R}^{m}$
+    \item For $(x_i, y_i)$ in D:
+    \begin{itemize}
+        \item if $y_i \sum_j \alpha_j y_j K(x_i, x_j) \leq 0$
+        \begin{itemize}
+            \item $\alpha_i \leftarrow \alpha_i + 1$
+        \end{itemize}
+    \end{itemize}
+    \item return $\alpha$
+\end{itemize}
+
+\section{Support Vector Machines}
+SVM's are similar to perceptrons except that they maximize the margin of the data set. Recall that the margin of a hyperplane for a dataset is the distance between the hyperplane nad the datapoint closest to it.
+
+We will skip the derivation, but to maximize the margin we seek to minimize $\frac{1}{2}w^Tw$ such that $\forall i, y_i(w^Tx_i + b) \ge 1$. The second constraint does not allow for any training error. If the data is not seperable, there is no w that will classify the data. This is a bit much to ask. Can we do better? Instead of using this "hard" SVM, we can introduce a slack variable $\xi_i$ along with a penalty to allow for errors but attempt to minimize them. The precise optimzation problem becomes
+
+\begin{gather*}
+    min_{w, b, \xi_i}(\frac{1}{2}w_Tw + C\Sigma_i \xi_i) \\
+    s.t. \forall i, y_i(w^Tx_i + b) \ge 1 - \xi_i \\
+    (\xi_i \ge 0)
+\end{gather*}
+
+or equivalently (via algebraic manipulation)$: $
+
+\begin{gather*}
+    min_{w, b, \xi_i}(\frac{1}{2}w_Tw + C\Sigma_i max(0, 1-y_i(w^Tx_i + b))) 
+\end{gather*}
+
+First term represents us maximizing the margin while the second term is the penalty for mispredictions.
