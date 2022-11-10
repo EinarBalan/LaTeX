@@ -273,4 +273,156 @@ Consider a new function, the "Toddler" function, that we define below:
     \end{cases}
 \end{gather*}
 
-We will see that TODD is uncomputable.
+In other words, TODD does the opposite of what M does, much like a toddler. We will see that TODD is uncomputable. Another way to think of TODD is as follows:
+
+\begin{gather*}
+    \text{Todd}: \{0, 1\}^* \rightarrow \{0, 1\} \\
+    \text{Todd}(\left<M\right>) = \begin{cases}
+        1 & \text{if $M(\left<M\right>)$ halts and the first bit of output is 0} \\
+        0 & \text{if $M(\left<M\right>)$ halts and the first bit of output is 1} \\
+        0 & \text{if $M(\left<M\right>)$ does not halt} \\
+    \end{cases}
+\end{gather*}
+
+\begin{proof}
+    
+    Suppose there was a machine, N, that computed Toddler. Consider what should happen if we try to compute TODD using N given the description of N as input. That is, what is $N(\left<N\right>)$? It should be equal to Todd($\left<N\right>$) if N computes Todd. However, we will see that by definition this is not the case. 
+
+    Case 1: If $N$ halts on $\left<N\right>$ and the output is 1
+    \begin{itemize}
+        \item then Todd($\left<N\right>$) should be 0
+        \item clearly N does not compute Todd since the outputs are not the same
+        \item we have reached a contradiction
+    \end{itemize}
+    Case 2: If $N(\left<N\right>)$ halts and the output is 0
+    \begin{itemize}
+        \item then Todd($\left<N\right>$) should be 1
+        \item once again, N does not compute Todd since the output differs
+        \item we have reached a contradiction
+    \end{itemize}
+    Case 3: If If $N(\left<N\right>)$ does not halt
+    \begin{itemize}
+        \item we will never know what to output 
+        \item Toddler is nicely defined in this case (it should equal 0)
+        \item N cannot compute Toddler since it does not have the same output as Toddler would have in this case
+    \end{itemize}
+
+    In every case, we see that $N$ returns the wrong value so it cannot be that it computes Todd. (Reminder that a TM $M$ is said to compute a function $f$ when for all inputs $x$, $M(x) = f(x)$). So we conclude by contradiction that Todd is uncomputable.
+    
+    \qed
+
+    \hr
+
+    An alternative vizualization once again starts with the assumption that $N$ computes TODD. If this is true then following must hold:
+    \begin{gather*}
+        N(\left<N\right>) = \text{TODD}(\left<N\right>) = \begin{cases}
+            1 & \text{if $N(\left<N\right>)$ halts and first bit is 0} \\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{gather*}
+    But this is clearly a contradiction because it implies that $N(\left<N\right>) = \lnot N(\left<N\right>)$. It's like saying 0 = 1, which is clearly not true. So TODD must be uncomputable.
+
+    \qed
+\end{proof}
+
+Intuitively, the main issue with the machine N that "computes" Toddler is that N might not halt. The fact that Toddler is uncomputable implies that many other more practical problems are uncomputable. Consider this: can we create a program to determine if another program will terminate? This would be very useful in applications such as OS or designing programming languages or debuggers, etc. 
+
+We can define HALT as follows:
+\begin{gather*}
+    \text{HALT}: \{0, 1\}^* \rightarrow \{0, 1\} \\
+    \text{HALT}(\left<M\right>, x) = \begin{cases}
+        1 & \text{if $M$ halts when run on $x$} \\
+        0 & \text{else}
+    \end{cases}
+\end{gather*}
+
+Unfortunately, halt is uncomputable.
+
+\begin{proof}
+    
+    We can use a concept known as reduction to show this. If HALT was computable, then we could use it to compute TODD as follows.
+
+    Solve Todd using Halt:
+    \begin{verbatim}
+    1. If Halt(<M>, <M>) = 1
+        Run M on <M>
+        Output the opposite of the first bit.
+    2. Else
+        Output 0
+    \end{verbatim}
+
+    If you're paying close attention, an important question arises: why doesn't the same contradiction from before hold when using HALT to compute TODD? Specifically, why is it that we can safely determine the output of <M> and return the opposite in a way that does not contradict the original function? This is mostly because we are not using N (the turing machine assumed to compute TODD) to directly compute TODD. We first check if N halts, and then output the opposite of its result if so. The problem with using N directly was that the machine could end up in a loop, and in this case we don't know what the opposite of our output was (there will never be any). Instead, we are using a different Turing Machine that uses HALT as a blackbox in order to, via its own definition, compute TODD. So if Halt was computable, then it would also be possible to compute TODD (and $x$ would equal $\lnot x$). However, clearly this cannot be the case since we proved TODD was uncomputable. It must be that HALT is uncomputable as well. 
+    
+    \qed    
+
+\end{proof}
+
+Is Halt really a difficult problem? The short answer is yes, even for a relatively simple programs. Consider how you might write a program that determines if the Goldback Conjecture was true. The Goldbach Conjecture says that every even number can be written as a sum of two primes.
+
+We can write a program as follows:
+
+\begin{verbatim}
+def isPrime(n):
+    for a in range(2, n):
+        if n % a == 0:
+            return 0
+    return 1
+def GOLDBACH():
+    n = 4
+    while True:
+        goldbachN = false
+        for p in range(2, n):
+            if isPrime(p) and isPrime(n - p):
+                goldbachN = True
+                break
+        if goldbachN: n += 2
+        else: return False
+\end{verbatim}
+
+It is difficult to tell if this program will halt just by looking at it. It will only halt if the Goldbach conjecture is false, otherwise it will proceed forever (since there are an infinite number of even numbers to consider). So yeah. Halt is a hard problem. If HALT was computable, we could use it to determine the answers to many other problems (such as the Goldbach conjecture, which to this day is unproven).
+
+\section{Reduction}
+Put simply, a reduction from A to B means that we use B to solve A.
+
+We showed before how to solve Toddler using Halt. This proved to us that Halt was uncomputable since we already knew Toddler was uncomputable. We can generalize this same approach to work for other problems. If we have two problems: A and B. We know that B is uncomputable. If we can reduce problem A to problem B, then this is proof that B is also uncomputable.
+
+This works because if we can use problem B to solve problem A, then it must be that A is computable if B is computable. However, if we know that A is uncomputable then we know that B is uncomputable as well. This is because the second statement is the contrapositive of the first. If we could solve B, then we must also be able to solve A. This is a contradiction since we know A is uncomputable.
+
+\subsection*{Turing/Cook Reductions}
+We can use the blackbox for B multiple times. For example, if $f$ is uncomputable then it must be that $NOTf$ is uncomputable as well. We can prove this by contradiction. If $NOTf$ was computable, we could use it to solve $f$ by taking its opposite. However, this is a contradiction because we know $f$ is uncomputable. Therefore, $NOTf$ must uncomputable as well.
+
+\subsection*{KARP Reductions}
+In KARP reductions, we reduce problem A to problem B by transforming the inputs for A to inputs for B. Specifically, we use function $R: \{\text{inputs for A}\} \rightarrow \{ \text{inputs for B}\}$.
+
+There are three parts for KARP Reduction.
+\begin{enumerate}
+    \item Specification (What): $R$
+    \item Utility (Why): $\forall x A(x) = B(R(x))$
+    \item Implementation (How): Need to make sure R is computable
+\end{enumerate}
+
+Consider a new function:
+\begin{gather*}
+    \text{HALTONZERO}: \{0,1\}^* \rightarrow \{0,1\} \\
+    \text{HALTONZERO}(\left<M\right>) = \begin{cases}
+        1 & \text{if M halts on input 0} \\
+        0 & \text{if M does not halt on input 0} \\
+    \end{cases}
+\end{gather*}
+
+We can create a reduction function that maps inputs (M, x) to a turing machine described by the following pseudocode:
+\begin{verbatim}
+def N(z):
+    res = EVAL(m, x)
+    return res
+\end{verbatim}
+This reduction function $R$ returns a turing machine that computes the output of the turing machine that is given to it as input.
+
+\pagebreak
+We can easily show that $\forall x \text{HALT}(M, x) = \text{HALTONZERO}(R(M,x))$. Note that the input to TM N is ignored.
+\begin{itemize}
+    \item If M halts on x, then N also halts on all inputs (including 0) so HALT(M, x) = HALTONZERO(N) = 1
+    \item If M does not halt on x, then N does not halt on all inputs (including 0) so HALT(M, x) = HALTONZERO(N) = 0
+\end{itemize}
+
+We have succesfully shown the reduction holds. So since, HALT is uncomputable we know HALTONZERO must also be uncomputable.

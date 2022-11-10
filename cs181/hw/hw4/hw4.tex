@@ -29,13 +29,45 @@
 \maketitle
 
 \begin{enumerate}
-\item[Remark:] To receive full credit, first explain at a high-level how the machine works (e.g., how we described the machine for Palindrome/Minority of 0's in class). You should then provide a few more details about each step as to how you implement them {\bf but} you don't have to dig in and write down all the individual transitions, etc. For example, it would be ok to say ``Scan right until you reach end and enter state $****$". But saying ``Pair up 0s and 1s until none are left'' for the PALINDROME problem would not a valid solution. If you are not sure about this, contact the TAs or ask on edstem for clarification. (The idea is to make it easy for you to write down the solution without cumbersome notation and make it easy for the readers to grade the solutions.)
+%\item[Remark:] To receive full credit, first explain at a high-level how the machine works (e.g., how we described the machine for Palindrome/Minority of 0's in class). You should then provide a few more details about each step as to how you implement them {\bf but} you don't have to dig in and write down all the individual transitions, etc. For example, it would be ok to say ``Scan right until you reach end and enter state $****$". But saying ``Pair up 0s and 1s until none are left'' for the PALINDROME problem would not a valid solution. If you are not sure about this, contact the TAs or ask on edstem for clarification. (The idea is to make it easy for you to write down the solution without cumbersome notation and make it easy for the readers to grade the solutions.)
 
 \item Design a TM that recognizes $L = \{x: \text{ number of $1$'s in $x$ is at least thrice the number of $0$'s.}\}$. So for instance $1101, 11110,011011111 \in L$, whereas $10,11100 \notin L$.  Do not use HOC here but describe the TM in pseudocode as we did in class for Maj. [1 point] 
 
-\begin{answer}
 
+\begin{answer}
+    % Idea: Match each zero with 3 ones.
+    
+    Pseudocode$:$
+    \begin{verbatim}
+    1. Scan to the right until a zero is found
+    2. If no zero is found:
+        Clean up the tape and return 1 
+    3. If a zero is found: 
+        Mark the zero as seen
+        Go to start of tape and enter state SearchFirst1
+        Scan to the right until a one is found
+        If no one is found:
+            Clean up the tape and return 0
+        If a one is found:
+            Mark the one as seen
+            Enter state SearchSecond1
+            Scan to the right until a one is found
+            If no one is found:
+                Clean up the tape and return 0
+            If a one is found:
+                Mark the one as seen
+                Enter state SearchThird1
+                Scan to the right until a one is found
+                If no one is found:
+                    Clean up the tape and return 0
+                If a one is found:
+                    Mark the one as seen
+                    Go to start 
+    4. Repeat until all symbols have been seen
+
+    \end{verbatim}
 \end{answer}
+
 
 \item Show that there is a simple constant size TM (or program in your favorite language) $Fermat$ such that the program $Fermat$ terminates (on any input) if and only if the Fermat's last theorem is true (which we know it is ... but don't assume that for this problem - just show equivalence). [1 point]
 
@@ -43,7 +75,10 @@
 
 \end{answer}
 
-\item Exercise 9.5. Please replace NAND++ program with a Turing machine for the problem. [1 point]
+\item Exercise 9.5. Please replace NAND++ program with a Turing machine for the problem. 
+
+In other words, prove that the following function Finite: $\{0,1\}^* \rightarrow \{0,1\}$ is uncomputable. On input $P \in \{0,1\}^*$ (the description of the TM), we define Finite(P) = 1 if and only if P is a string that represents a TM such that there are only a finite number of inputs $x \in \{0,1\}^*$ on which the TM outputs 1.
+[1 point]
 
 [Hint: One approach is to use a reduction from NOTHALTONZERO.]
 
