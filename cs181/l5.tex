@@ -67,7 +67,7 @@ One might wonder, what are NFA's good for? Well, we can use them to compute the 
     \img{./img/nfa-3.png}
 \end{center}
 
-Important Takeaway: In general, if two functions are computable by DFA's, we can compute their concatentation using an NFA in which we simply add $varepsilon$ transitions pointing from accepting states of the first function to the start of the second.
+Important Takeaway: In general, if two functions are computable by DFA's, we can compute their concatentation using an NFA in which we simply add $\varepsilon$ transitions pointing from accepting states of the first function to the start of the second.
 \begin{center}
     \img{./img/nfa-4.png}
 \end{center}
@@ -231,7 +231,7 @@ We can compute regex pattern matching in O(n * m) time. The GREP algorithm is th
 \begin{proof}
     By construction,
 
-    We defined regex inductively, so we will alos build the NFA for a regex inductively.
+    We defined regex inductively, so we will also build the NFA for a regex inductively.
 
     Base cases:
     \begin{itemize}

@@ -88,6 +88,22 @@ Prepare \verb|train_loader|, \verb|valid_loader|, and \verb|test_loader| by usin
 
 You can refer \url{https://pytorch.org/docs/stable/data.html} for more information about \verb|TensorDataset| and \verb|DataLoader|. 
 
+\begin{verbatim}
+def get_dataloaders(X_train, y_train, X_val, y_val, X_test, y_test, train_batch_size=16, test_batch_size=32):
+    ### ========== TODO : START ========== ###
+    # part a: Create dataloaders for train, validation and test sets
+    train_set = TensorDataset(X_train, y_train)
+    val_set = TensorDataset(X_val, y_val)
+    test_set = TensorDataset(X_test, y_test)
+
+    train_loader = DataLoader(train_set, batch_size=train_batch_size)
+    val_loader = DataLoader(val_set, batch_size=train_batch_size)
+    test_loader = DataLoader(test_set, batch_size=test_batch_size)
+    ### ========== TODO : END ========== ###
+
+    return train_loader, val_loader, test_loader    
+\end{verbatim}
+
 \end{enumerate}
 
 \subsection{One Layer Neural Network \problemworth{11}}
@@ -122,10 +138,48 @@ Implement the constructor of \verb|OneLayerNetwork| with \verb|torch.nn.Linear| 
 
 You can refer to \url{https://pytorch.org/docs/stable/generated/torch.nn.Linear.html} for more information about \verb|torch.nn.Linear| and \url{https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html} for more information about \verb|torch.nn.Sigmoid|.
 
+\begin{verbatim}
+class OneLayerNetwork(torch.nn.Module):
+    def __init__(self, input_features):
+        # input_features: int
+        super(OneLayerNetwork, self).__init__()
+
+        ### ========== TODO : START ========== ###
+        ### part c: implement OneLayerNetwork with torch.nn.Linear. Use sigmoid as the activation
+        self.p = torch.nn.Linear(6, 1)
+        self.sigmoid = torch.nn.Sigmoid()
+        ### ========== TODO : END ========== ###
+
+    def forward(self, x):
+        # x.shape = (n_batch, n_features)
+
+        ### ========== TODO : START ========== ###
+        ### part c: implement the foward function
+        outputs = self.sigmoid(self.p(x))
+
+        ### ========== TODO : END ========== ###
+        return outputs
+\end{verbatim}
+
 \item \itemworth{3}
 In this part, we will create an instance of the model, set up the loss criterion and initialize the optimizer as well. Create an instance of \verb|OneLayerNetwork|, set up a criterion with \verb|torch.nn.BCELoss| with the aggregation of loss as the sum (see \verb|reduction| parameter), and set up a stochastic gradient descent (SGD) optimizer with learning rate as a parameter using \verb|torch.optim.SGD| \problemworth{2}
 
 You can refer to \url{https://pytorch.org/docs/stable/optim.html} for more information about \verb|torch.optim.SGD|. Since we have only two classes, we use the Binary Cross Entropy Loss - \verb|torch.nn.BCELoss|. We can refer to \url{https://pytorch.org/docs/stable/generated/torch.nn.BCELoss.html} for more information.
+
+\begin{verbatim}
+def init_oneLayerNN(in_features, lr):
+    # input_features: int -> Number of input features
+    # lr: float -> Learning Rate
+
+    ### ========== TODO : START ========== ###
+    ### part d: prepare the OneLayerNetwork model, criterion, and optimizer
+    model = OneLayerNetwork(in_features)
+    criterion = torch.nn.BCELoss(reduction="sum")
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+
+    ### ========== TODO : END ========== ###
+    return model, criterion, optimizer
+\end{verbatim}
 
 \end{enumerate}
 
@@ -139,8 +193,53 @@ For one-layer network, we consider a network from input dimension to a hidden di
 \item \itemworth{4}
 Implement the constructor of \verb|TwoLayerNetwork| with \verb|torch.nn.Linear| and implement the \verb|forward| function to compute the outputs i.e. $\sigma(\mathbf{W}_2^\top \sigma(\mathbf{W}_1^\top \mathbf{x}_n))$. Notice that we use the sigmoid function here as the activation for both layers.
 
+\begin{verbatim}
+class TwoLayerNetwork(torch.nn.Module):
+    def __init__(self, input_features, hidden_features, first_activation='sigmoid'):
+        # input_features: int -> Number of input features
+        # hidden_features: int -> Size of the hidden layer
+        # first_activation: str -> Activation to use for the first hidden layer
+        
+        super(TwoLayerNetwork, self).__init__()
+        ### ========== TODO : START ========== ###
+        ### part e: implement TwoLayerNetwork with torch.nn.Linear. Use sigmoid as the activation for both layers
+        self.l1 = torch.nn.Linear(input_features, hidden_features)
+        self.l2 = torch.nn.Linear(hidden_features, 1)
+        self.sigmoid = torch.nn.Sigmoid()
+
+        ### ========== TODO : END ========== ###
+
+    def forward(self, x):
+        # x.shape = (n_batch, n_features)
+
+        ### ========== TODO : START ========== ###
+        ### part e: implement the forward function
+        a1 = self.sigmoid(self.l1(x))
+        outputs = self.sigmoid(self.l2(a1))
+
+        ### ========== TODO : END ========== ###
+        return outputs    
+\end{verbatim}
+
 \item \itemworth{2}
 Create an instance of \verb|TwoLayerNetwork|, set up a criterion with \verb|torch.nn.BCELoss| with the aggregation of loss as the sum (see \verb|reduction| parameter), and set up a stochastic gradient descent (SGD) optimizer with learning rate as a parameter using \verb|torch.optim.SGD| \problemworth{2}
+
+\begin{verbatim}
+def init_twoLayerNN(in_features, hidden_size, first_activation, lr):
+    # input_features: int -> Number of input features
+    # hidden_features: int -> Size of the hidden layer
+    # first_activation: str -> Activation to use for the first hidden layer
+    # lr: float -> Learning Rate
+
+    ### ========== TODO : START ========== ###
+    ### part f: prepare the TwoLayerNetwork model, criterion, and optimizer
+    model = TwoLayerNetwork(in_features, hidden_size, first_activation)
+    criterion = torch.nn.BCELoss(reduction="sum")
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    ### ========== TODO : END ========== ###
+
+    return model, criterion, optimizer
+\end{verbatim}
 
 \end{enumerate}
 
@@ -163,6 +262,45 @@ Start training OneLayerNetwork...
 | epoch  3 | train loss 0.533699 | train acc 0.761309 | valid loss ...
 ...
 \end{minted}
+
+\begin{verbatim}
+def train(model, criterion, optimizer, train_loader, valid_loader, num_epochs, logging_epochs=1):
+    print("Start training model...")
+
+    train_loss_list = []
+    valid_loss_list = []
+    train_acc_list = []
+    valid_acc_list = []
+    for epoch in range(1, num_epochs+1):
+        model.train()
+        for batch_X, batch_y in train_loader:
+            ### ========== TODO : START ========== ###
+            ### part g: Build the training paradigm - Zero out gradients, forward pass, compute loss, loss backward, update model
+            
+            # init zero gradient
+            optimizer.zero_grad()
+
+            # forward + loss + backwards prop + update optimizer
+            outputs = model(batch_X)
+            loss = criterion(outputs, batch_y)
+            loss.backward()
+            optimizer.step()
+            ### ========== TODO : END ========== ###
+            
+        train_loss = evaluate_loss(model, criterion, train_loader)
+        valid_loss = evaluate_loss(model, criterion, valid_loader)
+        train_acc = evaluate_acc(model, train_loader)
+        valid_acc = evaluate_acc(model, valid_loader)
+        train_loss_list.append(train_loss)
+        valid_loss_list.append(valid_loss)
+        train_acc_list.append(train_acc)
+        valid_acc_list.append(valid_acc)
+
+        if logging_epochs > 0 and epoch % logging_epochs == 0:
+            print(f"| epoch {epoch:2d} | train loss {train_loss:.6f} | train acc {train_acc:.6f} | valid loss {valid_loss:.6f} | valid acc {valid_acc:.6f} |")
+
+    return train_loss_list, valid_loss_list, train_acc_list, valid_acc_list
+\end{verbatim}
 
 \end{enumerate}
 

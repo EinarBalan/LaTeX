@@ -357,6 +357,31 @@ Unfortunately, halt is uncomputable.
 
 \end{proof}
 
+We can also prove Halt is uncomputable using a more direct approach, rather than a reduction from TODD. 
+
+\begin{proof}
+    
+    Suppose there was a machine H that computed HALT. Consider the following program:
+
+    \begin{verbatim}
+    def CANTSOLVEME(<M>):
+        if H(<M>, <M>) == 1:
+            while true: continue
+        else:
+            return 0
+    \end{verbatim}
+
+    What does CANTSOLVEME do if we input a TM that computes CANTSOLVEME?
+    \begin{itemize}
+        \item If CANTSOLVEME(<CANTSOLVEME>) halts and returns some output, then we should enter the infinite loop and not halt! This is a contradiction.
+        \item If CANTSOLVEME(<CANTSOLVME>) doesn't halt then we should return 0 and halt. Another contradiction.
+    \end{itemize}
+    No matter what happens, we get a contradiction. So HALT must be uncomputable.
+
+    \qed
+
+\end{proof}
+
 Is Halt really a difficult problem? The short answer is yes, even for a relatively simple programs. Consider how you might write a program that determines if the Goldback Conjecture was true. The Goldbach Conjecture says that every even number can be written as a sum of two primes.
 
 We can write a program as follows:
@@ -382,7 +407,7 @@ def GOLDBACH():
 It is difficult to tell if this program will halt just by looking at it. It will only halt if the Goldbach conjecture is false, otherwise it will proceed forever (since there are an infinite number of even numbers to consider). So yeah. Halt is a hard problem. If HALT was computable, we could use it to determine the answers to many other problems (such as the Goldbach conjecture, which to this day is unproven).
 
 \section{Reduction}
-Put simply, a reduction from A to B means that we use B to solve A.
+Put simply, a reduction from A to B means that we use B to solve A. We are reducing the task of computing A to the task of computing B. 
 
 We showed before how to solve Toddler using Halt. This proved to us that Halt was uncomputable since we already knew Toddler was uncomputable. We can generalize this same approach to work for other problems. If we have two problems: A and B. We know that B is uncomputable. If we can reduce problem A to problem B, then this is proof that B is also uncomputable.
 
@@ -392,12 +417,15 @@ This works because if we can use problem B to solve problem A, then it must be t
 We can use the blackbox for B multiple times. For example, if $f$ is uncomputable then it must be that $NOTf$ is uncomputable as well. We can prove this by contradiction. If $NOTf$ was computable, we could use it to solve $f$ by taking its opposite. However, this is a contradiction because we know $f$ is uncomputable. Therefore, $NOTf$ must uncomputable as well.
 
 \subsection*{KARP Reductions}
-In KARP reductions, we reduce problem A to problem B by transforming the inputs for A to inputs for B. Specifically, we use function $R: \{\text{inputs for A}\} \rightarrow \{ \text{inputs for B}\}$.
+In KARP reductions, we reduce problem A to problem B by transforming the inputs for A to inputs for B. Specifically, we use function $R: \{\text{inputs for A}\} \rightarrow \{ \text{inputs for B}\}$. 
 
 There are three parts for KARP Reduction.
 \begin{enumerate}
     \item Specification (What): $R$
     \item Utility (Why): $\forall x A(x) = B(R(x))$
+    \begin{itemize}
+        \item Therefore, if we can solve B, then we must be able to solve A by giving B the transformed input to A. This leads to a contradiction when we know that A is uncomputable. So in general, to prove if a problem B is uncomputable we reduce from an uncomputable problem A to problem B. 
+    \end{itemize}
     \item Implementation (How): Need to make sure R is computable
 \end{enumerate}
 
@@ -413,12 +441,11 @@ Consider a new function:
 We can create a reduction function that maps inputs (M, x) to a turing machine described by the following pseudocode:
 \begin{verbatim}
 def N(z):
-    res = EVAL(m, x)
+    res = EVAL(<M>, x)
     return res
 \end{verbatim}
 This reduction function $R$ returns a turing machine that computes the output of the turing machine that is given to it as input.
 
-\pagebreak
 We can easily show that $\forall x \text{HALT}(M, x) = \text{HALTONZERO}(R(M,x))$. Note that the input to TM N is ignored.
 \begin{itemize}
     \item If M halts on x, then N also halts on all inputs (including 0) so HALT(M, x) = HALTONZERO(N) = 1
@@ -426,3 +453,91 @@ We can easily show that $\forall x \text{HALT}(M, x) = \text{HALTONZERO}(R(M,x))
 \end{itemize}
 
 We have succesfully shown the reduction holds. So since, HALT is uncomputable we know HALTONZERO must also be uncomputable.
+
+\begin{example}
+    
+    Consider the following function:
+
+    \begin{gather*}
+        \text{NOTEMPTY}: \{0, 1\} \rightarrow \{0, 1\} \\
+        \text{NOTEMPTY}(\left<M\right>) = \begin{cases}
+            1 & \text{if there is an x such that M(x) = 1} \\
+            0 & \text{else}
+        \end{cases}
+    \end{gather*}
+
+    Essentially, NOTEMPTY is 1 if the language is not empty and 0 otherwise. We want to prove that it is not computable via a reduction. We will reduce from HALTONZERO. Consider an R that returns the following program:
+
+    \begin{verbatim}
+    def N(z):
+        EVAL(<M>, 0)
+        return 1
+    \end{verbatim}
+
+    Let's consider the cases:
+    \begin{enumerate}
+        \item If HALTONZERO($\left<M\right>$) = 1, then N will return 1 on all inputs so the language is not empty and NOTEMPTY($\left<N\right>$) = 1
+        \item If HALTONZERO($\left<M\right>$) = 0, then N will return 1 on no inputs so the language is empty and NOTEMPTY($\left<N\right>$) = 0
+    \end{enumerate}
+
+\end{example}
+
+\section{Semantics}
+
+A very important concept in Computer Science is software verification. We want to ensure we have created a program that works as expected in all cases. Another way to think of this is to check if a program A is equivalent to another program B for all possible inputs. This would be an amazing tool to have for software testing, computer security, and programming languages. To investigate if this is possible, we introduce several new ideas
+
+\begin{definition}
+    Semantic Functions/Properties
+
+    For an $F$ which takes TM descriptions as input, $F$ is semantic if for all equivalent programs $M$ and $M'$ (i.e. programs that are equal on all inputs), $F(\left<M\right>) = F(\left<M'\right>)$. 
+
+    Another way to think about it is that a function is semantic if it only depends on the input/output behaviour of the TM, rather than implementation details.
+
+\end{definition}
+
+\begin{example}
+    
+    Semantic functions:
+    \begin{itemize}
+        \item HALTONZERO
+        \item ISMAJORITY (1 if M is equivalent to MAJORITY)
+    \end{itemize}
+
+    Non-semantic functions:
+    \begin{itemize}
+        \item F(<M>) = 1 iff <M> ends with a 1
+        \item F(<M>) = 1 iff <M> halts in in 100 steps on 0 (this depends on implementation)
+        \item TODD(<M>)
+    \end{itemize}
+\end{example}
+
+\begin{theorem}
+    Rice's Theorem (1951)
+
+    Every non-trivial semantic function/property is uncomputable. Trivial functions are the constant 0 or 1 function on all input.
+\end{theorem}
+
+\begin{proof}
+    
+    Consider $F$, a nontrivial semantic property, and the program INF(z) which just runs an infinite loop. There are two cases: $F(\left<INF\right>) = 0$ and $F(\left<INF\right>) = 1$. We will consider the first case here. 
+
+    We want to reduce from HALTONZERO to F. We use an R which returns the following program:
+
+    \begin{verbatim}
+    def N(z):
+        EVAL(<M>, 0)
+        EVAL(<M_1>, z)
+    \end{verbatim}
+
+    Two cases:
+    \begin{itemize}
+        \item If HALTONZERO($\left<M\right>$) = 1, then N is equivalent to M so F($\left<N\right>$) = F($\left<M_1\right>$) = 1.
+        \item If HALTONZERO($\left<M\right>$) = 0, then N is equivalent to INF so F($\left<N\right>$) = F($\left<M_1\right>$) = 0.
+    \end{itemize}
+
+    We have shown HALTONZERO reduces to F, so F (a general semantic property) is uncomputable. 
+
+    We follow as similar idea when $F(\left<INF\right>) = 1$ except we just use NOTF. 
+
+    \qed
+\end{proof}

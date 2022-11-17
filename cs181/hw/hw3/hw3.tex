@@ -146,44 +146,49 @@ For instance, $010010000,1000,0010010000$ are in the language but $10101, 011001
 {\bf Additional practice problems - Not to be graded}
 
 \begin{enumerate}
-%\item Show that if a language $L$ is regular, then so is $Reverse(L) = \{x: Reverse(x) \in L\}$. 
+\item (COMMENTED OUT) Show that if a language $L$ is regular, then so is $Reverse(L) = \{x: Reverse(x) \in L\}$. 
 
 \item Design a regular expression for the following languages: 
 \begin{itemize}
 \item $L = \{x: \text{ third bit from end of $x$ is a 1}\}$.
-\begin{itemize}
-    \item $(0|1)^*1(0|1)(0|1)$
-\end{itemize}
+% \begin{itemize}
+%     \item $(0|1)^*1(0|1)(0|1)$
+% \end{itemize}
 \item $L = \{x: \text{ number of $1$'s in $x$ is divisible by $5$}\}$.
-\begin{itemize}
-    \item $((0)^*1(0)^*1(0)^*1(0)^*1(0)^*1(0)^*)^*$
-\end{itemize}
+% \begin{itemize}
+%     \item $((0)^*1(0)^*1(0)^*1(0)^*1(0)^*1(0)^*)^*$
+% \end{itemize}
 \item $L = \{x: \text{ $x$ has an odd number of $1$'s}\}$. 
-\begin{itemize}
-    \item 
-\end{itemize}
+% \begin{itemize}
+%     \item 
+% \end{itemize}
 \item $L = \{x: \text{ $x$ has at least three $1$'s}\}$.
-\begin{itemize}
-    \item $((0)^*1(0)^*1(0)^*1(0)^*)(0|1)^*$
-\end{itemize}
+% \begin{itemize}
+%     \item $((0)^*1(0)^*1(0)^*1(0)^*)(0|1)^*$
+% \end{itemize}
 \item L = All strings except the empty string.
-\begin{itemize}
-    \item $(0|1)(0|1)*$
-\end{itemize}
+% \begin{itemize}
+%     \item $(0|1)(0|1)*$
+% \end{itemize}
 \item $L = \{x: \text{ $x$ has an even number of $0$'s or contains exactly two $1$'s}\}$.
 \end{itemize}
 
 \item Continuing problem (2) above:
 \begin{enumerate}
-\item[2a] How many transitions/edges are present in the final NFA built by the procdure in class as a function of $m$ (use big-Oh notation and avoid computing constants)?
+\item[3a] How many transitions/edges are present in the final NFA built by the procdure in class as a function of $m$ (use big-Oh notation and avoid computing constants)?
 
 [Hint: Look at each of the steps in the compund case, and see how the number of edges added changes.] 
 
-\item[2b] (Advanced) Do you see a way to modify the procedure to only add at most $O(m)$ transitions in the NFA? Such an NFA is what gets used in grep and other regex matching tools.
+\item[3b] (Advanced) Do you see a way to modify the procedure to only add at most $O(m)$ transitions in the NFA? Such an NFA is what gets used in grep and other regex matching tools.
 
 [Hint: The most expensive step in terms of number of edges added is the compound case corresponding to the (*) operation. What happens if you maintain the invariant that all the NFAs you build only have one accept state?Can we maintain this invariant?]
 \end{enumerate}
 
+\item Show that the following languages are not regular.
+\begin{enumerate}
+    \item $L = \{ 0^{|w|} \circ w: w \in \{0, 1\}^*\}$
+    \item $L = \{ ww: w \in \{0, 1\}^*\}$
+\end{enumerate}
 
 \end{enumerate}
 

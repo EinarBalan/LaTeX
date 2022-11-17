@@ -137,7 +137,62 @@ We will skip the derivation, but to maximize the margin we seek to minimize $\fr
 or equivalently (via algebraic manipulation)$: $
 
 \begin{gather*}
-    min_{w, b, \xi_i}(\frac{1}{2}w_Tw + C\Sigma_i max(0, 1-y_i(w^Tx_i + b))) 
+    J^t(w) = min_{w, b, \xi_i}(\frac{1}{2}w_Tw + C\Sigma_i max(0, 1-y_i(w^Tx_i + b))) 
 \end{gather*}
 
-First term represents us maximizing the margin while the second term is the penalty for mispredictions.
+First term represents us maximizing the margin while the second term is the penalty for mispredictions (also known as the loss function; called the hinge loss). C is a hyperparameter that controls the tradeoff between a large margin and a small loss. 
+
+In general,
+\[
+  min_{w\in \mathbb{R}^d} R(w) + C \Sigma_{(x, y) \in \hat{D}} [L(x,w,y)]
+\]
+
+We can use multiple kinds of loss:
+\begin{itemize}
+    \item 0-1 loss 
+    \item hinge loss (which is seen above)
+    \begin{itemize}
+        \item preferable to 0-1 because more easily differentiable
+    \end{itemize}
+    \item logistic loss
+    \item perceptron loss
+\end{itemize}
+
+There are also many choices for the regularization:
+\begin{itemize}
+    \item simply \# of non-zero elements in w (L0)
+    \item $\sum_i |w_i|$ (L1)
+    \item $\sum_i w_i^2$ (L2)
+\end{itemize}
+
+\subsection*{Training}
+Note that the hinge loss is not directly differentiable. Instead, we must break it into subgradients.
+
+\begin{equation*}
+    \nabla J^t = \begin{cases}
+        w & \text{if } max(0, 1-y_i(w^Tx_i+b)) = 0 \\
+        w - Cy_ix_i & \text{otherwise}
+    \end{cases}
+\end{equation*}
+
+We then must modify SGD to accommodate for the subgradient.
+
+\begin{verbatim}
+    Given a training set D
+    Initialize w = 0
+    For epoch 1..T:
+        For (x, y) in D:
+            if y(w^Tx + b) < 1:
+                w = w - eta * (w - Cyx)
+                b = b + eta * Cy
+            else:
+                w = w - eta * w
+\end{verbatim}
+
+SVM optimizes the hinge loss with L2 regularization (as opposed to Perceptron which optimizes perceptron loss with no regularization).
+
+\begin{definition}
+    Support Vector
+
+    A support vector is a datapoint that contributes to learning the weights for an SVM. This is the case when the datapoint is misclassifed, or lies either within or on the margin.
+\end{definition}
